@@ -77,7 +77,7 @@ export default function ResetPasswordForm({ className, ...props }: React.Compone
             <div className="flex items-center justify-center rounded-full">
               <Image
                 src="/logo.svg"
-                alt="Account Manager logo"
+                alt="MAnasPM logo"
                 width={120}
                 height={120}
                 className="size-30"
@@ -117,7 +117,7 @@ export default function ResetPasswordForm({ className, ...props }: React.Compone
             <div className="flex items-center justify-center rounded-full">
               <Image
                 src="/logo.svg"
-                alt="Account Manager logo"
+                alt="MAnasPM logo"
                 width={120}
                 height={120}
                 className="size-30"

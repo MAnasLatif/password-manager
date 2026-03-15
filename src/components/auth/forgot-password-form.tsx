@@ -47,7 +47,7 @@ export default function ForgotPasswordForm({ className, ...props }: React.Compon
             <div className="flex items-center justify-center rounded-full">
               <Image
                 src="/logo.svg"
-                alt="Account Manager logo"
+                alt="MAnasPM logo"
                 width={120}
                 height={120}
                 className="size-30"
@@ -56,7 +56,7 @@ export default function ForgotPasswordForm({ className, ...props }: React.Compon
             <h1 className="text-xl font-bold">Check Your Email</h1>
             <p className="text-muted text-sm">
               If an account exists with <span className="text-foreground font-medium">{email}</span>
-              , you will receive a password reset link shortly.
+              on MAnasPM, you will receive a password reset link shortly.
             </p>
           </div>
 
@@ -90,7 +90,7 @@ export default function ForgotPasswordForm({ className, ...props }: React.Compon
             <div className="flex items-center justify-center rounded-full">
               <Image
                 src="/logo.svg"
-                alt="Account Manager logo"
+                alt="MAnasPM logo"
                 width={120}
                 height={120}
                 className="size-30"

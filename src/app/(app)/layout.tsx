@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Account Manager",
-  description: "HeroUI-powered foundation for the Account Manager application.",
+  title: "MAnasPM",
+  description: "HeroUI-powered foundation for the MAnasPM application.",
 };
 
 export default function AppLayout({

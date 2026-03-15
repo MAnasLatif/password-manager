@@ -4,8 +4,8 @@ import { Suspense } from "react";
 import SignupForm from "@/components/auth/signup-form";
 
 export const metadata: Metadata = {
-  title: "Create Account | Account Manager",
-  description: "Create your Account Manager account",
+  title: "Create Account | MAnasPM",
+  description: "Create your MAnasPM account",
 };
 
 export default function SignupPage() {

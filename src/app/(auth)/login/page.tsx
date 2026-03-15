@@ -4,8 +4,8 @@ import { Suspense } from "react";
 import LoginForm from "@/components/auth/login-form";
 
 export const metadata: Metadata = {
-  title: "Sign In | Account Manager",
-  description: "Sign in to your Account Manager account",
+  title: "Sign In | MAnasPM",
+  description: "Sign in to your MAnasPM account",
 };
 
 export default function LoginPage() {

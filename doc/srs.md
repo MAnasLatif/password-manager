@@ -1,4 +1,4 @@
-# Account Manager Web Application - Software Requirements Specification (SRS)
+# MAnasPM (Password Manager) Web Application - Software Requirements Specification (SRS)
 
 # 1. Purpose
 

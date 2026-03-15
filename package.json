@@ -1,5 +1,6 @@
 {
-  "name": "account-manager",
+  "name": "manaspm",
+  "description": "MAnasPM (Password Manager) is a secure and user-friendly web application designed to help users manage their passwords and sensitive information efficiently. The application provides features such as password storage, generation, and organization, ensuring that users can keep their credentials safe and easily accessible.",
   "version": "0.1.0",
   "private": true,
   "scripts": {

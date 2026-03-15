@@ -4,8 +4,8 @@ import { Suspense } from "react";
 import ForgotPasswordForm from "@/components/auth/forgot-password-form";
 
 export const metadata: Metadata = {
-  title: "Forgot Password | Account Manager",
-  description: "Reset your Account Manager password",
+  title: "Forgot Password | MAnasPM",
+  description: "Reset your MAnasPM password",
 };
 
 export default function ForgotPasswordPage() {

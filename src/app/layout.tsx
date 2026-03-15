@@ -16,36 +16,36 @@ const geistMono = Geist_Mono({
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
-      default: "Account Manager",
-      template: `%s - Account Manager`,
+      default: "MAnasPM",
+      template: `%s - MAnasPM`,
     },
-    description: "A simple account manager to manage your accounts and passwords.",
+    description: "MAnasPM is a simple password manager to organize and protect your passwords.",
     robots: { index: true, follow: true },
     icons: {
       icon: [
         { url: "/favicon/favicon.ico", sizes: "any", type: "image/x-icon" },
         {
-          url: "/favicon/favicon-16x16.png",
+          url: "/favicon-16x16.png",
           sizes: "16x16",
           type: "image/png",
         },
         {
-          url: "/favicon/favicon-32x32.png",
+          url: "/favicon-32x32.png",
           sizes: "32x32",
           type: "image/png",
         },
         {
-          url: "/favicon/favicon-192x192.png",
+          url: "/favicon-192x192.png",
           sizes: "192x192",
           type: "image/png",
         },
         {
-          url: "/favicon/favicon-512x512.png",
+          url: "/favicon-512x512.png",
           sizes: "512x512",
           type: "image/png",
         },
       ],
-      shortcut: "/favicon/favicon-16x16.png",
+      shortcut: "/favicon-16x16.png",
       apple: "/favicon/apple-touch-icon.png",
     },
   };

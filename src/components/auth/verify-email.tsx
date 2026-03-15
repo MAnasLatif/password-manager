@@ -73,7 +73,7 @@ export default function VerifyEmail({ className, ...props }: React.ComponentProp
           <div className="flex items-center justify-center rounded-full">
             <Image
               src="/logo.svg"
-              alt="Account Manager logo"
+              alt="MAnasPM logo"
               width={120}
               height={120}
               className="size-30"

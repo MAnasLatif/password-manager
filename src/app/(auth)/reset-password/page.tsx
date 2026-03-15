@@ -4,8 +4,8 @@ import { Suspense } from "react";
 import ResetPasswordForm from "@/components/auth/reset-password-form";
 
 export const metadata: Metadata = {
-  title: "Reset Password | Account Manager",
-  description: "Set a new password for your Account Manager account",
+  title: "Reset Password | MAnasPM",
+  description: "Set a new password for your MAnasPM account",
 };
 
 export default function ResetPasswordPage() {

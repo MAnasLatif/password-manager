@@ -45,10 +45,10 @@ export function HeroUIShowcase() {
 
             <div className="space-y-4">
               <p className="text-accent text-sm font-semibold tracking-[0.32em] uppercase">
-                Account Manager
+                MAnasPM
               </p>
               <h1 className="text-foreground max-w-3xl text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
-                A polished UI foundation for the account management workspace.
+                A polished UI foundation for the password management workspace.
               </h1>
               <p className="text-muted max-w-2xl text-lg leading-8">
                 HeroUI is now wired into this Next.js app with Tailwind v4, so we can move from
@@ -60,7 +60,7 @@ export function HeroUIShowcase() {
               <Input
                 aria-label="Workspace email"
                 fullWidth
-                placeholder="team@accountmanager.com"
+                placeholder="team@manaspm.com"
                 variant="secondary"
               />
 

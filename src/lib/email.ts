@@ -54,7 +54,7 @@ interface SendEmailOptions {
 async function sendEmail({ to, subject, html, text, attachments }: SendEmailOptions) {
   const transporter = getTransporter();
 
-  const from = process.env.EMAIL_FROM ?? `"Account Manager" <no-reply@example.com>`;
+  const from = process.env.EMAIL_FROM ?? `"MAnasPM" <no-reply@example.com>`;
 
   return transporter.sendMail({ from, to, subject, html, text, attachments });
 }
@@ -69,12 +69,12 @@ export async function sendVerificationEmail(
 ) {
   return sendEmail({
     to,
-    subject: "Verify your email for Account Manager",
+    subject: "Verify your email for MAnasPM",
     html: emailVerificationTemplate(opts),
     attachments: [
       {
         cid: EMAIL_LOGO_CID,
-        filename: "account-manager-logo.png",
+        filename: "manaspm-logo.png",
         path: path.join(process.cwd(), "public", "apple-touch-icon.png"),
       },
     ],
@@ -87,12 +87,12 @@ export async function sendPasswordResetEmail(
 ) {
   return sendEmail({
     to,
-    subject: "Reset your Account Manager password",
+    subject: "Reset your MAnasPM password",
     html: passwordResetTemplate(opts),
     attachments: [
       {
         cid: EMAIL_LOGO_CID,
-        filename: "account-manager-logo.png",
+        filename: "manaspm-logo.png",
         path: path.join(process.cwd(), "public", "apple-touch-icon.png"),
       },
     ],
@@ -105,12 +105,12 @@ export async function sendWelcomeEmail(
 ) {
   return sendEmail({
     to,
-    subject: "Welcome to Account Manager",
+    subject: "Welcome to MAnasPM",
     html: welcomeTemplate(opts),
     attachments: [
       {
         cid: EMAIL_LOGO_CID,
-        filename: "account-manager-logo.png",
+        filename: "manaspm-logo.png",
         path: path.join(process.cwd(), "public", "apple-touch-icon.png"),
       },
     ],
@@ -128,12 +128,12 @@ export async function sendTeamInvitationEmail(
 ) {
   return sendEmail({
     to,
-    subject: `You've been invited to join ${opts.teamName} on Account Manager`,
+    subject: `You've been invited to join ${opts.teamName} on MAnasPM`,
     html: teamInvitationTemplate(opts),
     attachments: [
       {
         cid: EMAIL_LOGO_CID,
-        filename: "account-manager-logo.png",
+        filename: "manaspm-logo.png",
         path: path.join(process.cwd(), "public", "apple-touch-icon.png"),
       },
     ],

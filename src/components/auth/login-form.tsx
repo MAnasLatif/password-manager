@@ -147,13 +147,13 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
             <div className="flex items-center justify-center rounded-full">
               <Image
                 src="/logo.svg"
-                alt="Account Manager logo"
+                alt="MAnasPM logo"
                 width={120}
                 height={120}
                 className="size-30"
               />
             </div>
-            <h1 className="text-xl font-bold">Welcome back</h1>
+            <h1 className="text-xl font-bold">Welcome back to MAnasPM</h1>
             <p className="text-muted text-sm">
               Don&apos;t have an account?{" "}
               <Link href="/signup" className="text-accent hover:underline">

@@ -4,8 +4,8 @@ import { Suspense } from "react";
 import VerifyEmail from "@/components/auth/verify-email";
 
 export const metadata: Metadata = {
-  title: "Verify Email | Account Manager",
-  description: "Verify your Account Manager email address",
+  title: "Verify Email | MAnasPM",
+  description: "Verify your MAnasPM email address",
 };
 
 export default function VerifyEmailPage() {

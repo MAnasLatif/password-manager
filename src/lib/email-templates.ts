@@ -2,11 +2,11 @@
 // Shared layout
 // ---------------------------------------------------------------------------
 
-const APP_NAME = "Account Manager";
+const APP_NAME = "MAnasPM";
 const BRAND_COLOR = "#6f42c1";
 const BRAND_TINT = "#ede7f8";
 const BACKGROUND_COLOR = "#f3f2f8";
-export const EMAIL_LOGO_CID = "account-manager-logo";
+export const EMAIL_LOGO_CID = "manaspm-logo";
 
 function layout(content: string) {
   return /* html */ `<!DOCTYPE html>
@@ -188,11 +188,11 @@ export function welcomeTemplate({
     <h1 style="font-size:22px;font-weight:700;color:#18181b;margin-bottom:8px;">Welcome to ${APP_NAME} 🎉</h1>
     <p style="font-size:15px;color:#52525b;line-height:1.7;margin-bottom:4px;">Hi ${name},</p>
     <p style="font-size:15px;color:#52525b;line-height:1.7;">
-      Your account is ready. ${APP_NAME} gives you one place to manage saved accounts, organize access, and stay on top of account activity with your team.
+      Your account is ready. ${APP_NAME} gives you one place to manage saved passwords, organize access, and stay on top of account activity with your team.
     </p>
     <p style="font-size:15px;color:#52525b;line-height:1.7;margin-top:12px;">Here's what you can do:</p>
     <ul style="font-size:15px;color:#52525b;line-height:1.9;padding-left:20px;margin-top:8px;">
-      <li>Add and organize saved accounts</li>
+      <li>Add and organize saved passwords</li>
       <li>Manage personal and shared access</li>
       <li>Collaborate with teammates securely</li>
       <li>Review activity in one place</li>
