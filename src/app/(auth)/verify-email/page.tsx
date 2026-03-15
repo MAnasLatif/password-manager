@@ -1,0 +1,25 @@
+import type { Metadata } from "next";
+import { Suspense } from "react";
+
+import VerifyEmail from "@/components/auth/verify-email";
+
+export const metadata: Metadata = {
+  title: "Verify Email | Account Manager",
+  description: "Verify your Account Manager email address",
+};
+
+export default function VerifyEmailPage() {
+  return (
+    <div className="w-full max-w-sm">
+      <Suspense
+        fallback={
+          <div className="flex h-64 items-center justify-center">
+            <div className="border-t-accent h-8 w-8 animate-spin rounded-full border-4 border-transparent" />
+          </div>
+        }
+      >
+        <VerifyEmail />
+      </Suspense>
+    </div>
+  );
+}

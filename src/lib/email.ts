@@ -1,7 +1,10 @@
+import path from "node:path";
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
+import type Mail from "nodemailer/lib/mailer";
 
 import {
+  EMAIL_LOGO_CID,
   emailVerificationTemplate,
   passwordResetTemplate,
   teamInvitationTemplate,
@@ -45,14 +48,15 @@ interface SendEmailOptions {
   subject: string;
   html: string;
   text?: string;
+  attachments?: Mail.Attachment[];
 }
 
-async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
+async function sendEmail({ to, subject, html, text, attachments }: SendEmailOptions) {
   const transporter = getTransporter();
 
   const from = process.env.EMAIL_FROM ?? `"Account Manager" <no-reply@example.com>`;
 
-  return transporter.sendMail({ from, to, subject, html, text });
+  return transporter.sendMail({ from, to, subject, html, text, attachments });
 }
 
 // ---------------------------------------------------------------------------
@@ -65,8 +69,15 @@ export async function sendVerificationEmail(
 ) {
   return sendEmail({
     to,
-    subject: "Verify your email address",
+    subject: "Verify your email for Account Manager",
     html: emailVerificationTemplate(opts),
+    attachments: [
+      {
+        cid: EMAIL_LOGO_CID,
+        filename: "account-manager-logo.png",
+        path: path.join(process.cwd(), "public", "apple-touch-icon.png"),
+      },
+    ],
   });
 }
 
@@ -76,8 +87,15 @@ export async function sendPasswordResetEmail(
 ) {
   return sendEmail({
     to,
-    subject: "Reset your password",
+    subject: "Reset your Account Manager password",
     html: passwordResetTemplate(opts),
+    attachments: [
+      {
+        cid: EMAIL_LOGO_CID,
+        filename: "account-manager-logo.png",
+        path: path.join(process.cwd(), "public", "apple-touch-icon.png"),
+      },
+    ],
   });
 }
 
@@ -89,6 +107,13 @@ export async function sendWelcomeEmail(
     to,
     subject: "Welcome to Account Manager",
     html: welcomeTemplate(opts),
+    attachments: [
+      {
+        cid: EMAIL_LOGO_CID,
+        filename: "account-manager-logo.png",
+        path: path.join(process.cwd(), "public", "apple-touch-icon.png"),
+      },
+    ],
   });
 }
 
@@ -103,7 +128,14 @@ export async function sendTeamInvitationEmail(
 ) {
   return sendEmail({
     to,
-    subject: `You've been invited to join ${opts.teamName}`,
+    subject: `You've been invited to join ${opts.teamName} on Account Manager`,
     html: teamInvitationTemplate(opts),
+    attachments: [
+      {
+        cid: EMAIL_LOGO_CID,
+        filename: "account-manager-logo.png",
+        path: path.join(process.cwd(), "public", "apple-touch-icon.png"),
+      },
+    ],
   });
 }

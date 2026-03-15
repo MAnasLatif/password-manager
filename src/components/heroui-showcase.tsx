@@ -44,7 +44,7 @@ export function HeroUIShowcase() {
             </Chip>
 
             <div className="space-y-4">
-              <p className="text-primary text-sm font-semibold tracking-[0.32em] uppercase">
+              <p className="text-accent text-sm font-semibold tracking-[0.32em] uppercase">
                 Account Manager
               </p>
               <h1 className="text-foreground max-w-3xl text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
@@ -117,7 +117,7 @@ export function HeroUIShowcase() {
                   key={item}
                   className="flex items-start gap-3 rounded-2xl border border-black/5 bg-black/2 px-4 py-3 dark:border-white/10 dark:bg-white/5"
                 >
-                  <div className="bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                  <div className="bg-accent-soft text-accent flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
                     0{index + 1}
                   </div>
                   <p className="text-foreground text-sm leading-6">{item}</p>
@@ -144,7 +144,7 @@ export function HeroUIShowcase() {
               className="border border-white/70 bg-white/70 shadow-[0_18px_50px_-36px_rgba(15,23,42,0.5)] backdrop-blur dark:border-white/10 dark:bg-zinc-900/70 dark:shadow-[0_18px_50px_-36px_rgba(0,0,0,0.8)]"
             >
               <Card.Header className="gap-2">
-                <p className="text-primary text-xs font-semibold tracking-[0.24em] uppercase">
+                <p className="text-accent text-xs font-semibold tracking-[0.24em] uppercase">
                   {card.eyebrow}
                 </p>
                 <Card.Title className="text-xl">{card.title}</Card.Title>
