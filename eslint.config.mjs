@@ -31,7 +31,7 @@ const eslintConfig = defineConfig([
     },
   },
   eslintConfigPrettier,
-  globalIgnores([".next/**", "build/**", "coverage/**", "next-env.d.ts", "out/**"]),
+  globalIgnores([".next/**", "build/**", "coverage/**", "next-env.d.ts", "out/**", ".heroui-docs/**"]),
 ]);
 
 export default eslintConfig;

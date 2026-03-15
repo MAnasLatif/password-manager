@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, ButtonGroup, Card, Chip, Input, Link } from "@heroui/react";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 const capabilityCards = [
   {
@@ -32,9 +33,9 @@ const integrationChecks = [
 export function HeroUIShowcase() {
   return (
     <main className="relative isolate overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(14,116,144,0.18),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(244,114,182,0.14),transparent_25%),linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,250,252,0.98))]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64 bg-[linear-gradient(180deg,rgba(15,23,42,0.06),transparent)]" />
-
+      <header className="absolute inset-x-0 top-0 z-10 flex h-16 items-center justify-end px-6">
+        <ThemeSwitcher />
+      </header>
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center gap-10 px-6 py-16 sm:px-8 lg:px-10">
         <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-6">
@@ -88,7 +89,7 @@ export function HeroUIShowcase() {
             </div>
           </div>
 
-          <Card className="border border-white/70 bg-white/75 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.45)] backdrop-blur-xl">
+          <Card className="border border-white/70 bg-white/75 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.45)] backdrop-blur-xl dark:border-white/10 dark:bg-zinc-900/75 dark:shadow-[0_24px_80px_-32px_rgba(0,0,0,0.8)]">
             <Card.Header className="gap-4">
               <div className="flex flex-wrap gap-2">
                 <Chip color="accent" size="sm" variant="soft">
@@ -112,7 +113,7 @@ export function HeroUIShowcase() {
               {integrationChecks.map((item, index) => (
                 <div
                   key={item}
-                  className="flex items-start gap-3 rounded-2xl border border-black/5 bg-black/2 px-4 py-3"
+                  className="flex items-start gap-3 rounded-2xl border border-black/5 bg-black/2 px-4 py-3 dark:border-white/10 dark:bg-white/5"
                 >
                   <div className="bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
                     0{index + 1}
@@ -138,7 +139,7 @@ export function HeroUIShowcase() {
           {capabilityCards.map((card) => (
             <Card
               key={card.title}
-              className="border border-white/70 bg-white/70 shadow-[0_18px_50px_-36px_rgba(15,23,42,0.5)] backdrop-blur"
+              className="border border-white/70 bg-white/70 shadow-[0_18px_50px_-36px_rgba(15,23,42,0.5)] backdrop-blur dark:border-white/10 dark:bg-zinc-900/70 dark:shadow-[0_18px_50px_-36px_rgba(0,0,0,0.8)]"
             >
               <Card.Header className="gap-2">
                 <p className="text-primary text-xs font-semibold tracking-[0.24em] uppercase">
