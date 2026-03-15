@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, ButtonGroup, Card, Chip, Input, Link } from "@heroui/react";
-import { ThemeSwitcher } from "./ThemeSwitcher";
+import { ThemeToggle } from "./ThemeSwitcher";
 
 const capabilityCards = [
   {
@@ -34,7 +34,7 @@ export function HeroUIShowcase() {
   return (
     <main className="relative isolate overflow-hidden">
       <header className="absolute inset-x-0 top-0 z-10 flex h-16 items-center justify-end px-6">
-        <ThemeSwitcher />
+        <ThemeToggle />
       </header>
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center gap-10 px-6 py-16 sm:px-8 lg:px-10">
         <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
@@ -66,8 +66,10 @@ export function HeroUIShowcase() {
 
               <ButtonGroup className="w-full sm:w-auto" variant="secondary">
                 <Button>Preview dashboard</Button>
-                <ButtonGroup.Separator />
-                <Button>Build next screen</Button>
+                <Button>
+                  <ButtonGroup.Separator />
+                  Build next screen
+                </Button>
               </ButtonGroup>
             </div>
 
