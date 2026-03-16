@@ -41,11 +41,11 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
+/**
+ * Check if a pathname is a protected route
+ */
 function isProtectedRoute(pathname: string): boolean {
-  return PROTECTED_PREFIXES.some((prefix) =>
-    // '/' must be an exact match — startsWith('/') would match every route
-    prefix === "/" ? pathname === "/" : pathname.startsWith(prefix),
-  );
+  return PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 }
 
 export const config = {

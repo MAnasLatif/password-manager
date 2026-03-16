@@ -112,10 +112,15 @@ const menuItems: SidebarSection[] = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const getItemHref = (item: SidebarItemType) =>
-    `/${item.type && `${item.type}/`}${item.slug || ""}`;
+  const normalizePath = (value: string) => value.replace(/\/+$/, "") || "/";
+  const getItemHref = (item: SidebarItemType) => {
+    const segments = [item.type, item.slug].filter(Boolean);
 
-  const isActive = (item: SidebarItemType) => pathname === getItemHref(item);
+    return segments.length ? `/${segments.join("/")}` : "/";
+  };
+
+  const isActive = (item: SidebarItemType) =>
+    normalizePath(pathname) === normalizePath(getItemHref(item));
 
   return (
     <aside className="w-full max-w-52 shrink-0 px-2 py-4">
