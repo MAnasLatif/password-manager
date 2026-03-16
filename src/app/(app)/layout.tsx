@@ -1,4 +1,5 @@
 import { AppHeader } from "@/components/app-header";
+import { AppSidebar } from "@/components/app-sidebar";
 import { AppStateProvider } from "@/contexts/app-state";
 import type { Metadata } from "next";
 
@@ -16,7 +17,10 @@ export default function AppLayout({
     <AppStateProvider>
       <div className="flex min-h-screen flex-col">
         <AppHeader />
-        <main className="flex-1">{children}</main>
+        <div className="flex flex-1 gap-4">
+          <AppSidebar />
+          <main className="flex-1 p-2">{children}</main>
+        </div>
       </div>
     </AppStateProvider>
   );
