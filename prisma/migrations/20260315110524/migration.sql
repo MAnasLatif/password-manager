@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "VaultEntryVisibility" AS ENUM ('PRIVATE', 'GROUP', 'SHARED');
+CREATE TYPE "VaultEntryVisibility" AS ENUM ('PRIVATE', 'COLLECTION', 'SHARED');
 
 -- CreateEnum
 CREATE TYPE "CustomFieldType" AS ENUM ('TEXT', 'TEXTAREA', 'NUMBER', 'DATE', 'EMAIL', 'URL', 'SECRET', 'IMAGE', 'KEY_VALUE');
@@ -11,10 +11,10 @@ CREATE TYPE "SharePermission" AS ENUM ('VIEW_METADATA', 'REVEAL_PASSWORD', 'COPY
 CREATE TYPE "TeamRole" AS ENUM ('OWNER', 'ADMIN', 'MEMBER');
 
 -- CreateEnum
-CREATE TYPE "GroupRole" AS ENUM ('OWNER', 'MEMBER');
+CREATE TYPE "CollectionRole" AS ENUM ('OWNER', 'MEMBER');
 
 -- CreateEnum
-CREATE TYPE "ActivityAction" AS ENUM ('ACCOUNT_CREATED', 'ACCOUNT_UPDATED', 'ACCOUNT_ARCHIVED', 'ACCOUNT_DELETED', 'PASSWORD_VIEWED', 'PASSWORD_COPIED', 'PASSWORD_CHANGED', 'ACCOUNT_SHARED', 'SHARE_REVOKED', 'ACCOUNT_MOVED', 'GROUP_CREATED', 'GROUP_UPDATED', 'GROUP_DELETED', 'TEAM_CREATED', 'TEAM_UPDATED', 'TEAM_DELETED', 'MEMBER_ADDED', 'MEMBER_REMOVED');
+CREATE TYPE "ActivityAction" AS ENUM ('ACCOUNT_CREATED', 'ACCOUNT_UPDATED', 'ACCOUNT_ARCHIVED', 'ACCOUNT_DELETED', 'PASSWORD_VIEWED', 'PASSWORD_COPIED', 'PASSWORD_CHANGED', 'ACCOUNT_SHARED', 'SHARE_REVOKED', 'ACCOUNT_MOVED', 'COLLECTION_CREATED', 'COLLECTION_UPDATED', 'COLLECTION_DELETED', 'TEAM_CREATED', 'TEAM_UPDATED', 'TEAM_DELETED', 'MEMBER_ADDED', 'MEMBER_REMOVED');
 
 -- CreateTable
 CREATE TABLE "user" (
@@ -125,7 +125,7 @@ CREATE TABLE "vault_entries" (
     "notes" TEXT,
     "iconKey" TEXT,
     "visibility" "VaultEntryVisibility" NOT NULL DEFAULT 'PRIVATE',
-    "groupId" TEXT,
+    "collectionId" TEXT,
     "archived" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -158,7 +158,7 @@ CREATE TABLE "tags" (
 );
 
 -- CreateTable
-CREATE TABLE "groups" (
+CREATE TABLE "collections" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
@@ -166,18 +166,18 @@ CREATE TABLE "groups" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "groups_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "collections_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "group_members" (
+CREATE TABLE "collection_members" (
     "id" TEXT NOT NULL,
-    "groupId" TEXT NOT NULL,
+    "collectionId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "role" "GroupRole" NOT NULL DEFAULT 'MEMBER',
+    "role" "CollectionRole" NOT NULL DEFAULT 'MEMBER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "group_members_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "collection_members_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -280,7 +280,7 @@ CREATE UNIQUE INDEX "platform_presets_name_key" ON "platform_presets"("name");
 CREATE INDEX "vault_entries_userId_idx" ON "vault_entries"("userId");
 
 -- CreateIndex
-CREATE INDEX "vault_entries_groupId_idx" ON "vault_entries"("groupId");
+CREATE INDEX "vault_entries_collectionId_idx" ON "vault_entries"("collectionId");
 
 -- CreateIndex
 CREATE INDEX "vault_entries_platformPresetId_idx" ON "vault_entries"("platformPresetId");
@@ -301,10 +301,10 @@ CREATE INDEX "tags_name_idx" ON "tags"("name");
 CREATE UNIQUE INDEX "tags_vaultEntryId_name_key" ON "tags"("vaultEntryId", "name");
 
 -- CreateIndex
-CREATE INDEX "groups_userId_idx" ON "groups"("userId");
+CREATE INDEX "collections_userId_idx" ON "collections"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "group_members_groupId_userId_key" ON "group_members"("groupId", "userId");
+CREATE UNIQUE INDEX "collection_members_collectionId_userId_key" ON "collection_members"("collectionId", "userId");
 
 -- CreateIndex
 CREATE INDEX "teams_ownerId_idx" ON "teams"("ownerId");
@@ -361,7 +361,7 @@ ALTER TABLE "vault_entries" ADD CONSTRAINT "vault_entries_userId_fkey" FOREIGN K
 ALTER TABLE "vault_entries" ADD CONSTRAINT "vault_entries_platformPresetId_fkey" FOREIGN KEY ("platformPresetId") REFERENCES "platform_presets"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "vault_entries" ADD CONSTRAINT "vault_entries_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "groups"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "vault_entries" ADD CONSTRAINT "vault_entries_collectionId_fkey" FOREIGN KEY ("collectionId") REFERENCES "collections"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "vault_entry_custom_fields" ADD CONSTRAINT "vault_entry_custom_fields_vaultEntryId_fkey" FOREIGN KEY ("vaultEntryId") REFERENCES "vault_entries"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -370,13 +370,13 @@ ALTER TABLE "vault_entry_custom_fields" ADD CONSTRAINT "vault_entry_custom_field
 ALTER TABLE "tags" ADD CONSTRAINT "tags_vaultEntryId_fkey" FOREIGN KEY ("vaultEntryId") REFERENCES "vault_entries"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "groups" ADD CONSTRAINT "groups_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "collections" ADD CONSTRAINT "collections_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "group_members" ADD CONSTRAINT "group_members_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "groups"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "collection_members" ADD CONSTRAINT "collection_members_collectionId_fkey" FOREIGN KEY ("collectionId") REFERENCES "collections"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "group_members" ADD CONSTRAINT "group_members_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "collection_members" ADD CONSTRAINT "collection_members_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "teams" ADD CONSTRAINT "teams_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;

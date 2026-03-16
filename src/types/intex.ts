@@ -1,5 +1,5 @@
 export interface SidebarItem {
-  type?: "group" | "team";
+  type?: "collection" | "team";
   slug: string;
   icon: string;
   id: string;

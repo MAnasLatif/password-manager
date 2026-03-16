@@ -9,10 +9,10 @@ The web app will allow users to:
 - sign up and log in
 - unlock their vault with PIN / passkey / biometric-capable browser flow
 - create and manage saved accounts
-- organize accounts into personal or group spaces
+- organize accounts into personal or collection spaces
 - share accounts with users and teams
 - view shared accounts
-- move accounts between personal and group ownership
+- move accounts between personal and collection ownership
 - manage audit logs and password history
 - use a clean, simple UI inspired by Material-style design
 
@@ -30,7 +30,7 @@ It includes:
 - vault unlock flow
 - dashboard
 - account management
-- groups and teams
+- collections and teams
 - sharing UI
 - shared-with-me section
 - audit logs
@@ -101,7 +101,7 @@ The web app is divided into these main modules:
 3. Dashboard
 4. Account Management
 5. Custom Fields
-6. Group Management
+6. Collection Management
 7. Team Management
 8. Sharing Management
 9. Shared Vault View
@@ -121,7 +121,7 @@ Can:
 
 - manage own vault
 - create personal accounts
-- create groups
+- create collections
 - share accounts
 - receive shared accounts
 - create teams if allowed by product rules
@@ -133,7 +133,7 @@ Can:
 - access accounts shared with their team
 - view permissions based on access rules
 
-## 6.3 Team Owner / Group Owner
+## 6.3 Team Owner / Collection Owner
 
 Can:
 
@@ -198,8 +198,8 @@ Can:
 2. Clicks “Move”
 3. Selects destination:
    - personal
-   - another group
-   - team-owned group if supported
+   - another collection
+   - team-owned collection if supported
 
 4. System updates ownership mapping
 
@@ -269,7 +269,7 @@ Separate account login from vault decryption authorization.
 ### Dashboard sections
 
 - Personal Accounts
-- Groups
+- Collections
 - Teams
 - Shared With Me
 - Recent Activity
@@ -296,7 +296,7 @@ Separate account login from vault decryption authorization.
 - notes
 - icon key or preset branding reference
 - visibility scope
-- group_id nullable
+- collection_id nullable
 - created_at
 - updated_at
 
@@ -372,23 +372,23 @@ Allow structured additional details per account.
 
 ---
 
-## 8.7 Group Management Module
+## 8.7 Collection Management Module
 
 ### Features
 
-- create group
-- rename group
-- delete group
+- create collection
+- rename collection
+- delete collection
 - add description
-- assign accounts to group
-- keep group private if no members added
+- assign accounts to collection
+- keep collection private if no members added
 
 ### Rules
 
-- a group may be personal-only
-- a group may later become shared
-- accounts can be moved in or out of group
-- deleting a group must not delete accounts automatically unless confirmed
+- a collection may be personal-only
+- a collection may later become shared
+- accounts can be moved in or out of collection
+- deleting a collection must not delete accounts automatically unless confirmed
 
 ---
 
@@ -453,7 +453,7 @@ Allow structured additional details per account.
 
 ### UI structure
 
-User sees shared content grouped by source, for example:
+User sees shared content organized by source, for example:
 
 - Shared by Anas
 - Shared by Ahmed
@@ -475,9 +475,9 @@ User sees shared content grouped by source, for example:
 
 ### Supported moves
 
-- personal → group
-- group → personal
-- one group → another group
+- personal → collection
+- collection → personal
+- one collection → another collection
 
 ### Requirements
 
@@ -522,7 +522,7 @@ Audit important events.
 - account shared
 - share revoked
 - account moved
-- group created
+- collection created
 - team created
 - member added
 - member removed
@@ -547,7 +547,7 @@ Audit important events.
 
 - global search
 - filter by platform
-- filter by group
+- filter by collection
 - filter by owner/source
 - filter by shared vs personal
 - sort by updated time / created time / name
@@ -684,12 +684,12 @@ The web app requires these API domains:
 - copy password event log
 - move account
 
-## 11.4 Group APIs
+## 11.4 Collection APIs
 
-- create group
-- update group
-- delete group
-- list groups
+- create collection
+- update collection
+- delete collection
+- list collections
 
 ## 11.5 Team APIs
 
@@ -728,7 +728,7 @@ The web app requires these API domains:
 
 - dashboard
 - personal vault
-- group detail
+- collection detail
 - teams list
 - team detail
 - shared with me
@@ -740,7 +740,7 @@ The web app requires these API domains:
 ## 12.3 Modal / Drawer Interfaces
 
 - unlock vault
-- add group
+- add collection
 - create team
 - share account
 - move account
@@ -782,8 +782,8 @@ Main entities:
 - passkeys
 - accounts
 - account_custom_fields
-- groups
-- group_members
+- collections
+- collection_members
 - teams
 - team_members
 - account_shares
@@ -802,7 +802,7 @@ apps/web
 │  ├─ (auth)
 │  ├─ dashboard
 │  ├─ vault
-│  ├─ groups
+│  ├─ collections
 │  ├─ teams
 │  ├─ shared
 │  ├─ settings
@@ -811,7 +811,7 @@ apps/web
 │  ├─ ui
 │  ├─ layout
 │  ├─ vault
-│  ├─ groups
+│  ├─ collections
 │  ├─ teams
 │  └─ shared
 ├─ lib
@@ -857,11 +857,11 @@ Here is the full web app functionality list, one by one:
 22. Use platform presets
 23. Add custom fields
 24. Add custom field label/value
-25. Group accounts
-26. Create personal group
-27. Rename group
-28. Delete group
-29. Move account to group
+25. Organize accounts into collections
+26. Create personal collection
+27. Rename collection
+28. Delete collection
+29. Move account to collection
 30. Move account back to personal
 31. Create team
 32. Add team members
@@ -871,7 +871,7 @@ Here is the full web app functionality list, one by one:
 36. Share account with one team
 37. Share account with multiple teams
 38. View “Shared With Me”
-39. View grouped shared sources
+39. View shared sources by owner
 40. Revoke sharing
 41. Password history tracking
 42. Activity log tracking
@@ -911,7 +911,7 @@ It will provide:
 - secure login and vault unlock
 - encrypted password storage
 - structured account management
-- personal and group organization
+- personal and collection organization
 - user and team sharing
 - shared vault visibility
 - password history

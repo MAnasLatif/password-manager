@@ -49,7 +49,7 @@ const data: SidebarItemType[] = [
   },
   {
     id: "work",
-    type: "group",
+    type: "collection",
     label: "Work",
     slug: "work",
     icon: "BriefcaseBusiness",
@@ -58,7 +58,7 @@ const data: SidebarItemType[] = [
   },
   {
     id: "personal",
-    type: "group",
+    type: "collection",
     label: "Personal",
     slug: "personal",
     icon: "UserRound",
@@ -67,7 +67,7 @@ const data: SidebarItemType[] = [
   },
   {
     id: "development",
-    type: "group",
+    type: "collection",
     label: "Development",
     slug: "development",
     icon: "Code2",
@@ -102,13 +102,20 @@ interface SidebarSection {
 
 const menuItems: SidebarSection[] = [
   { id: "main", items: data.filter((item) => !item.type) },
-  { id: "groups", title: "Groups", items: data.filter((item) => item.type === "group") },
+  {
+    id: "collections",
+    title: "Collections",
+    items: data.filter((item) => item.type === "collection"),
+  },
   { id: "teams", title: "Teams", items: data.filter((item) => item.type === "team") },
 ];
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const isActive = (slug: string) => pathname === slug;
+  const getItemHref = (item: SidebarItemType) =>
+    `/${item.type && `${item.type}/`}${item.slug || ""}`;
+
+  const isActive = (item: SidebarItemType) => pathname === getItemHref(item);
 
   return (
     <aside className="w-full max-w-52 shrink-0 px-2 py-4">
@@ -135,11 +142,11 @@ export function AppSidebar() {
                 return (
                   <Link
                     key={item.id}
-                    href={`/${item.type ? `${item.type}/` : ""}${item.slug || ""}`}
-                    aria-current={isActive(item.slug) ? "page" : undefined}
+                    href={getItemHref(item)}
+                    aria-current={isActive(item) ? "page" : undefined}
                   >
                     <Button
-                      variant={isActive(item.slug) ? "primary" : "ghost"}
+                      variant={isActive(item) ? "primary" : "ghost"}
                       className="w-full justify-start gap-3"
                       size="sm"
                     >
