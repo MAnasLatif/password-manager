@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "My Vault",
-  description: "HeroUI-powered foundation for the MAnasPM application.",
+  description: "",
 };
 
 export default function AppLayout({
@@ -17,9 +17,9 @@ export default function AppLayout({
     <AppStateProvider>
       <div className="flex min-h-screen flex-col">
         <AppHeader />
-        <div className="flex flex-1 gap-4">
+        <div className="flex flex-1 justify-between gap-4">
           <AppSidebar />
-          <main className="flex-1 p-2">{children}</main>
+          {children}
         </div>
       </div>
     </AppStateProvider>

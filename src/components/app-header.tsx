@@ -40,9 +40,9 @@ export function AppHeader() {
     : "?";
 
   return (
-    <header className="flex h-14 items-center justify-between gap-4 px-8">
+    <header className="flex items-center justify-between gap-4 p-4">
       {/* Logo + Brand */}
-      <Link href="/" className="flex shrink-0 items-center gap-2.5">
+      <Link href="/" className="flex max-w-48 flex-1 shrink-0 items-center gap-2.5">
         <Image src="/logo.svg" alt="MAAnasVault logo" width={28} height={28} className="size-7" />
         <div className="flex flex-col leading-none">
           <span className="text-sm font-semibold">MAnasPM</span>
@@ -51,7 +51,7 @@ export function AppHeader() {
       </Link>
 
       {/* Search */}
-      <div className="flex max-w-lg flex-1 items-center gap-4">
+      <div className="flex max-w-2xl flex-1 items-center gap-4">
         <SearchField
           variant="secondary"
           value={inputValue}
