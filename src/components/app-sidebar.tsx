@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@heroui/react";
-import { Plus, User, Users } from "lucide-react";
+import { Accordion, Button } from "@heroui/react";
+import { ChevronDown, Plus, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -32,21 +32,6 @@ const Icons: {
 };
 
 const data: SidebarItemType[] = [
-  {
-    id: "vault",
-    label: "My Vault",
-    slug: "",
-    icon: "User",
-    description:
-      "Your personal vault for all credentials and notes. Access your most important items and recent activity here.",
-  },
-  {
-    id: "shared",
-    label: "Shared With Me",
-    slug: "shared",
-    icon: "Users",
-    description: "Credentials and notes shared with you by teammates across active projects.",
-  },
   {
     id: "work",
     type: "collection",
@@ -95,75 +80,111 @@ const data: SidebarItemType[] = [
 ];
 
 interface SidebarSection {
-  id: string;
-  title?: string;
+  title: string;
   items: SidebarItemType[];
 }
 
 const menuItems: SidebarSection[] = [
-  { id: "main", items: data.filter((item) => !item.type) },
   {
-    id: "collections",
     title: "Collections",
     items: data.filter((item) => item.type === "collection"),
   },
-  { id: "teams", title: "Teams", items: data.filter((item) => item.type === "team") },
+  { title: "Teams", items: data.filter((item) => item.type === "team") },
 ];
 
 export function AppSidebar() {
   const pathname = usePathname();
   const normalizePath = (value: string) => value.replace(/\/+$/, "") || "/";
-  const getItemHref = (item: SidebarItemType) => {
-    const segments = [item.type, item.slug].filter(Boolean);
 
+  const getItemHref = (section: SidebarSection, item: SidebarItemType) => {
+    const segments = [section.title[0].toLocaleLowerCase(), item.slug].filter(Boolean);
     return segments.length ? `/${segments.join("/")}` : "/";
   };
 
-  const isActive = (item: SidebarItemType) =>
-    normalizePath(pathname) === normalizePath(getItemHref(item));
+  const isActive = (section: SidebarSection, item: SidebarItemType) =>
+    normalizePath(pathname) === normalizePath(getItemHref(section, item));
 
   return (
     <aside className="w-full max-w-52 shrink-0 px-2 py-4">
-      <nav className="flex h-full flex-col gap-2">
-        {menuItems.map((section) => (
-          <div key={section.id}>
-            {section.title && (
-              <div className="flex items-center justify-between px-3">
-                <p className="text-muted text-xs uppercase">{section.title}</p>
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="ghost"
-                  aria-label={`Add ${section.title.slice(0, -1)}`}
-                >
-                  <Plus className="text-muted size-4" />
-                </Button>
-              </div>
-            )}
-
-            <div className="flex flex-col gap-2">
-              {section?.items?.map((item) => {
-                const ICon = Icons[item.icon];
-                return (
-                  <Link
-                    key={item.id}
-                    href={getItemHref(item)}
-                    aria-current={isActive(item) ? "page" : undefined}
-                  >
+      <nav className="flex h-full flex-col gap-1">
+        <Link href="/" aria-current={normalizePath(pathname) === "/" ? "page" : undefined}>
+          <Button
+            variant={normalizePath(pathname) === "/" ? "primary" : "ghost"}
+            className="w-full justify-start gap-3"
+            size="sm"
+          >
+            <User />
+            My Vault
+          </Button>
+        </Link>
+        <Link
+          href="/shared"
+          aria-current={normalizePath(pathname) === "/shared" ? "page" : undefined}
+          className="mb-2"
+        >
+          <Button
+            variant={normalizePath(pathname) === "/shared" ? "primary" : "ghost"}
+            className="w-full justify-start gap-3"
+            size="sm"
+          >
+            <Users />
+            Shared With Me
+          </Button>
+        </Link>
+        {menuItems.map((section) => {
+          // Render sections with accordion
+          return (
+            <div key={section.title}>
+              <Accordion
+                className="w-full"
+                allowsMultipleExpanded
+                defaultExpandedKeys={[section.title]}
+              >
+                <Accordion.Item id={section.title}>
+                  <Accordion.Heading>
+                    <Accordion.Trigger className="flex w-full items-center justify-between rounded-3xl px-3 py-1">
+                      <span className="text-muted text-xs uppercase">{section.title}</span>
+                      <Accordion.Indicator className="text-muted">
+                        <ChevronDown className="size-4" />
+                      </Accordion.Indicator>
+                    </Accordion.Trigger>
                     <Button
-                      variant={isActive(item) ? "primary" : "ghost"}
-                      className="w-full justify-start gap-3"
+                      isIconOnly
                       size="sm"
+                      variant="ghost"
+                      aria-label={`Add ${section?.title?.slice(0, -1)}`}
                     >
-                      <ICon />
-                      <span>{item.label}</span>
+                      <Plus className="text-muted size-4" />
                     </Button>
-                  </Link>
-                );
-              })}
+                  </Accordion.Heading>
+                  <Accordion.Panel>
+                    <Accordion.Body className="flex flex-col gap-2 px-0 pt-2 pb-4">
+                      {section?.items?.map((item) => {
+                        const ICon = Icons[item.icon];
+                        return (
+                          <Link
+                            key={item.id}
+                            href={getItemHref(section, item)}
+                            aria-current={isActive(section, item) ? "page" : undefined}
+                          >
+                            <Button
+                              variant={isActive(section, item) ? "primary" : "ghost"}
+                              className="w-full justify-start gap-3"
+                              size="sm"
+                            >
+                              <ICon />
+                              <span>{item.label}</span>
+                            </Button>
+                          </Link>
+                        );
+                      })}
+                    </Accordion.Body>
+                  </Accordion.Panel>
+                </Accordion.Item>
+              </Accordion>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </nav>
     </aside>
   );
