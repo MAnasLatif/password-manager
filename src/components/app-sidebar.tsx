@@ -4,6 +4,7 @@ import { Accordion, Button } from "@heroui/react";
 import { ChevronDown, Plus, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLocalStorage, useIsClient } from "usehooks-ts";
 
 import type { LucideIcon } from "lucide-react";
 import type { SidebarItem as SidebarItemType } from "@/types";
@@ -95,6 +96,18 @@ const menuItems: SidebarSection[] = [
 export function AppSidebar() {
   const pathname = usePathname();
   const normalizePath = (value: string) => value.replace(/\/+$/, "") || "/";
+  const isClient = useIsClient();
+
+  // Store expanded accordion sections in localStorage
+  const [expandedKeysArray, setExpandedKeysArray] = useLocalStorage<string[]>(
+    "sidebar-expanded-sections",
+    menuItems.map((section) => section.title),
+  );
+
+  // Use default expanded keys during SSR/hydration, then switch to localStorage value
+  const expandedKeys = isClient
+    ? new Set(expandedKeysArray)
+    : new Set(menuItems.map((section) => section.title));
 
   const getItemHref = (section: SidebarSection, item: SidebarItemType) => {
     const segments = [section.title[0].toLocaleLowerCase(), item.slug].filter(Boolean);
@@ -138,7 +151,8 @@ export function AppSidebar() {
               <Accordion
                 className="w-full"
                 allowsMultipleExpanded
-                defaultExpandedKeys={[section.title]}
+                expandedKeys={expandedKeys}
+                onExpandedChange={(keys) => setExpandedKeysArray(Array.from(keys).map(String))}
               >
                 <Accordion.Item id={section.title}>
                   <Accordion.Heading>
