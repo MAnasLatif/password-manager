@@ -80,29 +80,26 @@ export function AppHeader() {
         <Dropdown>
           <Dropdown.Trigger className="rounded-full">
             <Avatar>
-              {session?.user?.image && (
-                <Avatar.Image src={session.user.image} alt={session.user.name ?? "User"} />
-              )}
+              <Avatar.Image src={session?.user?.image ?? ""} alt={session?.user?.name ?? "User"} />
               <Avatar.Fallback delayMs={0}>{userInitials}</Avatar.Fallback>
             </Avatar>
           </Dropdown.Trigger>
           <Dropdown.Popover>
-            {session?.user && (
-              <div className="px-3 pt-3 pb-2">
-                <div className="flex items-center gap-2">
-                  <Avatar>
-                    {session.user.image && (
-                      <Avatar.Image src={session.user.image} alt={session.user.name ?? "User"} />
-                    )}
-                    <Avatar.Fallback delayMs={0}>{userInitials}</Avatar.Fallback>
-                  </Avatar>
-                  <div className="flex flex-col gap-0">
-                    <p className="text-sm leading-5 font-medium">{session.user.name}</p>
-                    <p className="text-muted text-xs leading-none">{session.user.email}</p>
-                  </div>
+            <div className="px-3 pt-3 pb-2">
+              <div className="flex items-center gap-2">
+                <Avatar>
+                  <Avatar.Image
+                    src={session?.user?.image ?? ""}
+                    alt={session?.user?.name ?? "User"}
+                  />
+                  <Avatar.Fallback delayMs={0}>{userInitials}</Avatar.Fallback>
+                </Avatar>
+                <div className="flex flex-col gap-0">
+                  <p className="text-sm leading-5 font-medium">{session?.user?.name ?? "Guest"}</p>
+                  <p className="text-muted text-xs leading-none">{session?.user?.email ?? ""}</p>
                 </div>
               </div>
-            )}
+            </div>
             <Dropdown.Menu
               onAction={async (key) => {
                 if (key === "profile") router.push("/profile");
