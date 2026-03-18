@@ -2,7 +2,7 @@
 
 import useAppState from "@/contexts/app-state";
 import { signOut, useSession } from "@/lib/auth-client";
-import { Avatar, Button, Dropdown, Label, SearchField } from "@heroui/react";
+import { Avatar, Button, Dropdown, Label, SearchField, Tooltip } from "@heroui/react";
 import { ThemeToggle } from "@/components/ThemeSwitcher";
 import { LogOut, Plus, Settings, User } from "lucide-react";
 import Image from "next/image";
@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 
 export function AppHeader() {
-  const { searchPlaceholder, searchQuery, setSearchQuery } = useAppState();
+  const { searchPlaceholder, searchQuery, setSearchQuery, addButton } = useAppState();
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -64,11 +64,16 @@ export function AppHeader() {
           </SearchField.Group>
         </SearchField>
         {/* Add new */}
-        <Link href="/new">
-          <Button isIconOnly variant="secondary" aria-label="Add new">
-            <Plus className="size-4" />
-          </Button>
-        </Link>
+        <Tooltip delay={0}>
+          <Link href={addButton.on}>
+            <Button isIconOnly variant="secondary" aria-label={addButton.tooltip}>
+              <Plus className="size-4" />
+            </Button>
+          </Link>
+          <Tooltip.Content>
+            <p>{addButton.tooltip}</p>
+          </Tooltip.Content>
+        </Tooltip>
       </div>
 
       {/* Actions */}
