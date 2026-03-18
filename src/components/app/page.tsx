@@ -1,5 +1,6 @@
 "use client";
 
+import useAppState from "@/contexts/app-state";
 import type { Platform } from "@/types";
 import { getFaviconUrl, getInitials, stringToColor } from "@/utils";
 import { Avatar } from "@heroui/react";
@@ -11,6 +12,9 @@ export default function HomePage({
 }: Readonly<{
   platforms: Platform[];
 }>) {
+  const { setSearchPlaceholder } = useAppState();
+  setSearchPlaceholder("Search platforms");
+
   return (
     <div className="flex flex-col gap-1">
       {platforms.map((platform, index) => (

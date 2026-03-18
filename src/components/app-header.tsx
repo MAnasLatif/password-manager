@@ -1,7 +1,6 @@
 "use client";
 
 import useAppState from "@/contexts/app-state";
-import { useQueryParams } from "@/hooks/use-query-params";
 import { signOut, useSession } from "@/lib/auth-client";
 import { Avatar, Button, Dropdown, Label, SearchField } from "@heroui/react";
 import { ThemeToggle } from "@/components/ThemeSwitcher";
@@ -13,19 +12,18 @@ import { useEffect, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 
 export function AppHeader() {
-  const { searchPlaceholder } = useAppState();
-  const { get, set, remove } = useQueryParams();
+  const { searchPlaceholder, searchQuery, setSearchQuery } = useAppState();
   const router = useRouter();
   const { data: session } = useSession();
 
-  const [inputValue, setInputValue] = useState(get("search") ?? "");
+  const [inputValue, setInputValue] = useState(searchQuery);
   const [debouncedValue] = useDebounceValue(inputValue, 300);
 
   useEffect(() => {
     if (debouncedValue) {
-      set("search", debouncedValue);
+      setSearchQuery(debouncedValue);
     } else {
-      remove("search");
+      setSearchQuery("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedValue]);

@@ -9,43 +9,36 @@ export const metadata: Metadata = {
 
 const platforms: Platform[] = [
   {
-    id: "1",
     name: "Google",
     domain: "google.com",
     count: 3,
   },
   {
-    id: "2",
     name: "GitHub",
     domain: "github.com",
     count: 2,
   },
   {
-    id: "3",
     name: "Netflix",
     domain: "netflix.com",
     count: 1,
   },
   {
-    id: "4",
     name: "Figma",
     domain: "figma.com",
     count: 4,
   },
   {
-    id: "5",
     name: "LinkedIn",
     domain: "linkedin.com",
     count: 2,
   },
   {
-    id: "6",
     name: "AWS",
     domain: "aws.amazon.com",
     count: 1,
   },
   {
-    id: "7",
     name: "Upvave",
     domain: "upvave.com",
     count: 1,
