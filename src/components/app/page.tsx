@@ -6,6 +6,7 @@ import { getFaviconUrl, getInitials, stringToColor } from "@/utils";
 import { Avatar } from "@heroui/react";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function HomePage({
   platforms,
@@ -13,7 +14,10 @@ export default function HomePage({
   platforms: Platform[];
 }>) {
   const { setSearchPlaceholder } = useAppState();
-  setSearchPlaceholder("Search platforms");
+
+  useEffect(() => {
+    setSearchPlaceholder("Search platforms");
+  }, [setSearchPlaceholder]);
 
   return (
     <div className="flex flex-col gap-1">

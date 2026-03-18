@@ -1,7 +1,8 @@
 "use client";
 
-import { Toast } from "@heroui/react";
+import { RouterProvider, Toast } from "@heroui/react";
 import { ThemeProvider } from "next-themes";
+import { useRouter } from "next/navigation";
 import NextTopLoader from "nextjs-toploader";
 
 export default function Provider({
@@ -9,11 +10,15 @@ export default function Provider({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const router = useRouter();
+
   return (
-    <ThemeProvider attribute={["class", "data-theme"]} defaultTheme="system" enableSystem>
-      <NextTopLoader color="#6f42c1" showSpinner={false} />
-      <Toast.Provider />
-      {children}
-    </ThemeProvider>
+    <RouterProvider navigate={router.push}>
+      <ThemeProvider attribute={["class", "data-theme"]} defaultTheme="system" enableSystem>
+        <NextTopLoader color="#6f42c1" showSpinner={false} />
+        <Toast.Provider />
+        {children}
+      </ThemeProvider>
+    </RouterProvider>
   );
 }
