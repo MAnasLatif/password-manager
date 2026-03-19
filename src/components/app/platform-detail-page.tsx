@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
+import ShareModal from "./share-modal";
 
 interface PlatformDetailPageProps {
   platform: Platform;
@@ -103,6 +104,7 @@ function AccountCard({ account }: { account: Account }) {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState<string | null>(null);
   const [isLoadingPassword, setIsLoadingPassword] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   // TODO: Replace with actual API call
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -185,11 +187,14 @@ function AccountCard({ account }: { account: Account }) {
           {getTitle() && (
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-base font-semibold">{getTitle()}</span>
-              {/* Avatar section */}
-              <div className="shrink-0 pt-0.5">
-                {account.isPrivate ? (
-                  <LockKeyhole className="text-muted/30 size-4" />
-                ) : account.sharedWith && account.sharedWith.length > 0 ? (
+              {/* Avatar section - clickable to open share modal */}
+              <button
+                type="button"
+                className="hover:bg-surface-hover shrink-0 cursor-pointer rounded p-0.5 pt-0.5 transition-colors"
+                onClick={() => setIsShareModalOpen(true)}
+                aria-label="Share account"
+              >
+                {account.sharedWith && account.sharedWith.length > 0 ? (
                   <div className="flex -space-x-1.5">
                     {account.sharedWith.slice(0, 3).map((user) => (
                       <Avatar key={user.id} className="ring-background size-5 ring-2">
@@ -216,7 +221,7 @@ function AccountCard({ account }: { account: Account }) {
                 ) : (
                   <LockKeyhole className="text-muted/30 size-4" />
                 )}
-              </div>
+              </button>
             </div>
           )}
           {account.email && (
@@ -318,6 +323,14 @@ function AccountCard({ account }: { account: Account }) {
           </Tooltip>
         </div>
       </div>
+
+      {/* Share Modal */}
+      <ShareModal
+        account={account}
+        isOpen={isShareModalOpen}
+        onOpenChange={setIsShareModalOpen}
+        title={getTitle()}
+      />
     </div>
   );
 }

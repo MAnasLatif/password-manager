@@ -21,8 +21,13 @@ export interface Account {
   hasPassword?: boolean;
   label?: string;
   notes?: string;
-  sharedWith?: { id: string; name: string; image?: string }[];
-  isPrivate?: boolean;
+  sharedWith?: {
+    id: string;
+    name: string;
+    email?: string;
+    image?: string;
+    permission?: "view" | "edit" | "owner";
+  }[];
   createdAt?: Date;
   updatedAt?: Date;
 }

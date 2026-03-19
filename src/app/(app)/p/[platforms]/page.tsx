@@ -27,7 +27,6 @@ const accountsData: Record<string, Account[]> = {
       username: "Manas Latif",
       hasPassword: true,
       label: "Personal",
-      isPrivate: true,
     },
     {
       id: "2",
@@ -71,7 +70,6 @@ const accountsData: Record<string, Account[]> = {
       id: "4",
       email: "manas@github.com",
       username: "manaslatif",
-      isPrivate: true,
     },
     {
       id: "5",
@@ -119,7 +117,6 @@ const accountsData: Record<string, Account[]> = {
       id: "8",
       email: "manas@figma.com",
       username: "Personal Figma",
-      isPrivate: true,
     },
     {
       id: "9",
@@ -142,7 +139,6 @@ const accountsData: Record<string, Account[]> = {
       email: "manas@linkedin.com",
       hasPassword: true,
       username: "Manas Latif",
-      isPrivate: true,
     },
     {
       id: "12",
@@ -158,7 +154,6 @@ const accountsData: Record<string, Account[]> = {
       username: "AWS Root",
       label: "Production",
       hasPassword: true,
-      isPrivate: true,
       notes: "IMPORTANT: Root account - use IAM users",
     },
   ],
@@ -167,7 +162,6 @@ const accountsData: Record<string, Account[]> = {
       id: "14",
       email: "admin@upvave.com",
       label: "Admin",
-      isPrivate: true,
     },
   ],
 };
