@@ -9,9 +9,10 @@ import { auth } from "./lib/auth";
 const AUTH_ROUTES = ["/login", "/signup", "/forgot-password", "/reset-password", "/verify-email"];
 
 /**
- * Protected route prefixes — redirect to /login if not authenticated
+ * Protected routes — redirect to /login if not authenticated
  */
-const PROTECTED_PREFIXES = ["/", "/settings", "/collections", "/teams", "/shared"];
+const PROTECTED_ROUTES = ["/"];
+const PROTECTED_PREFIXES = ["/settings", "/collections", "/teams", "/shared"];
 
 /**
  * Next.js 16 proxy function (replaces middleware from Next.js 15)
@@ -45,7 +46,10 @@ export async function proxy(request: NextRequest) {
  * Check if a pathname is a protected route
  */
 function isProtectedRoute(pathname: string): boolean {
-  return PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+  return (
+    PROTECTED_ROUTES.includes(pathname) ||
+    PROTECTED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`))
+  );
 }
 
 export const config = {
