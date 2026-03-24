@@ -39,21 +39,25 @@ const accountsData: Record<string, Account[]> = {
         {
           id: "u1",
           name: "John Doe",
+          email: "john.doe@example.com",
           image: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/blue.jpg",
         },
         {
           id: "u2",
           name: "Jane Smith",
+          email: "jane.smith@example.com",
           image: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/green.jpg",
         },
         {
           id: "u3",
           name: "Bob Wilson",
+          email: "bob.wilson@example.com",
           image: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/yellow.jpg",
         },
         {
           id: "u4",
           name: "Jane Smith",
+          email: "jane.smith@example.com",
           image: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/green.jpg",
         },
       ],

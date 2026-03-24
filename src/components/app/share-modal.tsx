@@ -2,7 +2,16 @@
 
 import type { Account } from "@/types";
 import { getInitials, stringToColor } from "@/utils";
-import { Avatar, Button, ListBox, Modal, Select, Separator, toast } from "@heroui/react";
+import {
+  Avatar,
+  Button,
+  ListBox,
+  Modal,
+  ScrollShadow,
+  Select,
+  Separator,
+  toast,
+} from "@heroui/react";
 import { FolderInput, Link2, Trash2, Upload } from "lucide-react";
 import { useState } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
@@ -43,7 +52,7 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
   return (
     <Modal>
       <Modal.Backdrop isOpen={isOpen} onOpenChange={onOpenChange}>
-        <Modal.Container size="sm">
+        <Modal.Container size="md">
           <Modal.Dialog className="p-3">
             {/* <Modal.CloseTrigger /> */}
             <Modal.Header className="mr-10 flex flex-row items-center gap-1">
@@ -67,15 +76,34 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
 
             <Modal.Body className="flex flex-col gap-4">
               {/* Email input with inline button */}
-              <div className="border-default flex items-center gap-2 rounded-lg border px-3 py-2">
+              <div className="border-default flex items-center gap-2 rounded-3xl border px-3 py-2">
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="share by email"
+                  placeholder="share by emails (comma separated)"
                   className="text-muted placeholder:text-muted/50 flex-1 bg-transparent text-sm outline-none"
                   aria-label="Email address"
                 />
+
+                <Select defaultValue="view" aria-label="Permission level">
+                  <Select.Trigger>
+                    <Select.Value />
+                    <Select.Indicator />
+                  </Select.Trigger>
+                  <Select.Popover>
+                    <ListBox>
+                      <ListBox.Item id="view" textValue="view">
+                        view
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                      <ListBox.Item id="edit" textValue="can edit">
+                        can edit
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                    </ListBox>
+                  </Select.Popover>
+                </Select>
                 <Button
                   size="sm"
                   variant="primary"
@@ -91,55 +119,61 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
               {sharedUsers.length > 0 && (
                 <div className="flex flex-col gap-2">
                   <span className="text-muted text-xs font-medium">Allow Access</span>
-                  <div className="flex flex-col">
-                    {sharedUsers.map((user) => (
-                      <div key={user.id} className="flex items-center gap-3 py-2">
-                        <Avatar className="size-9">
-                          <Avatar.Image src={user.image ?? ""} alt={user.name} />
-                          <Avatar.Fallback
-                            style={{
-                              backgroundColor: stringToColor(user.name),
-                              color: "white",
-                            }}
-                            className="text-xs font-semibold"
-                          >
-                            {getInitials(user.name)}
-                          </Avatar.Fallback>
-                        </Avatar>
-                        <div className="flex flex-1 flex-col">
-                          <span className="text-sm font-medium">{user.name}</span>
-                          {user.email && <span className="text-muted text-xs">{user.email}</span>}
+                  <ScrollShadow className="max-h-100">
+                    <div className="flex flex-col gap-2">
+                      {sharedUsers.map((user) => (
+                        <div key={user.id} className="flex items-center gap-3 py-2">
+                          <Avatar className="size-9">
+                            <Avatar.Image src={user.image ?? ""} alt={user.name} />
+                            <Avatar.Fallback
+                              style={{
+                                backgroundColor: stringToColor(user.name),
+                                color: "white",
+                              }}
+                              className="text-xs font-semibold"
+                            >
+                              {getInitials(user.name)}
+                            </Avatar.Fallback>
+                          </Avatar>
+                          <div className="flex flex-1 flex-col">
+                            <span className="text-sm font-medium">{user.name}</span>
+                            {user.email && <span className="text-muted text-xs">{user.email}</span>}
+                          </div>
+                          <Select value={user.permission || "view"} aria-label="Permission level">
+                            <Select.Trigger>
+                              <Select.Value />
+                              <Select.Indicator />
+                            </Select.Trigger>
+                            <Select.Popover>
+                              <ListBox>
+                                <ListBox.Item id="view" textValue="view">
+                                  view
+                                  <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                                <ListBox.Item id="edit" textValue="can edit">
+                                  can edit
+                                  <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                                <Separator className="my-1" />
+                                <ListBox.Item id="transfer" textValue="Transfer ownership">
+                                  <FolderInput className="text-primary size-4" />
+                                  <span>Transfer ownership</span>
+                                </ListBox.Item>
+                                <ListBox.Item
+                                  id="remove"
+                                  textValue="Remove access"
+                                  variant="danger"
+                                >
+                                  <Trash2 className="text-danger size-4" />
+                                  <span>Remove access</span>
+                                </ListBox.Item>
+                              </ListBox>
+                            </Select.Popover>
+                          </Select>
                         </div>
-                        <Select value={user.permission || "view"} aria-label="Permission level">
-                          <Select.Trigger className="border-default h-8 w-24 border bg-transparent text-sm">
-                            <Select.Value />
-                            <Select.Indicator />
-                          </Select.Trigger>
-                          <Select.Popover>
-                            <ListBox>
-                              <ListBox.Item id="view" textValue="view">
-                                view
-                                <ListBox.ItemIndicator />
-                              </ListBox.Item>
-                              <ListBox.Item id="edit" textValue="can edit">
-                                can edit
-                                <ListBox.ItemIndicator />
-                              </ListBox.Item>
-                              <Separator className="my-1" />
-                              <ListBox.Item id="transfer" textValue="Transfer ownership">
-                                <FolderInput className="text-primary size-4" />
-                                <span>Transfer ownership</span>
-                              </ListBox.Item>
-                              <ListBox.Item id="remove" textValue="Remove access" variant="danger">
-                                <Trash2 className="text-danger size-4" />
-                                <span>Remove access</span>
-                              </ListBox.Item>
-                            </ListBox>
-                          </Select.Popover>
-                        </Select>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  </ScrollShadow>
                 </div>
               )}
             </Modal.Body>
