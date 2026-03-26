@@ -52,7 +52,7 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
   return (
     <Modal>
       <Modal.Backdrop isOpen={isOpen} onOpenChange={onOpenChange}>
-        <Modal.Container size="md">
+        <Modal.Container size="md" placement="top">
           <Modal.Dialog className="p-3">
             {/* <Modal.CloseTrigger /> */}
             <Modal.Header className="mr-10 flex flex-row items-center gap-1">
@@ -76,7 +76,7 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
 
             <Modal.Body className="flex flex-col gap-4">
               {/* Email input with inline button */}
-              <div className="border-default flex items-center gap-2 rounded-3xl border px-3 py-2">
+              <div className="border-default flex items-center rounded-3xl border px-3 py-2">
                 <input
                   type="email"
                   value={email}
@@ -86,8 +86,8 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
                   aria-label="Email address"
                 />
 
-                <Select defaultValue="view" aria-label="Permission level">
-                  <Select.Trigger>
+                <Select defaultValue="view" variant="secondary" aria-label="Permission level">
+                  <Select.Trigger className="bg-transparent">
                     <Select.Value />
                     <Select.Indicator />
                   </Select.Trigger>
@@ -139,8 +139,12 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
                             <span className="text-sm font-medium">{user.name}</span>
                             {user.email && <span className="text-muted text-xs">{user.email}</span>}
                           </div>
-                          <Select value={user.permission || "view"} aria-label="Permission level">
-                            <Select.Trigger>
+                          <Select
+                            value={user.permission || "view"}
+                            aria-label="Permission level"
+                            variant="secondary"
+                          >
+                            <Select.Trigger className="bg-transparent">
                               <Select.Value />
                               <Select.Indicator />
                             </Select.Trigger>
