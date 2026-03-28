@@ -8,7 +8,6 @@ import {
   DatePicker,
   DateRangePicker,
   Dropdown,
-  Input,
   InputGroup,
   InputOTP,
   Label,
@@ -23,7 +22,33 @@ import {
 } from "@heroui/react";
 import type { TimeValue } from "react-aria-components";
 import { parseDate, parseDateTime } from "@internationalized/date";
-import { ArrowLeft, ChevronDown, Dices, Eye, EyeOff, Globe, Plus, Trash2 } from "lucide-react";
+import {
+  AlignLeft,
+  ArrowLeft,
+  Calendar as CalendarIcon,
+  CalendarDays,
+  CalendarRange,
+  ChevronDown,
+  Clock,
+  CreditCard,
+  Dices,
+  Eye,
+  EyeOff,
+  Globe,
+  Hash,
+  HelpCircle,
+  KeyRound,
+  Link2,
+  Mail,
+  MapPin,
+  NotebookPen,
+  Phone,
+  Plus,
+  ShieldEllipsis,
+  Tag,
+  Trash2,
+  User,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -156,6 +181,35 @@ function getFieldPlaceholder(type: FieldType): string {
       return "4242 4242 4242 4242";
     default:
       return "Value";
+  }
+}
+
+function getFieldIcon(type: FieldType): React.ReactNode {
+  switch (type) {
+    case "text":
+      return <AlignLeft className="text-muted size-4" />;
+    case "email":
+      return <Mail className="text-muted size-4" />;
+    case "url":
+      return <Link2 className="text-muted size-4" />;
+    case "phone":
+      return <Phone className="text-muted size-4" />;
+    case "number":
+      return <Hash className="text-muted size-4" />;
+    case "textarea":
+      return <AlignLeft className="text-muted size-4" />;
+    case "address":
+      return <MapPin className="text-muted size-4" />;
+    case "secret":
+      return <ShieldEllipsis className="text-muted size-4" />;
+    case "password":
+      return <KeyRound className="text-muted size-4" />;
+    case "security-question":
+      return <HelpCircle className="text-muted size-4" />;
+    case "credit-card":
+      return <CreditCard className="text-muted size-4" />;
+    default:
+      return null;
   }
 }
 
@@ -296,7 +350,12 @@ export default function AddPasswordPage() {
                 autoFocus={!initialPlatform}
               >
                 <Label>Website Name</Label>
-                <Input placeholder="Google" />
+                <InputGroup>
+                  <InputGroup.Prefix>
+                    <Globe className="text-muted size-4" />
+                  </InputGroup.Prefix>
+                  <InputGroup.Input placeholder="Google" />
+                </InputGroup>
               </TextField>
             </div>
             <div className="flex-1">
@@ -332,7 +391,12 @@ export default function AddPasswordPage() {
           {/* Title */}
           <TextField type="text" value={title} onChange={setTitle} isDisabled={isPending}>
             <Label>Title</Label>
-            <Input placeholder="Personal account" />
+            <InputGroup>
+              <InputGroup.Prefix>
+                <Tag className="text-muted size-4" />
+              </InputGroup.Prefix>
+              <InputGroup.Input placeholder="Personal account" />
+            </InputGroup>
           </TextField>
 
           {/* Email + Username — same line */}
@@ -340,13 +404,23 @@ export default function AddPasswordPage() {
             <div className="flex-1">
               <TextField type="email" value={email} onChange={setEmail} isDisabled={isPending}>
                 <Label>Email</Label>
-                <Input placeholder="username@domain.com" />
+                <InputGroup>
+                  <InputGroup.Prefix>
+                    <Mail className="text-muted size-4" />
+                  </InputGroup.Prefix>
+                  <InputGroup.Input placeholder="username@domain.com" />
+                </InputGroup>
               </TextField>
             </div>
             <div className="flex-1">
               <TextField type="text" value={username} onChange={setUsername} isDisabled={isPending}>
                 <Label>Username</Label>
-                <Input placeholder="manas" />
+                <InputGroup>
+                  <InputGroup.Prefix>
+                    <User className="text-muted size-4" />
+                  </InputGroup.Prefix>
+                  <InputGroup.Input placeholder="manas" />
+                </InputGroup>
               </TextField>
             </div>
           </div>
@@ -356,6 +430,9 @@ export default function AddPasswordPage() {
             <Label>Password</Label>
             <div className="flex gap-2">
               <InputGroup className="flex-1">
+                <InputGroup.Prefix>
+                  <KeyRound className="text-muted size-4" />
+                </InputGroup.Prefix>
                 <InputGroup.Input
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
@@ -427,6 +504,9 @@ export default function AddPasswordPage() {
           <TextField value={notes} onChange={setNotes} isDisabled={isPending}>
             <Label>Notes</Label>
             <InputGroup>
+              <InputGroup.Prefix>
+                <NotebookPen className="text-muted size-4" />
+              </InputGroup.Prefix>
               <InputGroup.TextArea placeholder="Add any notes..." rows={3} />
             </InputGroup>
           </TextField>
@@ -515,6 +595,9 @@ export default function AddPasswordPage() {
                   isDisabled={isPending}
                 >
                   <DateField.Group fullWidth>
+                    <DateField.Prefix>
+                      <CalendarIcon className="text-muted size-4" />
+                    </DateField.Prefix>
                     <DateField.Input>
                       {(segment) => <DateField.Segment segment={segment} />}
                     </DateField.Input>
@@ -573,6 +656,9 @@ export default function AddPasswordPage() {
                   {({ state }) => (
                     <>
                       <DateField.Group fullWidth>
+                        <DateField.Prefix>
+                          <Clock className="text-muted size-4" />
+                        </DateField.Prefix>
                         <DateField.Input>
                           {(segment) => <DateField.Segment segment={segment} />}
                         </DateField.Input>
@@ -650,6 +736,9 @@ export default function AddPasswordPage() {
                   isDisabled={isPending}
                 >
                   <DateField.Group fullWidth>
+                    <DateField.Prefix>
+                      <CalendarRange className="text-muted size-4" />
+                    </DateField.Prefix>
                     <DateField.Input slot="start">
                       {(segment) => <DateField.Segment segment={segment} />}
                     </DateField.Input>
@@ -690,19 +779,24 @@ export default function AddPasswordPage() {
                   </DateRangePicker.Popover>
                 </DateRangePicker>
               ) : field.type === "number" ? (
-                <NumberField
-                  value={field.value !== "" ? Number(field.value) : undefined}
-                  onChange={(val) =>
-                    handleUpdateField(field.id, { value: isNaN(val) ? "" : String(val) })
-                  }
-                  isDisabled={isPending}
-                >
-                  <NumberField.Group>
-                    <NumberField.DecrementButton />
-                    <NumberField.Input placeholder="0" />
-                    <NumberField.IncrementButton />
-                  </NumberField.Group>
-                </NumberField>
+                <InputGroup>
+                  <InputGroup.Prefix>
+                    <Hash className="text-muted size-4" />
+                  </InputGroup.Prefix>
+                  <NumberField
+                    value={field.value !== "" ? Number(field.value) : undefined}
+                    onChange={(val) =>
+                      handleUpdateField(field.id, { value: isNaN(val) ? "" : String(val) })
+                    }
+                    isDisabled={isPending}
+                  >
+                    <NumberField.Group className="border-none shadow-none">
+                      <NumberField.DecrementButton />
+                      <NumberField.Input placeholder="0" className="border-none shadow-none" />
+                      <NumberField.IncrementButton />
+                    </NumberField.Group>
+                  </NumberField>
+                </InputGroup>
               ) : field.type === "textarea" || field.type === "address" ? (
                 <TextField
                   value={field.value}
@@ -710,6 +804,7 @@ export default function AddPasswordPage() {
                   isDisabled={isPending}
                 >
                   <InputGroup>
+                    <InputGroup.Prefix>{getFieldIcon(field.type)}</InputGroup.Prefix>
                     <InputGroup.TextArea placeholder={getFieldPlaceholder(field.type)} rows={3} />
                   </InputGroup>
                 </TextField>
@@ -721,9 +816,17 @@ export default function AddPasswordPage() {
                     onChange={(value) => handleUpdateField(field.id, { label: value })}
                     isDisabled={isPending}
                   >
-                    <Input placeholder="Question" />
+                    <InputGroup>
+                      <InputGroup.Prefix>
+                        <HelpCircle className="text-muted size-4" />
+                      </InputGroup.Prefix>
+                      <InputGroup.Input placeholder="Question" />
+                    </InputGroup>
                   </TextField>
                   <InputGroup>
+                    <InputGroup.Prefix>
+                      <ShieldEllipsis className="text-muted size-4" />
+                    </InputGroup.Prefix>
                     <InputGroup.Input
                       type={field.showSecret ? "text" : "password"}
                       placeholder="Answer"
@@ -753,6 +856,9 @@ export default function AddPasswordPage() {
               ) : field.type === "credit-card" ? (
                 <div className="flex flex-col gap-2">
                   <InputGroup>
+                    <InputGroup.Prefix>
+                      <CreditCard className="text-muted size-4" />
+                    </InputGroup.Prefix>
                     <InputGroup.Input
                       placeholder="4242 4242 4242 4242"
                       value={field.cardNumber ?? ""}
@@ -792,6 +898,9 @@ export default function AddPasswordPage() {
                       </InputGroup.Suffix>
                     </InputGroup>
                     <InputGroup className="flex-1">
+                      <InputGroup.Prefix>
+                        <CalendarDays className="text-muted size-4" />
+                      </InputGroup.Prefix>
                       <InputGroup.Input
                         placeholder="MM/YY"
                         value={field.cardExp ?? ""}
@@ -808,9 +917,6 @@ export default function AddPasswordPage() {
                         disabled={isPending}
                         maxLength={5}
                       />
-                      <InputGroup.Suffix>
-                        <span className="text-muted text-xs">Exp</span>
-                      </InputGroup.Suffix>
                     </InputGroup>
                   </div>
                 </div>
@@ -830,6 +936,9 @@ export default function AddPasswordPage() {
                 </InputOTP>
               ) : field.type === "password" ? (
                 <InputGroup>
+                  <InputGroup.Prefix>
+                    <KeyRound className="text-muted size-4" />
+                  </InputGroup.Prefix>
                   <InputGroup.Input
                     type={field.showSecret ? "text" : "password"}
                     placeholder="Password"
@@ -909,6 +1018,9 @@ export default function AddPasswordPage() {
                 </InputGroup>
               ) : SECRET_TYPES.includes(field.type) ? (
                 <InputGroup>
+                  <InputGroup.Prefix>
+                    <ShieldEllipsis className="text-muted size-4" />
+                  </InputGroup.Prefix>
                   <InputGroup.Input
                     type={field.showSecret ? "text" : "password"}
                     placeholder={getFieldPlaceholder(field.type)}
@@ -939,7 +1051,10 @@ export default function AddPasswordPage() {
                   onChange={(value) => handleUpdateField(field.id, { value })}
                   isDisabled={isPending}
                 >
-                  <Input placeholder={getFieldPlaceholder(field.type)} />
+                  <InputGroup>
+                    <InputGroup.Prefix>{getFieldIcon(field.type)}</InputGroup.Prefix>
+                    <InputGroup.Input placeholder={getFieldPlaceholder(field.type)} />
+                  </InputGroup>
                 </TextField>
               )}
             </div>
