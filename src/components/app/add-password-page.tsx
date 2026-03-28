@@ -50,7 +50,7 @@ type FieldType =
   | "credit-card"
   | "membership-id";
 
-const SECRET_TYPES: FieldType[] = ["secret", "credit-card"];
+const SECRET_TYPES: FieldType[] = ["secret"];
 
 interface CustomField {
   id: string;
@@ -60,6 +60,10 @@ interface CustomField {
   showSecret?: boolean;
   strength?: PasswordStrength;
   pinLength?: number;
+  cardNumber?: string;
+  cardPin?: string;
+  cardExp?: string;
+  showCardPin?: boolean;
 }
 
 const FIELD_TYPES: { id: FieldType; label: string; group: string }[] = [
@@ -749,6 +753,70 @@ export default function AddPasswordPage() {
                       </button>
                     </InputGroup.Suffix>
                   </InputGroup>
+                </div>
+              ) : field.type === "credit-card" ? (
+                <div className="flex flex-col gap-2">
+                  <InputGroup>
+                    <InputGroup.Input
+                      placeholder="4242 4242 4242 4242"
+                      value={field.cardNumber ?? ""}
+                      onChange={(e) => handleUpdateField(field.id, { cardNumber: e.target.value })}
+                      disabled={isPending}
+                      maxLength={19}
+                    />
+                    <InputGroup.Suffix>
+                      <span className="text-muted text-xs">Card Number</span>
+                    </InputGroup.Suffix>
+                  </InputGroup>
+                  <div className="flex gap-2">
+                    <InputGroup className="flex-1">
+                      <InputGroup.Input
+                        type={field.showCardPin ? "text" : "password"}
+                        placeholder="PIN"
+                        value={field.cardPin ?? ""}
+                        onChange={(e) => handleUpdateField(field.id, { cardPin: e.target.value })}
+                        disabled={isPending}
+                      />
+                      <InputGroup.Suffix>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleUpdateField(field.id, { showCardPin: !field.showCardPin })
+                          }
+                          className="text-muted hover:text-foreground transition-colors focus:outline-none"
+                          disabled={isPending}
+                          tabIndex={-1}
+                        >
+                          {field.showCardPin ? (
+                            <EyeOff className="size-4" />
+                          ) : (
+                            <Eye className="size-4" />
+                          )}
+                        </button>
+                      </InputGroup.Suffix>
+                    </InputGroup>
+                    <InputGroup className="flex-1">
+                      <InputGroup.Input
+                        placeholder="MM/YY"
+                        value={field.cardExp ?? ""}
+                        onChange={(e) => {
+                          let val = e.target.value.replace(/[^0-9/]/g, "");
+                          if (
+                            val.length === 2 &&
+                            !val.includes("/") &&
+                            (field.cardExp?.length ?? 0) < 2
+                          )
+                            val = val + "/";
+                          handleUpdateField(field.id, { cardExp: val });
+                        }}
+                        disabled={isPending}
+                        maxLength={5}
+                      />
+                      <InputGroup.Suffix>
+                        <span className="text-muted text-xs">Exp</span>
+                      </InputGroup.Suffix>
+                    </InputGroup>
+                  </div>
                 </div>
               ) : field.type === "pin" ? (
                 <InputOTP
