@@ -10,10 +10,12 @@ import {
   Dropdown,
   Input,
   InputGroup,
+  InputOTP,
   Label,
   ListBox,
   NumberField,
   RangeCalendar,
+  REGEXP_ONLY_DIGITS,
   Select,
   Spinner,
   TextField,
@@ -48,7 +50,7 @@ type FieldType =
   | "credit-card"
   | "membership-id";
 
-const SECRET_TYPES: FieldType[] = ["secret", "password", "pin", "credit-card"];
+const SECRET_TYPES: FieldType[] = ["secret", "credit-card"];
 
 interface CustomField {
   id: string;
@@ -57,6 +59,7 @@ interface CustomField {
   value: string;
   showSecret?: boolean;
   strength?: PasswordStrength;
+  pinLength?: number;
 }
 
 const FIELD_TYPES: { id: FieldType; label: string; group: string }[] = [
@@ -467,17 +470,38 @@ export default function AddPasswordPage() {
                   disabled={isPending}
                 />
                 <InputGroup.Suffix>
-                  <Button
-                    type="button"
-                    isIconOnly
-                    variant="ghost"
-                    size="sm"
-                    onPress={() => handleRemoveField(field.id)}
-                    isDisabled={isPending}
-                    aria-label="Remove field"
-                  >
-                    <Trash2 className="text-danger size-4" />
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    {field.type === "pin" && (
+                      <NumberField
+                        value={field.pinLength ?? 4}
+                        minValue={4}
+                        maxValue={12}
+                        onChange={(val) => {
+                          const len = isNaN(val) ? 4 : val;
+                          handleUpdateField(field.id, { pinLength: len, value: "" });
+                        }}
+                        isDisabled={isPending}
+                        aria-label="PIN length"
+                      >
+                        <NumberField.Group>
+                          <NumberField.DecrementButton />
+                          <NumberField.Input className="w-12 text-center" />
+                          <NumberField.IncrementButton />
+                        </NumberField.Group>
+                      </NumberField>
+                    )}
+                    <Button
+                      type="button"
+                      isIconOnly
+                      variant="ghost"
+                      size="sm"
+                      onPress={() => handleRemoveField(field.id)}
+                      isDisabled={isPending}
+                      aria-label="Remove field"
+                    >
+                      <Trash2 className="text-danger size-4" />
+                    </Button>
+                  </div>
                 </InputGroup.Suffix>
               </InputGroup>
 
@@ -726,6 +750,20 @@ export default function AddPasswordPage() {
                     </InputGroup.Suffix>
                   </InputGroup>
                 </div>
+              ) : field.type === "pin" ? (
+                <InputOTP
+                  maxLength={field.pinLength ?? 4}
+                  value={field.value}
+                  onChange={(val) => handleUpdateField(field.id, { value: val })}
+                  isDisabled={isPending}
+                  pattern={REGEXP_ONLY_DIGITS}
+                >
+                  <InputOTP.Group>
+                    {Array.from({ length: field.pinLength ?? 4 }, (_, i) => (
+                      <InputOTP.Slot key={i} index={i} />
+                    ))}
+                  </InputOTP.Group>
+                </InputOTP>
               ) : field.type === "password" ? (
                 <InputGroup>
                   <InputGroup.Input
