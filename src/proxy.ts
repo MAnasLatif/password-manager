@@ -11,7 +11,7 @@ const AUTH_ROUTES = ["/login", "/signup", "/forgot-password", "/reset-password",
 /**
  * Protected routes — redirect to /login if not authenticated
  */
-const PROTECTED_ROUTES = ["/"];
+const PROTECTED_ROUTES = ["/", "/new"];
 const PROTECTED_PREFIXES = ["/settings", "/collections", "/teams", "/shared"];
 
 /**
@@ -64,5 +64,6 @@ export const config = {
     "/collections/:path*",
     "/teams/:path*",
     "/shared/:path*",
+    "/new",
   ],
 };
