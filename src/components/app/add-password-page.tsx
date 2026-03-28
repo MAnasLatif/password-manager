@@ -47,8 +47,7 @@ type FieldType =
   | "pin"
   | "security-question"
   | "address"
-  | "credit-card"
-  | "membership-id";
+  | "credit-card";
 
 const SECRET_TYPES: FieldType[] = ["secret"];
 
@@ -85,7 +84,6 @@ const FIELD_TYPES: { id: FieldType; label: string; group: string }[] = [
   { id: "security-question", label: "Security Q&A", group: "Secrets" },
   // Identity
   { id: "credit-card", label: "Credit Card", group: "Identity" },
-  { id: "membership-id", label: "Membership ID", group: "Identity" },
 ];
 
 type PasswordStrength = "normal" | "strong" | "very-strong";
@@ -124,7 +122,7 @@ function generatePassword(strength: PasswordStrength): string {
 
 function getFieldInputType(type: FieldType): string {
   if (type === "phone") return "tel";
-  if (type === "membership-id" || type === "credit-card") return "text";
+  if (type === "credit-card") return "text";
   return type;
 }
 
@@ -156,8 +154,6 @@ function getFieldPlaceholder(type: FieldType): string {
       return "Answer";
     case "credit-card":
       return "4242 4242 4242 4242";
-    case "membership-id":
-      return "ID-12345";
     default:
       return "Value";
   }
