@@ -20,9 +20,14 @@ const PROTECTED_PREFIXES = ["/settings", "/collections", "/teams", "/shared"];
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  let session = null;
+  try {
+    session = await auth.api.getSession({
+      headers: await headers(),
+    });
+  } catch {
+    // Database unreachable or auth error — treat as unauthenticated
+  }
 
   // Authenticated users visiting auth pages → redirect to app
   if (session && AUTH_ROUTES.includes(pathname)) {
