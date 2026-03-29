@@ -1,7 +1,7 @@
 "use client";
 
 import { Accordion, Button, cn } from "@heroui/react";
-import { ChevronDown, Plus, User, Users } from "lucide-react";
+import { ChevronDown, Circle, Plus, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLocalStorage, useIsClient } from "usehooks-ts";
@@ -78,6 +78,38 @@ const data: SidebarItemType[] = [
     description:
       "Keep infrastructure access, production credentials, and runbooks easy to audit and rotate.",
   },
+  {
+    id: "social",
+    type: "tag",
+    label: "Social",
+    slug: "social",
+    icon: "",
+    color: "#3b82f6",
+  },
+  {
+    id: "email",
+    type: "tag",
+    label: "Email",
+    slug: "email",
+    icon: "",
+    color: "#a855f7",
+  },
+  {
+    id: "finance",
+    type: "tag",
+    label: "Finance",
+    slug: "finance",
+    icon: "",
+    color: "#22c55e",
+  },
+  {
+    id: "work",
+    type: "tag",
+    label: "Work",
+    slug: "work-tag",
+    icon: "",
+    color: "#f97316",
+  },
 ];
 
 interface SidebarSection {
@@ -91,6 +123,7 @@ const menuItems: SidebarSection[] = [
     items: data.filter((item) => item.type === "collection"),
   },
   { title: "Teams", items: data.filter((item) => item.type === "team") },
+  { title: "Tags", items: data.filter((item) => item.type === "tag") },
 ];
 
 export function AppSidebar({ className }: { className?: string }) {
@@ -186,7 +219,15 @@ export function AppSidebar({ className }: { className?: string }) {
                               className="w-full justify-start gap-3"
                               size="sm"
                             >
-                              <ICon />
+                              {item.type === "tag" ? (
+                                <Circle
+                                  className="size-3.5 shrink-0"
+                                  fill={item.color}
+                                  stroke={item.color}
+                                />
+                              ) : (
+                                ICon && <ICon />
+                              )}
                               <span>{item.label}</span>
                             </Button>
                           </Link>
