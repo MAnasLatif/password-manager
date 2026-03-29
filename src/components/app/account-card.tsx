@@ -8,8 +8,8 @@ import {
   downloadAccountFile,
   getAccountTitle,
 } from "@/utils/account";
-import { Avatar, Button, toast, Tooltip } from "@heroui/react";
-import { Copy, Eye, EyeOff, Loader2, LockKeyhole } from "lucide-react";
+import { Avatar, Button, Chip, toast, Tooltip } from "@heroui/react";
+import { Copy, Eye, EyeOff, Loader2, LockKeyhole, Star } from "lucide-react";
 import { useState } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
 import AccountCardMenu from "./account-card-menu";
@@ -166,7 +166,28 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
         <div className="flex min-w-0 flex-1 flex-col">
           {getTitle() && (
             <div className="flex flex-wrap items-center gap-2">
+              {account.isFavorite && (
+                <Star className="size-4 shrink-0 fill-yellow-400 text-yellow-400" />
+              )}
               <span className="text-base font-semibold">{getTitle()}</span>
+              {account.tags && account.tags.length > 0 && (
+                <>
+                  {account.tags.map((tag) => (
+                    <Chip
+                      key={tag.id}
+                      size="sm"
+                      variant="soft"
+                      style={
+                        tag.color
+                          ? { backgroundColor: `${tag.color}20`, color: tag.color }
+                          : undefined
+                      }
+                    >
+                      {tag.name}
+                    </Chip>
+                  ))}
+                </>
+              )}
               {/* Avatar section - clickable to open share modal */}
               <button
                 type="button"
@@ -296,6 +317,7 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
         <div className="flex shrink-0 items-center gap-1">
           <AccountCardMenu
             title={getTitle()}
+            isFavorite={account.isFavorite}
             onOpenWebsite={() =>
               window.open(`https://${platform.domain}`, "_blank", "noopener,noreferrer")
             }

@@ -1,7 +1,7 @@
 "use client";
 
 import { Accordion, Button, cn } from "@heroui/react";
-import { ChevronDown, Circle, Plus, User, Users } from "lucide-react";
+import { ChevronDown, Circle, Plus, Star, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLocalStorage, useIsClient } from "usehooks-ts";
@@ -161,6 +161,19 @@ export function AppSidebar({ className }: { className?: string }) {
           >
             <User />
             My Vault
+          </Button>
+        </Link>
+        <Link
+          href="/favorites"
+          aria-current={normalizePath(pathname) === "/favorites" ? "page" : undefined}
+        >
+          <Button
+            variant={normalizePath(pathname) === "/favorites" ? "primary" : "ghost"}
+            className="w-full justify-start gap-3"
+            size="sm"
+          >
+            <Star />
+            Favorites
           </Button>
         </Link>
         <Link

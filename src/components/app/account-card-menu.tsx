@@ -13,6 +13,7 @@ import {
   Pencil,
   Share2,
   Star,
+  StarOff,
   Tag,
   Timer,
   Trash2,
@@ -20,6 +21,7 @@ import {
 
 interface AccountCardMenuProps {
   title: string | null;
+  isFavorite?: boolean;
   onOpenWebsite: () => void;
   onCopyDetails: () => void;
   onCopyLink: () => void;
@@ -37,6 +39,7 @@ interface AccountCardMenuProps {
 
 export default function AccountCardMenu({
   title,
+  isFavorite,
   onOpenWebsite,
   onCopyDetails,
   onCopyLink,
@@ -131,9 +134,16 @@ export default function AccountCardMenu({
           {/* Organize */}
           <Dropdown.Section>
             <Header>Organize</Header>
-            <Dropdown.Item id="favorite" textValue="Favorite">
-              <Star className="text-muted size-3.5" />
-              <Label>Favorite</Label>
+            <Dropdown.Item
+              id="favorite"
+              textValue={isFavorite ? "Remove from Favorites" : "Favorite"}
+            >
+              {isFavorite ? (
+                <StarOff className="text-muted size-3.5" />
+              ) : (
+                <Star className="text-muted size-3.5" />
+              )}
+              <Label>{isFavorite ? "Remove from Favorites" : "Favorite"}</Label>
             </Dropdown.Item>
             <Dropdown.Item id="add-tag" textValue="Add Tag">
               <Tag className="text-muted size-3.5" />

@@ -22,6 +22,12 @@ export interface AccountCustomField {
   pinned?: boolean;
 }
 
+export interface AccountTag {
+  id: string;
+  name: string;
+  color?: string;
+}
+
 export interface Account {
   id: string;
   title?: string;
@@ -30,6 +36,8 @@ export interface Account {
   hasPassword?: boolean;
   label?: string;
   notes?: string;
+  isFavorite?: boolean;
+  tags?: AccountTag[];
   customFields?: AccountCustomField[];
   sharedWith?: {
     id: string;

@@ -28,6 +28,8 @@ const accountsData: Record<string, Account[]> = {
       username: "Manas Latif",
       hasPassword: true,
       label: "Personal",
+      isFavorite: true,
+      tags: [{ id: "t1", name: "Personal", color: "#3b82f6" }],
     },
     {
       id: "2",
@@ -36,6 +38,10 @@ const accountsData: Record<string, Account[]> = {
       hasPassword: true,
       label: "Work",
       notes: "Main work Google account",
+      tags: [
+        { id: "t2", name: "Work", color: "#8b5cf6" },
+        { id: "t3", name: "Shared", color: "#10b981" },
+      ],
       sharedWith: [
         {
           id: "u1",
@@ -68,6 +74,7 @@ const accountsData: Record<string, Account[]> = {
       email: "dev@gmail.com",
       label: "Development",
       notes: "For testing APIs",
+      isFavorite: true,
     },
   ],
   "github.com": [
