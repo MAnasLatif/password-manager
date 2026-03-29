@@ -1,6 +1,23 @@
 "use client";
 
 import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import type { DragEndEvent } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import {
   Alert,
   Button,
   Calendar,
@@ -34,6 +51,7 @@ import {
   Eye,
   EyeOff,
   Globe,
+  GripVertical,
   Hash,
   HelpCircle,
   KeyRound,
@@ -42,6 +60,7 @@ import {
   MapPin,
   NotebookPen,
   Phone,
+  Pin,
   Plus,
   ShieldEllipsis,
   Tag,
@@ -83,6 +102,7 @@ interface CustomField {
   showSecret?: boolean;
   strength?: PasswordStrength;
   pinLength?: number;
+  pinned?: boolean;
   cardNumber?: string;
   cardName?: string;
   cardPin?: string;
@@ -291,6 +311,22 @@ export default function AddPasswordPage() {
 
   const handleUpdateField = (id: string, updates: Partial<CustomField>) => {
     setCustomFields((prev) => prev.map((f) => (f.id === id ? { ...f, ...updates } : f)));
+  };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setCustomFields((prev) => {
+        const oldIndex = prev.findIndex((f) => f.id === active.id);
+        const newIndex = prev.findIndex((f) => f.id === over.id);
+        return arrayMove(prev, oldIndex, newIndex);
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -512,154 +548,113 @@ export default function AddPasswordPage() {
           </TextField>
 
           {/* Custom Fields */}
-          {customFields.map((field) => (
-            <div key={field.id} className="border-border flex flex-col gap-2 rounded-xl border p-3">
-              <InputGroup>
-                <InputGroup.Prefix>
-                  <Select
-                    selectedKey={field.type}
-                    onSelectionChange={(key) =>
-                      handleUpdateField(field.id, { type: key as FieldType, value: "" })
-                    }
-                    aria-label="Field type"
-                  >
-                    <Select.Trigger className="border-none bg-transparent shadow-none">
-                      <Select.Value />
-                      <Select.Indicator />
-                    </Select.Trigger>
-                    <Select.Popover
-                      UNSTABLE_portalContainer={
-                        typeof document !== "undefined" ? document.body : undefined
-                      }
-                    >
-                      <ListBox>
-                        {FIELD_TYPES.map((ft) => (
-                          <ListBox.Item key={ft.id} id={ft.id} textValue={ft.label}>
-                            {ft.label}
-                            <ListBox.ItemIndicator />
-                          </ListBox.Item>
-                        ))}
-                      </ListBox>
-                    </Select.Popover>
-                  </Select>
-                </InputGroup.Prefix>
-                <InputGroup.Input
-                  placeholder="Label"
-                  value={field.label}
-                  onChange={(e) => handleUpdateField(field.id, { label: e.target.value })}
-                  disabled={isPending}
-                />
-                <InputGroup.Suffix>
-                  <div className="flex items-center gap-1">
-                    {field.type === "pin" && (
-                      <NumberField
-                        value={field.pinLength ?? 4}
-                        minValue={4}
-                        maxValue={12}
-                        onChange={(val) => {
-                          const len = isNaN(val) ? 4 : val;
-                          handleUpdateField(field.id, { pinLength: len, value: "" });
-                        }}
-                        isDisabled={isPending}
-                        aria-label="PIN length"
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={customFields.map((f) => f.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {customFields.map((field) => (
+                <SortableFieldCard key={field.id} id={field.id}>
+                  <InputGroup>
+                    <InputGroup.Prefix>
+                      <Select
+                        selectedKey={field.type}
+                        onSelectionChange={(key) =>
+                          handleUpdateField(field.id, { type: key as FieldType, value: "" })
+                        }
+                        aria-label="Field type"
                       >
-                        <NumberField.Group className="shadow-none">
-                          <NumberField.DecrementButton />
-                          <NumberField.Input className="w-12 text-center" />
-                          <NumberField.IncrementButton />
-                        </NumberField.Group>
-                      </NumberField>
-                    )}
-                    <Button
-                      type="button"
-                      isIconOnly
-                      variant="ghost"
-                      size="sm"
-                      onPress={() => handleRemoveField(field.id)}
-                      isDisabled={isPending}
-                      aria-label="Remove field"
-                    >
-                      <Trash2 className="text-danger size-4" />
-                    </Button>
-                  </div>
-                </InputGroup.Suffix>
-              </InputGroup>
-
-              {/* Field value */}
-              {field.type === "date" ? (
-                <DatePicker
-                  value={field.value ? parseDate(field.value) : null}
-                  onChange={(val) =>
-                    handleUpdateField(field.id, { value: val ? val.toString() : "" })
-                  }
-                  isDisabled={isPending}
-                >
-                  <DateField.Group fullWidth>
-                    <DateField.Prefix>
-                      <CalendarDays className="text-muted size-4" />
-                    </DateField.Prefix>
-                    <DateField.Input>
-                      {(segment) => <DateField.Segment segment={segment} />}
-                    </DateField.Input>
-                    <DateField.Suffix>
-                      <DatePicker.Trigger>
-                        <DatePicker.TriggerIndicator>
-                          <ChevronDown />
-                        </DatePicker.TriggerIndicator>
-                      </DatePicker.Trigger>
-                    </DateField.Suffix>
-                    <DatePicker.Popover>
-                      <Calendar aria-label="Pick a date">
-                        <Calendar.Header>
-                          <Calendar.YearPickerTrigger>
-                            <Calendar.YearPickerTriggerHeading />
-                            <Calendar.YearPickerTriggerIndicator />
-                          </Calendar.YearPickerTrigger>
-                          <Calendar.NavButton slot="previous" />
-                          <Calendar.NavButton slot="next" />
-                        </Calendar.Header>
-                        <Calendar.Grid>
-                          <Calendar.GridHeader>
-                            {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
-                          </Calendar.GridHeader>
-                          <Calendar.GridBody>
-                            {(date) => <Calendar.Cell date={date} />}
-                          </Calendar.GridBody>
-                        </Calendar.Grid>
-                        <Calendar.YearPickerGrid>
-                          <Calendar.YearPickerGridBody>
-                            {({ year }) => <Calendar.YearPickerCell year={year} />}
-                          </Calendar.YearPickerGridBody>
-                        </Calendar.YearPickerGrid>
-                      </Calendar>
-                    </DatePicker.Popover>
-                  </DateField.Group>
-                </DatePicker>
-              ) : field.type === "datetime" ? (
-                <DatePicker
-                  granularity="minute"
-                  hideTimeZone
-                  value={
-                    field.value
-                      ? (() => {
-                          try {
-                            return parseDateTime(field.value);
-                          } catch {
-                            return null;
+                        <Select.Trigger className="border-none bg-transparent shadow-none">
+                          <Select.Value />
+                          <Select.Indicator />
+                        </Select.Trigger>
+                        <Select.Popover
+                          UNSTABLE_portalContainer={
+                            typeof document !== "undefined" ? document.body : undefined
                           }
-                        })()
-                      : null
-                  }
-                  onChange={(val) =>
-                    handleUpdateField(field.id, { value: val ? val.toString() : "" })
-                  }
-                  isDisabled={isPending}
-                >
-                  {({ state }) => (
-                    <>
+                        >
+                          <ListBox>
+                            {FIELD_TYPES.map((ft) => (
+                              <ListBox.Item key={ft.id} id={ft.id} textValue={ft.label}>
+                                {ft.label}
+                                <ListBox.ItemIndicator />
+                              </ListBox.Item>
+                            ))}
+                          </ListBox>
+                        </Select.Popover>
+                      </Select>
+                    </InputGroup.Prefix>
+                    <InputGroup.Input
+                      placeholder="Label"
+                      value={field.label}
+                      onChange={(e) => handleUpdateField(field.id, { label: e.target.value })}
+                      disabled={isPending}
+                    />
+                    <InputGroup.Suffix>
+                      <div className="flex items-center gap-1">
+                        {field.type === "pin" && (
+                          <NumberField
+                            value={field.pinLength ?? 4}
+                            minValue={4}
+                            maxValue={12}
+                            onChange={(val) => {
+                              const len = isNaN(val) ? 4 : val;
+                              handleUpdateField(field.id, { pinLength: len, value: "" });
+                            }}
+                            isDisabled={isPending}
+                            aria-label="PIN length"
+                          >
+                            <NumberField.Group className="shadow-none">
+                              <NumberField.DecrementButton />
+                              <NumberField.Input className="w-12 text-center" />
+                              <NumberField.IncrementButton />
+                            </NumberField.Group>
+                          </NumberField>
+                        )}
+                        <Button
+                          type="button"
+                          isIconOnly
+                          variant="ghost"
+                          size="sm"
+                          onPress={() => handleUpdateField(field.id, { pinned: !field.pinned })}
+                          isDisabled={isPending}
+                          aria-label={field.pinned ? "Unpin from card" : "Pin to card"}
+                        >
+                          <Pin
+                            className={`size-4 ${field.pinned ? "text-accent fill-accent" : "text-muted"}`}
+                          />
+                        </Button>
+                        <Button
+                          type="button"
+                          isIconOnly
+                          variant="ghost"
+                          size="sm"
+                          onPress={() => handleRemoveField(field.id)}
+                          isDisabled={isPending}
+                          aria-label="Remove field"
+                        >
+                          <Trash2 className="text-danger size-4" />
+                        </Button>
+                      </div>
+                    </InputGroup.Suffix>
+                  </InputGroup>
+
+                  {/* Field value */}
+                  {field.type === "date" ? (
+                    <DatePicker
+                      value={field.value ? parseDate(field.value) : null}
+                      onChange={(val) =>
+                        handleUpdateField(field.id, { value: val ? val.toString() : "" })
+                      }
+                      isDisabled={isPending}
+                    >
                       <DateField.Group fullWidth>
                         <DateField.Prefix>
-                          <Clock className="text-muted size-4" />
+                          <CalendarDays className="text-muted size-4" />
                         </DateField.Prefix>
                         <DateField.Input>
                           {(segment) => <DateField.Segment segment={segment} />}
@@ -671,246 +666,467 @@ export default function AddPasswordPage() {
                             </DatePicker.TriggerIndicator>
                           </DatePicker.Trigger>
                         </DateField.Suffix>
+                        <DatePicker.Popover>
+                          <Calendar aria-label="Pick a date">
+                            <Calendar.Header>
+                              <Calendar.YearPickerTrigger>
+                                <Calendar.YearPickerTriggerHeading />
+                                <Calendar.YearPickerTriggerIndicator />
+                              </Calendar.YearPickerTrigger>
+                              <Calendar.NavButton slot="previous" />
+                              <Calendar.NavButton slot="next" />
+                            </Calendar.Header>
+                            <Calendar.Grid>
+                              <Calendar.GridHeader>
+                                {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
+                              </Calendar.GridHeader>
+                              <Calendar.GridBody>
+                                {(date) => <Calendar.Cell date={date} />}
+                              </Calendar.GridBody>
+                            </Calendar.Grid>
+                            <Calendar.YearPickerGrid>
+                              <Calendar.YearPickerGridBody>
+                                {({ year }) => <Calendar.YearPickerCell year={year} />}
+                              </Calendar.YearPickerGridBody>
+                            </Calendar.YearPickerGrid>
+                          </Calendar>
+                        </DatePicker.Popover>
                       </DateField.Group>
-                      <DatePicker.Popover className="flex flex-col gap-3">
-                        <Calendar aria-label="Pick a date and time">
-                          <Calendar.Header>
-                            <Calendar.YearPickerTrigger>
-                              <Calendar.YearPickerTriggerHeading />
-                              <Calendar.YearPickerTriggerIndicator />
-                            </Calendar.YearPickerTrigger>
-                            <Calendar.NavButton slot="previous" />
-                            <Calendar.NavButton slot="next" />
-                          </Calendar.Header>
-                          <Calendar.Grid>
-                            <Calendar.GridHeader>
-                              {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
-                            </Calendar.GridHeader>
-                            <Calendar.GridBody>
-                              {(date) => <Calendar.Cell date={date} />}
-                            </Calendar.GridBody>
-                          </Calendar.Grid>
-                          <Calendar.YearPickerGrid>
-                            <Calendar.YearPickerGridBody>
-                              {({ year }) => <Calendar.YearPickerCell year={year} />}
-                            </Calendar.YearPickerGridBody>
-                          </Calendar.YearPickerGrid>
-                        </Calendar>
-                        <div className="flex items-center justify-between gap-4">
-                          <Label>Time</Label>
-                          <TimeField
-                            aria-label="Time"
-                            granularity="minute"
-                            hideTimeZone
-                            value={state.timeValue}
-                            onChange={(v) => state.setTimeValue(v as TimeValue)}
-                          >
-                            <TimeField.Group variant="secondary">
-                              <TimeField.Input>
-                                {(segment) => <TimeField.Segment segment={segment} />}
-                              </TimeField.Input>
-                            </TimeField.Group>
-                          </TimeField>
-                        </div>
-                      </DatePicker.Popover>
-                    </>
-                  )}
-                </DatePicker>
-              ) : field.type === "date-range" ? (
-                <DateRangePicker
-                  value={(() => {
-                    if (!field.value) return null;
-                    try {
-                      const { start, end } = JSON.parse(field.value);
-                      return { start: parseDate(start), end: parseDate(end) };
-                    } catch {
-                      return null;
-                    }
-                  })()}
-                  onChange={(range) =>
-                    handleUpdateField(field.id, {
-                      value: range
-                        ? JSON.stringify({
-                            start: range.start.toString(),
-                            end: range.end.toString(),
-                          })
-                        : "",
-                    })
-                  }
-                  isDisabled={isPending}
-                >
-                  <DateField.Group fullWidth>
-                    <DateField.Prefix>
-                      <CalendarRange className="text-muted size-4" />
-                    </DateField.Prefix>
-                    <DateField.Input slot="start">
-                      {(segment) => <DateField.Segment segment={segment} />}
-                    </DateField.Input>
-                    <DateRangePicker.RangeSeparator />
-                    <DateField.Input slot="end">
-                      {(segment) => <DateField.Segment segment={segment} />}
-                    </DateField.Input>
-                    <DateField.Suffix>
-                      <DateRangePicker.Trigger>
-                        <DatePicker.TriggerIndicator>
-                          <ChevronDown />
-                        </DatePicker.TriggerIndicator>
-                      </DateRangePicker.Trigger>
-                    </DateField.Suffix>
-                  </DateField.Group>
-                  <DateRangePicker.Popover>
-                    <RangeCalendar aria-label="Pick a date range">
-                      <RangeCalendar.Header>
-                        <RangeCalendar.YearPickerTrigger>
-                          <RangeCalendar.YearPickerTriggerHeading />
-                          <RangeCalendar.YearPickerTriggerIndicator />
-                        </RangeCalendar.YearPickerTrigger>
-                        <RangeCalendar.NavButton slot="previous" />
-                        <RangeCalendar.NavButton slot="next" />
-                      </RangeCalendar.Header>
-                      <RangeCalendar.Grid>
-                        <RangeCalendar.GridHeader>
-                          {(day) => <RangeCalendar.HeaderCell>{day}</RangeCalendar.HeaderCell>}
-                        </RangeCalendar.GridHeader>
-                        <RangeCalendar.GridBody>
-                          {(date) => <RangeCalendar.Cell date={date} />}
-                        </RangeCalendar.GridBody>
-                      </RangeCalendar.Grid>
-                      <RangeCalendar.YearPickerGrid>
-                        <RangeCalendar.YearPickerGridBody>
-                          {({ year }) => <RangeCalendar.YearPickerCell year={year} />}
-                        </RangeCalendar.YearPickerGridBody>
-                      </RangeCalendar.YearPickerGrid>
-                    </RangeCalendar>
-                  </DateRangePicker.Popover>
-                </DateRangePicker>
-              ) : field.type === "number" ? (
-                <InputGroup>
-                  <InputGroup.Prefix>
-                    <Hash className="text-muted size-4" />
-                  </InputGroup.Prefix>
-                  <NumberField
-                    className="w-full"
-                    value={field.value !== "" ? Number(field.value) : undefined}
-                    onChange={(val) =>
-                      handleUpdateField(field.id, { value: isNaN(val) ? "" : String(val) })
-                    }
-                    isDisabled={isPending}
-                  >
-                    <NumberField.Group className="border-none shadow-none">
-                      <NumberField.DecrementButton />
-                      <NumberField.Input placeholder="0" className="border-none shadow-none" />
-                      <NumberField.IncrementButton />
-                    </NumberField.Group>
-                  </NumberField>
-                </InputGroup>
-              ) : field.type === "textarea" || field.type === "address" ? (
-                <TextField
-                  value={field.value}
-                  onChange={(value) => handleUpdateField(field.id, { value })}
-                  isDisabled={isPending}
-                >
-                  <InputGroup>
-                    <InputGroup.Prefix>{getFieldIcon(field.type)}</InputGroup.Prefix>
-                    <InputGroup.TextArea placeholder={getFieldPlaceholder(field.type)} rows={3} />
-                  </InputGroup>
-                </TextField>
-              ) : field.type === "security-question" ? (
-                <div className="flex flex-col gap-2">
-                  <TextField
-                    type="text"
-                    value={field.label}
-                    onChange={(value) => handleUpdateField(field.id, { label: value })}
-                    isDisabled={isPending}
-                  >
+                    </DatePicker>
+                  ) : field.type === "datetime" ? (
+                    <DatePicker
+                      granularity="minute"
+                      hideTimeZone
+                      value={
+                        field.value
+                          ? (() => {
+                              try {
+                                return parseDateTime(field.value);
+                              } catch {
+                                return null;
+                              }
+                            })()
+                          : null
+                      }
+                      onChange={(val) =>
+                        handleUpdateField(field.id, { value: val ? val.toString() : "" })
+                      }
+                      isDisabled={isPending}
+                    >
+                      {({ state }) => (
+                        <>
+                          <DateField.Group fullWidth>
+                            <DateField.Prefix>
+                              <Clock className="text-muted size-4" />
+                            </DateField.Prefix>
+                            <DateField.Input>
+                              {(segment) => <DateField.Segment segment={segment} />}
+                            </DateField.Input>
+                            <DateField.Suffix>
+                              <DatePicker.Trigger>
+                                <DatePicker.TriggerIndicator>
+                                  <ChevronDown />
+                                </DatePicker.TriggerIndicator>
+                              </DatePicker.Trigger>
+                            </DateField.Suffix>
+                          </DateField.Group>
+                          <DatePicker.Popover className="flex flex-col gap-3">
+                            <Calendar aria-label="Pick a date and time">
+                              <Calendar.Header>
+                                <Calendar.YearPickerTrigger>
+                                  <Calendar.YearPickerTriggerHeading />
+                                  <Calendar.YearPickerTriggerIndicator />
+                                </Calendar.YearPickerTrigger>
+                                <Calendar.NavButton slot="previous" />
+                                <Calendar.NavButton slot="next" />
+                              </Calendar.Header>
+                              <Calendar.Grid>
+                                <Calendar.GridHeader>
+                                  {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
+                                </Calendar.GridHeader>
+                                <Calendar.GridBody>
+                                  {(date) => <Calendar.Cell date={date} />}
+                                </Calendar.GridBody>
+                              </Calendar.Grid>
+                              <Calendar.YearPickerGrid>
+                                <Calendar.YearPickerGridBody>
+                                  {({ year }) => <Calendar.YearPickerCell year={year} />}
+                                </Calendar.YearPickerGridBody>
+                              </Calendar.YearPickerGrid>
+                            </Calendar>
+                            <div className="flex items-center justify-between gap-4">
+                              <Label>Time</Label>
+                              <TimeField
+                                aria-label="Time"
+                                granularity="minute"
+                                hideTimeZone
+                                value={state.timeValue}
+                                onChange={(v) => state.setTimeValue(v as TimeValue)}
+                              >
+                                <TimeField.Group variant="secondary">
+                                  <TimeField.Input>
+                                    {(segment) => <TimeField.Segment segment={segment} />}
+                                  </TimeField.Input>
+                                </TimeField.Group>
+                              </TimeField>
+                            </div>
+                          </DatePicker.Popover>
+                        </>
+                      )}
+                    </DatePicker>
+                  ) : field.type === "date-range" ? (
+                    <DateRangePicker
+                      value={(() => {
+                        if (!field.value) return null;
+                        try {
+                          const { start, end } = JSON.parse(field.value);
+                          return { start: parseDate(start), end: parseDate(end) };
+                        } catch {
+                          return null;
+                        }
+                      })()}
+                      onChange={(range) =>
+                        handleUpdateField(field.id, {
+                          value: range
+                            ? JSON.stringify({
+                                start: range.start.toString(),
+                                end: range.end.toString(),
+                              })
+                            : "",
+                        })
+                      }
+                      isDisabled={isPending}
+                    >
+                      <DateField.Group fullWidth>
+                        <DateField.Prefix>
+                          <CalendarRange className="text-muted size-4" />
+                        </DateField.Prefix>
+                        <DateField.Input slot="start">
+                          {(segment) => <DateField.Segment segment={segment} />}
+                        </DateField.Input>
+                        <DateRangePicker.RangeSeparator />
+                        <DateField.Input slot="end">
+                          {(segment) => <DateField.Segment segment={segment} />}
+                        </DateField.Input>
+                        <DateField.Suffix>
+                          <DateRangePicker.Trigger>
+                            <DatePicker.TriggerIndicator>
+                              <ChevronDown />
+                            </DatePicker.TriggerIndicator>
+                          </DateRangePicker.Trigger>
+                        </DateField.Suffix>
+                      </DateField.Group>
+                      <DateRangePicker.Popover>
+                        <RangeCalendar aria-label="Pick a date range">
+                          <RangeCalendar.Header>
+                            <RangeCalendar.YearPickerTrigger>
+                              <RangeCalendar.YearPickerTriggerHeading />
+                              <RangeCalendar.YearPickerTriggerIndicator />
+                            </RangeCalendar.YearPickerTrigger>
+                            <RangeCalendar.NavButton slot="previous" />
+                            <RangeCalendar.NavButton slot="next" />
+                          </RangeCalendar.Header>
+                          <RangeCalendar.Grid>
+                            <RangeCalendar.GridHeader>
+                              {(day) => <RangeCalendar.HeaderCell>{day}</RangeCalendar.HeaderCell>}
+                            </RangeCalendar.GridHeader>
+                            <RangeCalendar.GridBody>
+                              {(date) => <RangeCalendar.Cell date={date} />}
+                            </RangeCalendar.GridBody>
+                          </RangeCalendar.Grid>
+                          <RangeCalendar.YearPickerGrid>
+                            <RangeCalendar.YearPickerGridBody>
+                              {({ year }) => <RangeCalendar.YearPickerCell year={year} />}
+                            </RangeCalendar.YearPickerGridBody>
+                          </RangeCalendar.YearPickerGrid>
+                        </RangeCalendar>
+                      </DateRangePicker.Popover>
+                    </DateRangePicker>
+                  ) : field.type === "number" ? (
                     <InputGroup>
                       <InputGroup.Prefix>
-                        <HelpCircle className="text-muted size-4" />
+                        <Hash className="text-muted size-4" />
                       </InputGroup.Prefix>
-                      <InputGroup.Input placeholder="Question" />
-                    </InputGroup>
-                  </TextField>
-                  <InputGroup>
-                    <InputGroup.Prefix>
-                      <ShieldEllipsis className="text-muted size-4" />
-                    </InputGroup.Prefix>
-                    <InputGroup.Input
-                      type={field.showSecret ? "text" : "password"}
-                      placeholder="Answer"
-                      value={field.value}
-                      onChange={(e) => handleUpdateField(field.id, { value: e.target.value })}
-                      disabled={isPending}
-                    />
-                    <InputGroup.Suffix>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleUpdateField(field.id, { showSecret: !field.showSecret })
+                      <NumberField
+                        className="w-full"
+                        value={field.value !== "" ? Number(field.value) : undefined}
+                        onChange={(val) =>
+                          handleUpdateField(field.id, { value: isNaN(val) ? "" : String(val) })
                         }
-                        className="text-muted hover:text-foreground transition-colors focus:outline-none"
-                        disabled={isPending}
-                        tabIndex={-1}
+                        isDisabled={isPending}
                       >
-                        {field.showSecret ? (
-                          <EyeOff className="size-4" />
-                        ) : (
-                          <Eye className="size-4" />
-                        )}
-                      </button>
-                    </InputGroup.Suffix>
-                  </InputGroup>
-                </div>
-              ) : field.type === "credit-card" ? (
-                <div className="flex flex-col gap-2">
-                  <InputGroup>
-                    <InputGroup.Prefix>
-                      <CreditCard className="text-muted size-4" />
-                    </InputGroup.Prefix>
-                    <InputGroup.Input
-                      placeholder="4242 4242 4242 4242"
-                      value={field.cardNumber ?? ""}
-                      onChange={(e) => handleUpdateField(field.id, { cardNumber: e.target.value })}
-                      disabled={isPending}
-                      maxLength={19}
-                    />
-                    <InputGroup.Suffix>
-                      <span className="text-muted text-xs">Card Number</span>
-                    </InputGroup.Suffix>
-                  </InputGroup>
-                  <InputGroup>
-                    <InputGroup.Prefix>
-                      <User className="text-muted size-4" />
-                    </InputGroup.Prefix>
-                    <InputGroup.Input
-                      placeholder="Cardholder Name"
-                      value={field.cardName ?? ""}
-                      onChange={(e) => handleUpdateField(field.id, { cardName: e.target.value })}
-                      disabled={isPending}
-                    />
-                    <InputGroup.Suffix>
-                      <span className="text-muted text-xs">Name</span>
-                    </InputGroup.Suffix>
-                  </InputGroup>
-                  <div className="flex gap-2">
-                    <InputGroup className="flex-1">
+                        <NumberField.Group className="border-none shadow-none">
+                          <NumberField.DecrementButton />
+                          <NumberField.Input placeholder="0" className="border-none shadow-none" />
+                          <NumberField.IncrementButton />
+                        </NumberField.Group>
+                      </NumberField>
+                    </InputGroup>
+                  ) : field.type === "textarea" || field.type === "address" ? (
+                    <TextField
+                      value={field.value}
+                      onChange={(value) => handleUpdateField(field.id, { value })}
+                      isDisabled={isPending}
+                    >
+                      <InputGroup>
+                        <InputGroup.Prefix>{getFieldIcon(field.type)}</InputGroup.Prefix>
+                        <InputGroup.TextArea
+                          placeholder={getFieldPlaceholder(field.type)}
+                          rows={3}
+                        />
+                      </InputGroup>
+                    </TextField>
+                  ) : field.type === "security-question" ? (
+                    <div className="flex flex-col gap-2">
+                      <TextField
+                        type="text"
+                        value={field.label}
+                        onChange={(value) => handleUpdateField(field.id, { label: value })}
+                        isDisabled={isPending}
+                      >
+                        <InputGroup>
+                          <InputGroup.Prefix>
+                            <HelpCircle className="text-muted size-4" />
+                          </InputGroup.Prefix>
+                          <InputGroup.Input placeholder="Question" />
+                        </InputGroup>
+                      </TextField>
+                      <InputGroup>
+                        <InputGroup.Prefix>
+                          <ShieldEllipsis className="text-muted size-4" />
+                        </InputGroup.Prefix>
+                        <InputGroup.Input
+                          type={field.showSecret ? "text" : "password"}
+                          placeholder="Answer"
+                          value={field.value}
+                          onChange={(e) => handleUpdateField(field.id, { value: e.target.value })}
+                          disabled={isPending}
+                        />
+                        <InputGroup.Suffix>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleUpdateField(field.id, { showSecret: !field.showSecret })
+                            }
+                            className="text-muted hover:text-foreground transition-colors focus:outline-none"
+                            disabled={isPending}
+                            tabIndex={-1}
+                          >
+                            {field.showSecret ? (
+                              <EyeOff className="size-4" />
+                            ) : (
+                              <Eye className="size-4" />
+                            )}
+                          </button>
+                        </InputGroup.Suffix>
+                      </InputGroup>
+                    </div>
+                  ) : field.type === "credit-card" ? (
+                    <div className="flex flex-col gap-2">
+                      <InputGroup>
+                        <InputGroup.Prefix>
+                          <CreditCard className="text-muted size-4" />
+                        </InputGroup.Prefix>
+                        <InputGroup.Input
+                          placeholder="4242 4242 4242 4242"
+                          value={field.cardNumber ?? ""}
+                          onChange={(e) =>
+                            handleUpdateField(field.id, { cardNumber: e.target.value })
+                          }
+                          disabled={isPending}
+                          maxLength={19}
+                        />
+                        <InputGroup.Suffix>
+                          <span className="text-muted text-xs">Card Number</span>
+                        </InputGroup.Suffix>
+                      </InputGroup>
+                      <InputGroup>
+                        <InputGroup.Prefix>
+                          <User className="text-muted size-4" />
+                        </InputGroup.Prefix>
+                        <InputGroup.Input
+                          placeholder="Cardholder Name"
+                          value={field.cardName ?? ""}
+                          onChange={(e) =>
+                            handleUpdateField(field.id, { cardName: e.target.value })
+                          }
+                          disabled={isPending}
+                        />
+                        <InputGroup.Suffix>
+                          <span className="text-muted text-xs">Name</span>
+                        </InputGroup.Suffix>
+                      </InputGroup>
+                      <div className="flex gap-2">
+                        <InputGroup className="flex-1">
+                          <InputGroup.Input
+                            type={field.showCardPin ? "text" : "password"}
+                            placeholder="PIN"
+                            value={field.cardPin ?? ""}
+                            onChange={(e) =>
+                              handleUpdateField(field.id, { cardPin: e.target.value })
+                            }
+                            disabled={isPending}
+                          />
+                          <InputGroup.Suffix>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleUpdateField(field.id, { showCardPin: !field.showCardPin })
+                              }
+                              className="text-muted hover:text-foreground transition-colors focus:outline-none"
+                              disabled={isPending}
+                              tabIndex={-1}
+                            >
+                              {field.showCardPin ? (
+                                <EyeOff className="size-4" />
+                              ) : (
+                                <Eye className="size-4" />
+                              )}
+                            </button>
+                          </InputGroup.Suffix>
+                        </InputGroup>
+                        <InputGroup className="flex-1">
+                          <InputGroup.Prefix>
+                            <CalendarDays className="text-muted size-4" />
+                          </InputGroup.Prefix>
+                          <InputGroup.Input
+                            placeholder="MM/YY"
+                            value={field.cardExp ?? ""}
+                            onChange={(e) => {
+                              let val = e.target.value.replace(/[^0-9/]/g, "");
+                              if (
+                                val.length === 2 &&
+                                !val.includes("/") &&
+                                (field.cardExp?.length ?? 0) < 2
+                              )
+                                val = val + "/";
+                              handleUpdateField(field.id, { cardExp: val });
+                            }}
+                            disabled={isPending}
+                            maxLength={5}
+                          />
+                        </InputGroup>
+                      </div>
+                    </div>
+                  ) : field.type === "pin" ? (
+                    <InputOTP
+                      maxLength={field.pinLength ?? 4}
+                      value={field.value}
+                      onChange={(val) => handleUpdateField(field.id, { value: val })}
+                      isDisabled={isPending}
+                      pattern={REGEXP_ONLY_DIGITS}
+                    >
+                      <InputOTP.Group>
+                        {Array.from({ length: field.pinLength ?? 4 }, (_, i) => (
+                          <InputOTP.Slot key={i} index={i} />
+                        ))}
+                      </InputOTP.Group>
+                    </InputOTP>
+                  ) : field.type === "password" ? (
+                    <InputGroup>
+                      <InputGroup.Prefix>
+                        <KeyRound className="text-muted size-4" />
+                      </InputGroup.Prefix>
                       <InputGroup.Input
-                        type={field.showCardPin ? "text" : "password"}
-                        placeholder="PIN"
-                        value={field.cardPin ?? ""}
-                        onChange={(e) => handleUpdateField(field.id, { cardPin: e.target.value })}
+                        type={field.showSecret ? "text" : "password"}
+                        placeholder="Password"
+                        value={field.value}
+                        onChange={(e) => handleUpdateField(field.id, { value: e.target.value })}
+                        disabled={isPending}
+                      />
+                      <InputGroup.Suffix>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            isIconOnly
+                            onPress={() =>
+                              handleUpdateField(field.id, { showSecret: !field.showSecret })
+                            }
+                            isDisabled={isPending}
+                          >
+                            {field.showSecret ? <EyeOff /> : <Eye />}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onPress={() =>
+                              handleUpdateField(field.id, {
+                                value: generatePassword(field.strength ?? "strong"),
+                                showSecret: true,
+                              })
+                            }
+                            isDisabled={isPending}
+                            aria-label="Generate password"
+                          >
+                            <Dices />
+                            {PASSWORD_STRENGTH_LABELS[field.strength ?? "strong"]}
+                          </Button>
+                          <Dropdown>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              isIconOnly
+                              aria-label="Password strength"
+                              isDisabled={isPending}
+                            >
+                              <ChevronDown />
+                            </Button>
+                            <Dropdown.Popover>
+                              <Dropdown.Menu
+                                aria-label="Password strength options"
+                                selectionMode="single"
+                                selectedKeys={[field.strength ?? "strong"]}
+                                onSelectionChange={(keys) => {
+                                  if (keys === "all") return;
+                                  const [key] = keys;
+                                  if (key)
+                                    handleUpdateField(field.id, {
+                                      strength: key as PasswordStrength,
+                                    });
+                                }}
+                              >
+                                <Dropdown.Item id="normal" textValue="Normal">
+                                  Normal
+                                  <Dropdown.ItemIndicator />
+                                </Dropdown.Item>
+                                <Dropdown.Item id="strong" textValue="Strong">
+                                  Strong
+                                  <Dropdown.ItemIndicator />
+                                </Dropdown.Item>
+                                <Dropdown.Item id="very-strong" textValue="Very Strong">
+                                  Very Strong
+                                  <Dropdown.ItemIndicator />
+                                </Dropdown.Item>
+                              </Dropdown.Menu>
+                            </Dropdown.Popover>
+                          </Dropdown>
+                        </div>
+                      </InputGroup.Suffix>
+                    </InputGroup>
+                  ) : SECRET_TYPES.includes(field.type) ? (
+                    <InputGroup>
+                      <InputGroup.Prefix>
+                        <ShieldEllipsis className="text-muted size-4" />
+                      </InputGroup.Prefix>
+                      <InputGroup.Input
+                        type={field.showSecret ? "text" : "password"}
+                        placeholder={getFieldPlaceholder(field.type)}
+                        value={field.value}
+                        onChange={(e) => handleUpdateField(field.id, { value: e.target.value })}
                         disabled={isPending}
                       />
                       <InputGroup.Suffix>
                         <button
                           type="button"
                           onClick={() =>
-                            handleUpdateField(field.id, { showCardPin: !field.showCardPin })
+                            handleUpdateField(field.id, { showSecret: !field.showSecret })
                           }
                           className="text-muted hover:text-foreground transition-colors focus:outline-none"
                           disabled={isPending}
                           tabIndex={-1}
                         >
-                          {field.showCardPin ? (
+                          {field.showSecret ? (
                             <EyeOff className="size-4" />
                           ) : (
                             <Eye className="size-4" />
@@ -918,168 +1134,23 @@ export default function AddPasswordPage() {
                         </button>
                       </InputGroup.Suffix>
                     </InputGroup>
-                    <InputGroup className="flex-1">
-                      <InputGroup.Prefix>
-                        <CalendarDays className="text-muted size-4" />
-                      </InputGroup.Prefix>
-                      <InputGroup.Input
-                        placeholder="MM/YY"
-                        value={field.cardExp ?? ""}
-                        onChange={(e) => {
-                          let val = e.target.value.replace(/[^0-9/]/g, "");
-                          if (
-                            val.length === 2 &&
-                            !val.includes("/") &&
-                            (field.cardExp?.length ?? 0) < 2
-                          )
-                            val = val + "/";
-                          handleUpdateField(field.id, { cardExp: val });
-                        }}
-                        disabled={isPending}
-                        maxLength={5}
-                      />
-                    </InputGroup>
-                  </div>
-                </div>
-              ) : field.type === "pin" ? (
-                <InputOTP
-                  maxLength={field.pinLength ?? 4}
-                  value={field.value}
-                  onChange={(val) => handleUpdateField(field.id, { value: val })}
-                  isDisabled={isPending}
-                  pattern={REGEXP_ONLY_DIGITS}
-                >
-                  <InputOTP.Group>
-                    {Array.from({ length: field.pinLength ?? 4 }, (_, i) => (
-                      <InputOTP.Slot key={i} index={i} />
-                    ))}
-                  </InputOTP.Group>
-                </InputOTP>
-              ) : field.type === "password" ? (
-                <InputGroup>
-                  <InputGroup.Prefix>
-                    <KeyRound className="text-muted size-4" />
-                  </InputGroup.Prefix>
-                  <InputGroup.Input
-                    type={field.showSecret ? "text" : "password"}
-                    placeholder="Password"
-                    value={field.value}
-                    onChange={(e) => handleUpdateField(field.id, { value: e.target.value })}
-                    disabled={isPending}
-                  />
-                  <InputGroup.Suffix>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        isIconOnly
-                        onPress={() =>
-                          handleUpdateField(field.id, { showSecret: !field.showSecret })
-                        }
-                        isDisabled={isPending}
-                      >
-                        {field.showSecret ? <EyeOff /> : <Eye />}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onPress={() =>
-                          handleUpdateField(field.id, {
-                            value: generatePassword(field.strength ?? "strong"),
-                            showSecret: true,
-                          })
-                        }
-                        isDisabled={isPending}
-                        aria-label="Generate password"
-                      >
-                        <Dices />
-                        {PASSWORD_STRENGTH_LABELS[field.strength ?? "strong"]}
-                      </Button>
-                      <Dropdown>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          isIconOnly
-                          aria-label="Password strength"
-                          isDisabled={isPending}
-                        >
-                          <ChevronDown />
-                        </Button>
-                        <Dropdown.Popover>
-                          <Dropdown.Menu
-                            aria-label="Password strength options"
-                            selectionMode="single"
-                            selectedKeys={[field.strength ?? "strong"]}
-                            onSelectionChange={(keys) => {
-                              if (keys === "all") return;
-                              const [key] = keys;
-                              if (key)
-                                handleUpdateField(field.id, {
-                                  strength: key as PasswordStrength,
-                                });
-                            }}
-                          >
-                            <Dropdown.Item id="normal" textValue="Normal">
-                              Normal
-                              <Dropdown.ItemIndicator />
-                            </Dropdown.Item>
-                            <Dropdown.Item id="strong" textValue="Strong">
-                              Strong
-                              <Dropdown.ItemIndicator />
-                            </Dropdown.Item>
-                            <Dropdown.Item id="very-strong" textValue="Very Strong">
-                              Very Strong
-                              <Dropdown.ItemIndicator />
-                            </Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown.Popover>
-                      </Dropdown>
-                    </div>
-                  </InputGroup.Suffix>
-                </InputGroup>
-              ) : SECRET_TYPES.includes(field.type) ? (
-                <InputGroup>
-                  <InputGroup.Prefix>
-                    <ShieldEllipsis className="text-muted size-4" />
-                  </InputGroup.Prefix>
-                  <InputGroup.Input
-                    type={field.showSecret ? "text" : "password"}
-                    placeholder={getFieldPlaceholder(field.type)}
-                    value={field.value}
-                    onChange={(e) => handleUpdateField(field.id, { value: e.target.value })}
-                    disabled={isPending}
-                  />
-                  <InputGroup.Suffix>
-                    <button
-                      type="button"
-                      onClick={() => handleUpdateField(field.id, { showSecret: !field.showSecret })}
-                      className="text-muted hover:text-foreground transition-colors focus:outline-none"
-                      disabled={isPending}
-                      tabIndex={-1}
+                  ) : (
+                    <TextField
+                      type={getFieldInputType(field.type)}
+                      value={field.value}
+                      onChange={(value) => handleUpdateField(field.id, { value })}
+                      isDisabled={isPending}
                     >
-                      {field.showSecret ? (
-                        <EyeOff className="size-4" />
-                      ) : (
-                        <Eye className="size-4" />
-                      )}
-                    </button>
-                  </InputGroup.Suffix>
-                </InputGroup>
-              ) : (
-                <TextField
-                  type={getFieldInputType(field.type)}
-                  value={field.value}
-                  onChange={(value) => handleUpdateField(field.id, { value })}
-                  isDisabled={isPending}
-                >
-                  <InputGroup>
-                    <InputGroup.Prefix>{getFieldIcon(field.type)}</InputGroup.Prefix>
-                    <InputGroup.Input placeholder={getFieldPlaceholder(field.type)} />
-                  </InputGroup>
-                </TextField>
-              )}
-            </div>
-          ))}
+                      <InputGroup>
+                        <InputGroup.Prefix>{getFieldIcon(field.type)}</InputGroup.Prefix>
+                        <InputGroup.Input placeholder={getFieldPlaceholder(field.type)} />
+                      </InputGroup>
+                    </TextField>
+                  )}
+                </SortableFieldCard>
+              ))}
+            </SortableContext>
+          </DndContext>
 
           {/* Add more fields */}
           <Button
@@ -1116,6 +1187,34 @@ export default function AddPasswordPage() {
           </div>
         </div>
       </form>
+    </div>
+  );
+}
+
+function SortableFieldCard({ id, children }: { id: string; children: React.ReactNode }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 10 : undefined,
+    opacity: isDragging ? 0.8 : undefined,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="border-border flex gap-2 rounded-xl border p-3">
+      <button
+        type="button"
+        className="text-muted hover:text-foreground mt-2 flex shrink-0 cursor-grab touch-none items-start active:cursor-grabbing"
+        aria-label="Drag to reorder"
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="size-4" />
+      </button>
+      <div className="flex min-w-0 flex-1 flex-col gap-2">{children}</div>
     </div>
   );
 }
