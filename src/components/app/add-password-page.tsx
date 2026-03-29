@@ -25,7 +25,6 @@ import { parseDate, parseDateTime } from "@internationalized/date";
 import {
   AlignLeft,
   ArrowLeft,
-  Calendar as CalendarIcon,
   CalendarDays,
   CalendarRange,
   ChevronDown,
@@ -85,6 +84,7 @@ interface CustomField {
   strength?: PasswordStrength;
   pinLength?: number;
   cardNumber?: string;
+  cardName?: string;
   cardPin?: string;
   cardExp?: string;
   showCardPin?: boolean;
@@ -563,7 +563,7 @@ export default function AddPasswordPage() {
                         isDisabled={isPending}
                         aria-label="PIN length"
                       >
-                        <NumberField.Group>
+                        <NumberField.Group className="shadow-none">
                           <NumberField.DecrementButton />
                           <NumberField.Input className="w-12 text-center" />
                           <NumberField.IncrementButton />
@@ -596,42 +596,44 @@ export default function AddPasswordPage() {
                 >
                   <DateField.Group fullWidth>
                     <DateField.Prefix>
-                      <CalendarIcon className="text-muted size-4" />
+                      <CalendarDays className="text-muted size-4" />
                     </DateField.Prefix>
                     <DateField.Input>
                       {(segment) => <DateField.Segment segment={segment} />}
                     </DateField.Input>
                     <DateField.Suffix>
                       <DatePicker.Trigger>
-                        <DatePicker.TriggerIndicator />
+                        <DatePicker.TriggerIndicator>
+                          <ChevronDown />
+                        </DatePicker.TriggerIndicator>
                       </DatePicker.Trigger>
                     </DateField.Suffix>
+                    <DatePicker.Popover>
+                      <Calendar aria-label="Pick a date">
+                        <Calendar.Header>
+                          <Calendar.YearPickerTrigger>
+                            <Calendar.YearPickerTriggerHeading />
+                            <Calendar.YearPickerTriggerIndicator />
+                          </Calendar.YearPickerTrigger>
+                          <Calendar.NavButton slot="previous" />
+                          <Calendar.NavButton slot="next" />
+                        </Calendar.Header>
+                        <Calendar.Grid>
+                          <Calendar.GridHeader>
+                            {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
+                          </Calendar.GridHeader>
+                          <Calendar.GridBody>
+                            {(date) => <Calendar.Cell date={date} />}
+                          </Calendar.GridBody>
+                        </Calendar.Grid>
+                        <Calendar.YearPickerGrid>
+                          <Calendar.YearPickerGridBody>
+                            {({ year }) => <Calendar.YearPickerCell year={year} />}
+                          </Calendar.YearPickerGridBody>
+                        </Calendar.YearPickerGrid>
+                      </Calendar>
+                    </DatePicker.Popover>
                   </DateField.Group>
-                  <DatePicker.Popover>
-                    <Calendar aria-label="Pick a date">
-                      <Calendar.Header>
-                        <Calendar.YearPickerTrigger>
-                          <Calendar.YearPickerTriggerHeading />
-                          <Calendar.YearPickerTriggerIndicator />
-                        </Calendar.YearPickerTrigger>
-                        <Calendar.NavButton slot="previous" />
-                        <Calendar.NavButton slot="next" />
-                      </Calendar.Header>
-                      <Calendar.Grid>
-                        <Calendar.GridHeader>
-                          {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
-                        </Calendar.GridHeader>
-                        <Calendar.GridBody>
-                          {(date) => <Calendar.Cell date={date} />}
-                        </Calendar.GridBody>
-                      </Calendar.Grid>
-                      <Calendar.YearPickerGrid>
-                        <Calendar.YearPickerGridBody>
-                          {({ year }) => <Calendar.YearPickerCell year={year} />}
-                        </Calendar.YearPickerGridBody>
-                      </Calendar.YearPickerGrid>
-                    </Calendar>
-                  </DatePicker.Popover>
                 </DatePicker>
               ) : field.type === "datetime" ? (
                 <DatePicker
@@ -664,7 +666,9 @@ export default function AddPasswordPage() {
                         </DateField.Input>
                         <DateField.Suffix>
                           <DatePicker.Trigger>
-                            <DatePicker.TriggerIndicator />
+                            <DatePicker.TriggerIndicator>
+                              <ChevronDown />
+                            </DatePicker.TriggerIndicator>
                           </DatePicker.Trigger>
                         </DateField.Suffix>
                       </DateField.Group>
@@ -748,7 +752,9 @@ export default function AddPasswordPage() {
                     </DateField.Input>
                     <DateField.Suffix>
                       <DateRangePicker.Trigger>
-                        <DateRangePicker.TriggerIndicator />
+                        <DatePicker.TriggerIndicator>
+                          <ChevronDown />
+                        </DatePicker.TriggerIndicator>
                       </DateRangePicker.Trigger>
                     </DateField.Suffix>
                   </DateField.Group>
@@ -784,6 +790,7 @@ export default function AddPasswordPage() {
                     <Hash className="text-muted size-4" />
                   </InputGroup.Prefix>
                   <NumberField
+                    className="w-full"
                     value={field.value !== "" ? Number(field.value) : undefined}
                     onChange={(val) =>
                       handleUpdateField(field.id, { value: isNaN(val) ? "" : String(val) })
@@ -868,6 +875,20 @@ export default function AddPasswordPage() {
                     />
                     <InputGroup.Suffix>
                       <span className="text-muted text-xs">Card Number</span>
+                    </InputGroup.Suffix>
+                  </InputGroup>
+                  <InputGroup>
+                    <InputGroup.Prefix>
+                      <User className="text-muted size-4" />
+                    </InputGroup.Prefix>
+                    <InputGroup.Input
+                      placeholder="Cardholder Name"
+                      value={field.cardName ?? ""}
+                      onChange={(e) => handleUpdateField(field.id, { cardName: e.target.value })}
+                      disabled={isPending}
+                    />
+                    <InputGroup.Suffix>
+                      <span className="text-muted text-xs">Name</span>
                     </InputGroup.Suffix>
                   </InputGroup>
                   <div className="flex gap-2">
