@@ -2,7 +2,7 @@
 
 import useAppState from "@/contexts/app-state";
 import { signOut, useSession } from "@/lib/auth-client";
-import { Avatar, Button, Dropdown, Label, SearchField, Tooltip } from "@heroui/react";
+import { Avatar, Button, cn, Dropdown, Label, SearchField, Tooltip } from "@heroui/react";
 import { ThemeToggle } from "@/components/ThemeSwitcher";
 import { LogOut, Plus, Settings, User } from "lucide-react";
 import Image from "next/image";
@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 
-export function AppHeader() {
+export function AppHeader({ className }: { className?: string }) {
   const { searchPlaceholder, searchQuery, setSearchQuery, addButton } = useAppState();
   const router = useRouter();
   const { data: session } = useSession();
@@ -38,9 +38,9 @@ export function AppHeader() {
     : "?";
 
   return (
-    <header className="flex items-center justify-between gap-4 p-4">
+    <header className={cn("flex items-center justify-between gap-4 p-4", className)}>
       {/* Logo + Brand */}
-      <Link href="/" className="flex max-w-48 flex-1 shrink-0 items-center gap-2.5">
+      <Link href="/" className="flex w-full max-w-50 items-center gap-2.5">
         <Image src="/logo.svg" alt="MAAnasVault logo" width={28} height={28} className="size-7" />
         <div className="flex flex-col leading-none">
           <span className="text-sm font-semibold">MAnasPM</span>
@@ -49,7 +49,7 @@ export function AppHeader() {
       </Link>
 
       {/* Search */}
-      <div className="flex max-w-2xl flex-1 items-center gap-4">
+      <div className="m-auto flex w-full max-w-2xl flex-1 items-center gap-4">
         <SearchField
           variant="secondary"
           value={inputValue}
@@ -77,7 +77,7 @@ export function AppHeader() {
       </div>
 
       {/* Actions */}
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="flex w-full max-w-25 shrink-0 items-center justify-end gap-2">
         {/* Theme toggle – re-use existing */}
         <ThemeToggle variant="ghost" size="sm" className="text-muted" />
 

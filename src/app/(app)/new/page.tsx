@@ -9,13 +9,8 @@ export const metadata: Metadata = {
 
 export default function NewPage() {
   return (
-    <>
-      <div className="max-w-2xl flex-1">
-        <Suspense>
-          <AddPasswordPage />
-        </Suspense>
-      </div>
-      <div className="w-24" />
-    </>
+    <Suspense>
+      <AddPasswordPage />
+    </Suspense>
   );
 }

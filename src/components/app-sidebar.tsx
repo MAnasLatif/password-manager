@@ -1,6 +1,6 @@
 "use client";
 
-import { Accordion, Button } from "@heroui/react";
+import { Accordion, Button, cn } from "@heroui/react";
 import { ChevronDown, Plus, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -93,7 +93,7 @@ const menuItems: SidebarSection[] = [
   { title: "Teams", items: data.filter((item) => item.type === "team") },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ className }: { className?: string }) {
   const pathname = usePathname();
   const normalizePath = (value: string) => value.replace(/\/+$/, "") || "/";
   const isClient = useIsClient();
@@ -118,7 +118,7 @@ export function AppSidebar() {
     normalizePath(pathname) === normalizePath(getItemHref(section, item));
 
   return (
-    <aside className="w-full max-w-52 shrink-0 px-2 py-4">
+    <aside className={cn(className)}>
       <nav className="flex h-full flex-col gap-1">
         <Link href="/" aria-current={normalizePath(pathname) === "/" ? "page" : undefined}>
           <Button

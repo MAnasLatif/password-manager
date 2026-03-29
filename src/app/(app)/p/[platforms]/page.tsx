@@ -1,6 +1,7 @@
 import PlatformDetailPage from "@/components/app/platform-detail-page";
 import type { Account, Platform } from "@/types";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Platform Accounts",
@@ -183,11 +184,8 @@ export default async function PlatformPage({ params }: { params: Promise<{ platf
   const accounts = accountsData[decodedSlug] || [];
 
   return (
-    <>
-      <div className="max-w-2xl flex-1">
-        <PlatformDetailPage platform={platform} accounts={accounts} />
-      </div>
-      <div className="w-24" />
-    </>
+    <Suspense>
+      <PlatformDetailPage platform={platform} accounts={accounts} />
+    </Suspense>
   );
 }
