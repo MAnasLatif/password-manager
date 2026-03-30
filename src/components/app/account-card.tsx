@@ -13,6 +13,7 @@ import { Copy, Eye, EyeOff, Loader2, LockKeyhole, Star } from "lucide-react";
 import { useState } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
 import AccountCardMenu from "./account-card-menu";
+import OneTimeLinkModal from "./one-time-link-modal";
 import ShareModal from "./share-modal";
 
 interface AccountCardProps {
@@ -27,6 +28,7 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
   const [password, setPassword] = useState<string | null>(null);
   const [isLoadingPassword, setIsLoadingPassword] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isOneTimeLinkModalOpen, setIsOneTimeLinkModalOpen] = useState(false);
 
   // TODO: Replace with actual API call
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -328,7 +330,7 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
                 .then(() => toast.success("Link copied to clipboard!"))
                 .catch((err) => console.error("Failed to copy link", err));
             }}
-            onOneTimeCopy={handleOneTimeCopy}
+            onOneTimeCopy={() => setIsOneTimeLinkModalOpen(true)}
             onShare={() => setIsShareModalOpen(true)}
             onDownload={handleDownload}
             onFavorite={() => {}}
@@ -347,6 +349,15 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
         account={account}
         isOpen={isShareModalOpen}
         onOpenChange={setIsShareModalOpen}
+        onOpenOneTimeLinks={() => setIsOneTimeLinkModalOpen(true)}
+        title={getTitle()}
+      />
+
+      {/* One-Time Link Modal */}
+      <OneTimeLinkModal
+        account={account}
+        isOpen={isOneTimeLinkModalOpen}
+        onOpenChange={setIsOneTimeLinkModalOpen}
         title={getTitle()}
       />
     </div>

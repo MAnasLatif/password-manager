@@ -110,9 +110,9 @@ export default function AccountCardMenu({
                     <Link2 className="text-muted size-3.5" />
                     <Label>Copy Link</Label>
                   </Dropdown.Item>
-                  <Dropdown.Item id="one-time-copy" textValue="One-Time Copy">
+                  <Dropdown.Item id="one-time-copy" textValue="One-Time Link">
                     <Timer className="text-muted size-3.5" />
-                    <Label>One-Time Copy</Label>
+                    <Label>One-Time Link</Label>
                   </Dropdown.Item>
                   <Dropdown.Item id="share" textValue="Share">
                     <Share2 className="text-muted size-3.5" />

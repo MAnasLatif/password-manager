@@ -23,6 +23,7 @@ interface ShareModalProps {
   account: Account;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
+  onOpenOneTimeLinks?: () => void;
   title: string | null;
 }
 
@@ -58,7 +59,13 @@ const RECENT_TEAMS = [
   { id: "t3", name: "Marketing", memberCount: 8, type: "team" as const },
 ];
 
-export default function ShareModal({ account, isOpen, onOpenChange, title }: ShareModalProps) {
+export default function ShareModal({
+  account,
+  isOpen,
+  onOpenChange,
+  onOpenOneTimeLinks,
+  title,
+}: ShareModalProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [copiedText, copy] = useCopyToClipboard();
   const [email, setEmail] = useState("");
@@ -515,10 +522,34 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
                         ))}
                       </>
                     )}
-                    <div className="mb-4" />
                   </div>
                 </ScrollShadow>
               </div>
+
+              {/* One-Time Link button */}
+              {onOpenOneTimeLinks && (
+                <>
+                  <button
+                    type="button"
+                    className="hover:bg-default flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors"
+                    onClick={() => {
+                      onOpenChange(false);
+                      onOpenOneTimeLinks();
+                    }}
+                  >
+                    <div className="bg-warning/10 flex size-8 shrink-0 items-center justify-center rounded-lg">
+                      <Link2 className="text-warning size-4" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">One-Time Links</span>
+                      <span className="text-muted text-xs">
+                        Create temporary links to share credentials securely with non account
+                        holders. You can also add expiration and usage limits.
+                      </span>
+                    </div>
+                  </button>
+                </>
+              )}
             </Modal.Body>
           </Modal.Dialog>
         </Modal.Container>
