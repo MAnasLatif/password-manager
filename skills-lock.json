@@ -66,6 +66,11 @@
       "sourceType": "github",
       "computedHash": "7cf11f4b74c616f1e154c6f00735411b4edbe46e9e968d7c420177b8fa5b1518"
     },
+    "tailwind-v4": {
+      "source": "existential-birds/beagle",
+      "sourceType": "github",
+      "computedHash": "1765f9873060271fe9a0ba7c06465b8fbd6137a0a285a56cb5c38295c6057a5e"
+    },
     "two-factor-authentication-best-practices": {
       "source": "better-auth/skills",
       "sourceType": "github",
