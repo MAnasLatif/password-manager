@@ -208,14 +208,16 @@ export function AppSidebar({ className }: { className?: string }) {
                         <ChevronDown className="size-4" />
                       </Accordion.Indicator>
                     </Accordion.Trigger>
-                    <Button
-                      isIconOnly
-                      size="sm"
-                      variant="ghost"
-                      aria-label={`Add ${section?.title?.slice(0, -1)}`}
-                    >
-                      <Plus className="text-muted size-4" />
-                    </Button>
+                    {section.title !== "Tags" && (
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        variant="ghost"
+                        aria-label={`Add ${section?.title?.slice(0, -1)}`}
+                      >
+                        <Plus className="text-muted size-4" />
+                      </Button>
+                    )}
                   </Accordion.Heading>
                   <Accordion.Panel>
                     <Accordion.Body className="flex flex-col gap-2 px-0 pt-2 pb-4">

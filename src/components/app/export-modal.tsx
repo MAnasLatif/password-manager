@@ -139,7 +139,7 @@ export default function ExportModal({
   return (
     <Modal>
       <Modal.Backdrop isOpen={isOpen} onOpenChange={onOpenChange}>
-        <Modal.Container size="lg" placement="top">
+        <Modal.Container size="md">
           <Modal.Dialog className="p-0">
             <Modal.Header className="mr-10 flex flex-row items-center gap-2 p-4 pb-0">
               <div className="flex size-9 items-center justify-center rounded-xl">

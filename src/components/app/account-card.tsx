@@ -12,6 +12,7 @@ import AccountCardMenu from "./account-card-menu";
 import ExportModal from "./export-modal";
 import OneTimeLinkModal from "./one-time-link-modal";
 import ShareModal from "./share-modal";
+import TagsModal from "./tags-modal";
 
 interface AccountCardProps {
   account: Account;
@@ -28,6 +29,8 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
   const [isOneTimeLinkModalOpen, setIsOneTimeLinkModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [exportFormat, setExportFormat] = useState<ExportFormat>("json");
+  const [isTagsModalOpen, setIsTagsModalOpen] = useState(false);
+  const [accountTags, setAccountTags] = useState(account.tags ?? []);
 
   // TODO: Replace with actual API call
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -321,7 +324,7 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
               setIsExportModalOpen(true);
             }}
             onFavorite={() => {}}
-            onAddTag={() => {}}
+            onAddTag={() => setIsTagsModalOpen(true)}
             onEdit={() => {}}
             onDuplicate={() => {}}
             onMove={() => {}}
@@ -356,6 +359,15 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
         isOpen={isExportModalOpen}
         onOpenChange={setIsExportModalOpen}
         resolvePassword={resolvePassword}
+      />
+
+      {/* Tags Modal */}
+      <TagsModal
+        isOpen={isTagsModalOpen}
+        onOpenChange={setIsTagsModalOpen}
+        accountTags={accountTags}
+        onTagsChange={setAccountTags}
+        title={getTitle()}
       />
     </div>
   );
