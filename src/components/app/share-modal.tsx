@@ -5,6 +5,7 @@ import { getInitials, stringToColor } from "@/utils";
 import {
   Avatar,
   Button,
+  Chip,
   InputGroup,
   ListBox,
   Modal,
@@ -14,8 +15,8 @@ import {
   TextField,
   toast,
 } from "@heroui/react";
-import { Crown, FolderInput, Link2, Mail, Trash2, Upload, Users } from "lucide-react";
-import { useRef, useState } from "react";
+import { Crown, FolderInput, Link2, Mail, Trash2, Upload, UserPlus, Users } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
 
 interface ShareModalProps {
@@ -62,6 +63,7 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
   const [copiedText, copy] = useCopyToClipboard();
   const [email, setEmail] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleCopyLink = () => {
@@ -82,6 +84,7 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
     toast.success(`Shared with ${email}`);
     setEmail("");
     setShowSuggestions(false);
+    setActiveIndex(-1);
   };
 
   const handleSelectSuggestion = (name: string, emailOrTeam: string) => {
@@ -99,17 +102,15 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
       setEmail(parts.join(", ") + ", ");
     }
     setShowSuggestions(true);
+    setActiveIndex(-1);
     inputRef.current?.focus();
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
-    // Show suggestions when input is focused, especially after a comma
-    const lastPart = value.split(",").pop()?.trim() ?? "";
-    setShowSuggestions(
-      value.endsWith(",") || value.endsWith(", ") || lastPart.length === 0 || lastPart.length > 0,
-    );
+    setShowSuggestions(true);
+    setActiveIndex(-1);
   };
 
   const handleInputFocus = () => {
@@ -118,16 +119,11 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
 
   const handleInputBlur = () => {
     // Delay to allow click on suggestion
-    setTimeout(() => setShowSuggestions(false), 200);
+    setTimeout(() => {
+      setShowSuggestions(false);
+      setActiveIndex(-1);
+    }, 200);
   };
-
-  // Filter suggestions based on text after the last comma
-  const currentQuery = (email.split(",").pop()?.trim() ?? "").toLowerCase();
-  const filteredContacts = RECENT_CONTACTS.filter(
-    (c) =>
-      c.name.toLowerCase().includes(currentQuery) || c.email.toLowerCase().includes(currentQuery),
-  );
-  const filteredTeams = RECENT_TEAMS.filter((t) => t.name.toLowerCase().includes(currentQuery));
 
   // Dummy data
   const sharedUsers = account.sharedWith || [];
@@ -139,10 +135,81 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
     permission: "owner" as const,
   };
 
+  // Filter suggestions based on text after the last comma
+  const currentQuery = (email.split(",").pop()?.trim() ?? "").toLowerCase();
+
+  // #1: Filter out already-shared users/teams from suggestions
+  const sharedEmails = new Set(sharedUsers.map((u) => u.email?.toLowerCase()).filter(Boolean));
+  const sharedTeamNames = new Set(sharedTeams.map((t) => t.name.toLowerCase()));
+
+  const filteredContacts = RECENT_CONTACTS.filter(
+    (c) =>
+      !sharedEmails.has(c.email.toLowerCase()) &&
+      (c.name.toLowerCase().includes(currentQuery) || c.email.toLowerCase().includes(currentQuery)),
+  );
+  const filteredTeams = RECENT_TEAMS.filter(
+    (t) =>
+      !sharedTeamNames.has(t.name.toLowerCase()) && t.name.toLowerCase().includes(currentQuery),
+  );
+
+  // Combined flat list for keyboard navigation
+  const allSuggestions = [
+    ...filteredContacts.map((c) => ({ ...c, kind: "user" as const })),
+    ...filteredTeams.map((t) => ({ ...t, kind: "team" as const })),
+  ];
+
+  // #3: Count badge
+  const accessCount = sharedUsers.length + sharedTeams.length;
+
+  // #4: Keyboard navigation
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (!showSuggestions || allSuggestions.length === 0) return;
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setActiveIndex((prev) => (prev < allSuggestions.length - 1 ? prev + 1 : 0));
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setActiveIndex((prev) => (prev > 0 ? prev - 1 : allSuggestions.length - 1));
+      } else if (e.key === "Enter" && activeIndex >= 0) {
+        e.preventDefault();
+        const item = allSuggestions[activeIndex];
+        if (item.kind === "user") {
+          handleSelectSuggestion(
+            item.name,
+            (item as (typeof filteredContacts)[0] & { kind: "user" }).email,
+          );
+        } else {
+          handleSelectSuggestion(item.name, item.name);
+        }
+      } else if (e.key === "Escape") {
+        setShowSuggestions(false);
+        setActiveIndex(-1);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [showSuggestions, allSuggestions, activeIndex],
+  );
+
+  // #5: Highlight matching text helper
+  const highlightMatch = (text: string, query: string) => {
+    if (!query) return text;
+    const idx = text.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return text;
+    return (
+      <>
+        {text.slice(0, idx)}
+        <span className="text-primary font-semibold">{text.slice(idx, idx + query.length)}</span>
+        {text.slice(idx + query.length)}
+      </>
+    );
+  };
+
   return (
     <Modal>
       <Modal.Backdrop isOpen={isOpen} onOpenChange={onOpenChange}>
-        <Modal.Container size="md" placement="top">
+        <Modal.Container size="lg" placement="top">
           <Modal.Dialog className="p-0">
             <Modal.Header className="mr-10 flex flex-row items-center gap-1 p-3 pb-0">
               <div className="bg-primary/10 flex size-8 items-center justify-center rounded-lg">
@@ -151,6 +218,11 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
               <div className="flex flex-1 items-center gap-1.5">
                 <span className="font-semibold">Share</span>
                 <span className="text-muted text-sm">&quot;{title}&quot;</span>
+                {accessCount > 0 && (
+                  <Chip size="sm" variant="soft" className="ml-1">
+                    {accessCount} {accessCount === 1 ? "person" : "people"}
+                  </Chip>
+                )}
               </div>
               <button
                 type="button"
@@ -180,6 +252,7 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
+                      onKeyDown={handleKeyDown}
                     />
                     <InputGroup.Suffix className="gap-1 pr-1">
                       <Select defaultValue="view" variant="secondary" aria-label="Permission level">
@@ -214,7 +287,7 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
                 </TextField>
 
                 {/* Suggestions dropdown */}
-                {showSuggestions && (filteredContacts.length > 0 || filteredTeams.length > 0) && (
+                {showSuggestions && allSuggestions.length > 0 && (
                   <div className="border-default bg-surface absolute top-full right-0 left-0 z-100 mt-1 overflow-hidden rounded-xl border shadow-xl">
                     <ScrollShadow className="max-h-60">
                       {filteredContacts.length > 0 && (
@@ -222,60 +295,78 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
                           <span className="text-muted px-2 py-1 text-xs font-medium">
                             Recent People
                           </span>
-                          {filteredContacts.map((contact) => (
-                            <button
-                              key={contact.id}
-                              type="button"
-                              className="hover:bg-default flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors"
-                              onMouseDown={(e) => {
-                                e.preventDefault();
-                                handleSelectSuggestion(contact.name, contact.email);
-                              }}
-                            >
-                              <Avatar className="size-7">
-                                <Avatar.Fallback
-                                  style={{
-                                    backgroundColor: stringToColor(contact.name),
-                                    color: "white",
-                                  }}
-                                  className="text-[10px] font-semibold"
-                                >
-                                  {getInitials(contact.name)}
-                                </Avatar.Fallback>
-                              </Avatar>
-                              <div className="flex flex-1 flex-col">
-                                <span className="text-sm font-medium">{contact.name}</span>
-                                <span className="text-muted text-xs">{contact.email}</span>
-                              </div>
-                            </button>
-                          ))}
+                          {filteredContacts.map((contact) => {
+                            const idx = allSuggestions.findIndex(
+                              (s) => s.id === contact.id && s.kind === "user",
+                            );
+                            return (
+                              <button
+                                key={contact.id}
+                                type="button"
+                                className={`flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors ${idx === activeIndex ? "bg-default" : "hover:bg-default"}`}
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  handleSelectSuggestion(contact.name, contact.email);
+                                }}
+                                onMouseEnter={() => setActiveIndex(idx)}
+                              >
+                                <Avatar className="size-7">
+                                  <Avatar.Fallback
+                                    style={{
+                                      backgroundColor: stringToColor(contact.name),
+                                      color: "white",
+                                    }}
+                                    className="text-[10px] font-semibold"
+                                  >
+                                    {getInitials(contact.name)}
+                                  </Avatar.Fallback>
+                                </Avatar>
+                                <div className="flex flex-1 flex-col">
+                                  <span className="text-sm font-medium">
+                                    {highlightMatch(contact.name, currentQuery)}
+                                  </span>
+                                  <span className="text-muted text-xs">
+                                    {highlightMatch(contact.email, currentQuery)}
+                                  </span>
+                                </div>
+                              </button>
+                            );
+                          })}
                         </div>
                       )}
                       {filteredTeams.length > 0 && (
                         <div className="p-1">
                           {filteredContacts.length > 0 && <Separator className="my-1" />}
                           <span className="text-muted px-2 py-1 text-xs font-medium">Teams</span>
-                          {filteredTeams.map((team) => (
-                            <button
-                              key={team.id}
-                              type="button"
-                              className="hover:bg-default flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors"
-                              onMouseDown={(e) => {
-                                e.preventDefault();
-                                handleSelectSuggestion(team.name, team.name);
-                              }}
-                            >
-                              <div className="bg-primary/10 flex size-7 items-center justify-center rounded-full">
-                                <Users className="text-primary size-3.5" />
-                              </div>
-                              <div className="flex flex-1 flex-col">
-                                <span className="text-sm font-medium">{team.name}</span>
-                                <span className="text-muted text-xs">
-                                  {team.memberCount} members
-                                </span>
-                              </div>
-                            </button>
-                          ))}
+                          {filteredTeams.map((team) => {
+                            const idx = allSuggestions.findIndex(
+                              (s) => s.id === team.id && s.kind === "team",
+                            );
+                            return (
+                              <button
+                                key={team.id}
+                                type="button"
+                                className={`flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors ${idx === activeIndex ? "bg-default" : "hover:bg-default"}`}
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  handleSelectSuggestion(team.name, team.name);
+                                }}
+                                onMouseEnter={() => setActiveIndex(idx)}
+                              >
+                                <div className="bg-primary/10 flex size-7 items-center justify-center rounded-full">
+                                  <Users className="text-primary size-3.5" />
+                                </div>
+                                <div className="flex flex-1 flex-col">
+                                  <span className="text-sm font-medium">
+                                    {highlightMatch(team.name, currentQuery)}
+                                  </span>
+                                  <span className="text-muted text-xs">
+                                    {team.memberCount} members
+                                  </span>
+                                </div>
+                              </button>
+                            );
+                          })}
                         </div>
                       )}
                     </ScrollShadow>
@@ -311,6 +402,17 @@ export default function ShareModal({ account, isOpen, onOpenChange, title }: Sha
                       </div>
                       <span className="text-muted px-2 text-sm">owner</span>
                     </div>
+
+                    {/* #6: Empty state when no shared users or teams */}
+                    {sharedUsers.length === 0 && sharedTeams.length === 0 && (
+                      <div className="flex flex-col items-center gap-2 py-8">
+                        <div className="bg-default flex size-10 items-center justify-center rounded-full">
+                          <UserPlus className="text-muted size-5" />
+                        </div>
+                        <p className="text-muted text-sm">Only you have access</p>
+                        <p className="text-muted/60 text-xs">Add people or teams above to share</p>
+                      </div>
+                    )}
 
                     {/* Shared Users */}
                     {sharedUsers.map((user) => (
