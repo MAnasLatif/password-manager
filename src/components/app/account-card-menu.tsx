@@ -92,7 +92,16 @@ export default function AccountCardMenu({
                 <Dropdown.SubmenuIndicator />
               </Dropdown.Item>
               <Dropdown.Popover>
-                <Dropdown.Menu>
+                <Dropdown.Menu
+                  onAction={(key) => {
+                    if (key === "copy-details") onCopyDetails();
+                    if (key === "copy-link") onCopyLink();
+                    if (key === "one-time-copy") onOneTimeCopy();
+                    if (key === "share") onShare();
+                    if (key === "download-json") onDownload("json");
+                    if (key === "download-txt") onDownload("txt");
+                  }}
+                >
                   <Dropdown.Item id="copy-details" textValue="Copy Details">
                     <ClipboardList className="text-muted size-3.5" />
                     <Label>Copy Details</Label>
@@ -116,7 +125,12 @@ export default function AccountCardMenu({
                       <Dropdown.SubmenuIndicator />
                     </Dropdown.Item>
                     <Dropdown.Popover>
-                      <Dropdown.Menu>
+                      <Dropdown.Menu
+                        onAction={(key) => {
+                          if (key === "download-json") onDownload("json");
+                          if (key === "download-txt") onDownload("txt");
+                        }}
+                      >
                         <Dropdown.Item id="download-json" textValue={`${title || "account"}.json`}>
                           <Label>{title || "account"}.json</Label>
                         </Dropdown.Item>

@@ -68,6 +68,10 @@ const accountsData: Record<string, Account[]> = {
           image: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/green.jpg",
         },
       ],
+      sharedWithTeams: [
+        { id: "t1", name: "Engineering", memberCount: 12, permission: "view" },
+        { id: "t2", name: "Design", memberCount: 6, permission: "edit" },
+      ],
     },
     {
       id: "3",
@@ -94,6 +98,7 @@ const accountsData: Record<string, Account[]> = {
         { id: "u2", name: "Jane Smith" },
         { id: "u3", name: "Bob Wilson" },
       ],
+      sharedWithTeams: [{ id: "t3", name: "Backend Team", memberCount: 8, permission: "edit" }],
     },
   ],
   "netflix.com": [
@@ -108,6 +113,7 @@ const accountsData: Record<string, Account[]> = {
         { id: "u2", name: "Dad" },
         { id: "u3", name: "Sister" },
       ],
+      sharedWithTeams: [{ id: "t4", name: "Family", memberCount: 4, permission: "view" }],
     },
   ],
   "figma.com": [

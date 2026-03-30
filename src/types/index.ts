@@ -28,6 +28,21 @@ export interface AccountTag {
   color?: string;
 }
 
+export interface SharedUser {
+  id: string;
+  name: string;
+  email?: string;
+  image?: string;
+  permission?: "view" | "edit" | "owner";
+}
+
+export interface SharedTeam {
+  id: string;
+  name: string;
+  memberCount?: number;
+  permission?: "view" | "edit";
+}
+
 export interface Account {
   id: string;
   title?: string;
@@ -39,13 +54,9 @@ export interface Account {
   isFavorite?: boolean;
   tags?: AccountTag[];
   customFields?: AccountCustomField[];
-  sharedWith?: {
-    id: string;
-    name: string;
-    email?: string;
-    image?: string;
-    permission?: "view" | "edit" | "owner";
-  }[];
+  owner?: SharedUser;
+  sharedWith?: SharedUser[];
+  sharedWithTeams?: SharedTeam[];
   createdAt?: Date;
   updatedAt?: Date;
 }
