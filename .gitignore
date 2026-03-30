@@ -44,6 +44,3 @@ next-env.d.ts
 
 # prisma
 generated/
-
-# MCP
-.agents/
