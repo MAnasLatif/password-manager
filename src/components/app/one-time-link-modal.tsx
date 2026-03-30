@@ -277,7 +277,7 @@ export default function OneTimeLinkModal({
                 <div className="flex items-center gap-2">
                   <span className="font-semibold">One-Time Links</span>
                   {activeCount > 0 && (
-                    <Chip size="sm" variant="soft" color="success">
+                    <Chip size="sm" variant="secondary" color="accent">
                       {activeCount} active
                     </Chip>
                   )}

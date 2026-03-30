@@ -218,18 +218,25 @@ export default function ShareModal({
       <Modal.Backdrop isOpen={isOpen} onOpenChange={onOpenChange}>
         <Modal.Container size="lg" placement="top">
           <Modal.Dialog className="p-0">
-            <Modal.Header className="mr-10 flex flex-row items-center gap-1 p-3 pb-0">
-              <div className="bg-primary/10 flex size-8 items-center justify-center rounded-lg">
-                <Upload className="text-primary size-4" />
+            <Modal.Header className="mr-10 flex flex-row items-center gap-2 p-4 pb-0">
+              <div className="flex size-9 items-center justify-center rounded-xl">
+                <Upload className="size-5" />
               </div>
-              <div className="flex flex-1 items-center gap-1.5">
-                <span className="font-semibold">Share</span>
-                <span className="text-muted text-sm">&quot;{title}&quot;</span>
-                {accessCount > 0 && (
-                  <Chip size="sm" variant="soft" className="ml-1">
-                    {accessCount} {accessCount === 1 ? "person" : "people"}
-                  </Chip>
-                )}
+              <div className="flex flex-1 flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">Share</span>
+                  {accessCount > 0 && (
+                    <Chip size="sm" variant="secondary" color="accent">
+                      {accessCount} {accessCount === 1 ? "person" : "people"}
+                    </Chip>
+                  )}
+                  {sharedTeams.length > 0 && (
+                    <Chip size="sm" variant="secondary" color="accent">
+                      {sharedTeams.length} {sharedTeams.length === 1 ? "team" : "teams"}
+                    </Chip>
+                  )}
+                </div>
+                <span className="text-muted text-xs">{title}</span>
               </div>
               <button
                 type="button"
