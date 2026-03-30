@@ -19,6 +19,8 @@ import { Crown, FolderInput, Link2, Mail, Trash2, Upload, UserPlus, Users } from
 import { useCallback, useRef, useState } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
 
+import { useSession } from "@/lib/auth-client";
+
 interface ShareModalProps {
   account: Account;
   isOpen: boolean;
@@ -66,6 +68,7 @@ export default function ShareModal({
   onOpenOneTimeLinks,
   title,
 }: ShareModalProps) {
+  const { data: session } = useSession();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [copiedText, copy] = useCopyToClipboard();
   const [email, setEmail] = useState("");
@@ -136,9 +139,10 @@ export default function ShareModal({
   const sharedUsers = account.sharedWith || [];
   const sharedTeams = account.sharedWithTeams || [];
   const owner = account.owner || {
-    id: "owner-1",
-    name: "You",
-    email: "you@example.com",
+    id: session?.user?.id ?? "owner-1",
+    name: session?.user?.name ?? "You",
+    email: session?.user?.email ?? "",
+    image: session?.user?.image ?? undefined,
     permission: "owner" as const,
   };
 
