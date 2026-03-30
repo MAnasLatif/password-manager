@@ -7,6 +7,11 @@ import {
   Download,
   Ellipsis,
   ExternalLink,
+  FileCode2,
+  FileJson,
+  FileSpreadsheet,
+  FileText,
+  FileType,
   FolderInput,
   History,
   Link2,
@@ -27,7 +32,7 @@ interface AccountCardMenuProps {
   onCopyLink: () => void;
   onOneTimeCopy: () => void;
   onShare: () => void;
-  onDownload: (format: "json" | "txt") => void;
+  onExport: (format: string) => void;
   onFavorite: () => void;
   onAddTag: () => void;
   onEdit: () => void;
@@ -45,7 +50,7 @@ export default function AccountCardMenu({
   onCopyLink,
   onOneTimeCopy,
   onShare,
-  onDownload,
+  onExport,
   onFavorite,
   onAddTag,
   onEdit,
@@ -67,8 +72,7 @@ export default function AccountCardMenu({
             if (key === "copy-link") onCopyLink();
             if (key === "one-time-copy") onOneTimeCopy();
             if (key === "share") onShare();
-            if (key === "download-json") onDownload("json");
-            if (key === "download-txt") onDownload("txt");
+            if (String(key).startsWith("export-")) onExport(String(key).replace("export-", ""));
             if (key === "favorite") onFavorite();
             if (key === "add-tag") onAddTag();
             if (key === "edit") onEdit();
@@ -98,8 +102,8 @@ export default function AccountCardMenu({
                     if (key === "copy-link") onCopyLink();
                     if (key === "one-time-copy") onOneTimeCopy();
                     if (key === "share") onShare();
-                    if (key === "download-json") onDownload("json");
-                    if (key === "download-txt") onDownload("txt");
+                    if (String(key).startsWith("export-"))
+                      onExport(String(key).replace("export-", ""));
                   }}
                 >
                   <Dropdown.Item id="copy-details" textValue="Copy Details">
@@ -119,23 +123,41 @@ export default function AccountCardMenu({
                     <Label>Share</Label>
                   </Dropdown.Item>
                   <Dropdown.SubmenuTrigger>
-                    <Dropdown.Item id="download" textValue="Download">
+                    <Dropdown.Item id="export" textValue="Export Account">
                       <Download className="text-muted size-3.5" />
-                      <Label>Download</Label>
+                      <Label>Export Account</Label>
                       <Dropdown.SubmenuIndicator />
                     </Dropdown.Item>
                     <Dropdown.Popover>
                       <Dropdown.Menu
                         onAction={(key) => {
-                          if (key === "download-json") onDownload("json");
-                          if (key === "download-txt") onDownload("txt");
+                          if (String(key).startsWith("export-"))
+                            onExport(String(key).replace("export-", ""));
                         }}
                       >
-                        <Dropdown.Item id="download-json" textValue={`${title || "account"}.json`}>
+                        <Dropdown.Item id="export-json" textValue="JSON">
+                          <FileJson className="text-muted size-3.5" />
                           <Label>{title || "account"}.json</Label>
                         </Dropdown.Item>
-                        <Dropdown.Item id="download-txt" textValue={`${title || "account"}.txt`}>
+                        <Dropdown.Item id="export-csv" textValue="CSV">
+                          <FileSpreadsheet className="text-muted size-3.5" />
+                          <Label>{title || "account"}.csv</Label>
+                        </Dropdown.Item>
+                        <Dropdown.Item id="export-txt" textValue="Plain Text">
+                          <FileText className="text-muted size-3.5" />
                           <Label>{title || "account"}.txt</Label>
+                        </Dropdown.Item>
+                        <Dropdown.Item id="export-md" textValue="Markdown">
+                          <FileType className="text-muted size-3.5" />
+                          <Label>{title || "account"}.md</Label>
+                        </Dropdown.Item>
+                        <Dropdown.Item id="export-xml" textValue="XML">
+                          <FileCode2 className="text-muted size-3.5" />
+                          <Label>{title || "account"}.xml</Label>
+                        </Dropdown.Item>
+                        <Dropdown.Item id="export-yaml" textValue="YAML">
+                          <FileCode2 className="text-muted size-3.5" />
+                          <Label>{title || "account"}.yaml</Label>
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown.Popover>

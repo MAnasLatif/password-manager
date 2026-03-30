@@ -2,17 +2,14 @@
 
 import type { Account, Platform } from "@/types";
 import { getInitials, stringToColor } from "@/utils";
-import {
-  buildAccountJson,
-  buildAccountText,
-  downloadAccountFile,
-  getAccountTitle,
-} from "@/utils/account";
+import type { ExportFormat } from "@/utils/account";
+import { buildAccountText, getAccountTitle } from "@/utils/account";
 import { Avatar, Button, Chip, toast, Tooltip } from "@heroui/react";
 import { Copy, Eye, EyeOff, Loader2, LockKeyhole, Star } from "lucide-react";
 import { useState } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
 import AccountCardMenu from "./account-card-menu";
+import ExportModal from "./export-modal";
 import OneTimeLinkModal from "./one-time-link-modal";
 import ShareModal from "./share-modal";
 
@@ -29,6 +26,8 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
   const [isLoadingPassword, setIsLoadingPassword] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isOneTimeLinkModalOpen, setIsOneTimeLinkModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [exportFormat, setExportFormat] = useState<ExportFormat>("json");
 
   // TODO: Replace with actual API call
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -109,21 +108,6 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
       toast.success("Account details copied to clipboard!");
     } catch (error) {
       console.error("Failed to copy details", error);
-    }
-  };
-
-  const handleDownload = async (format: "json" | "txt") => {
-    try {
-      const title = getTitle() || "account";
-      const pw = await resolvePassword();
-      const content =
-        format === "json"
-          ? buildAccountJson(account, platform, pw)
-          : buildAccountText(account, platform, pw);
-      downloadAccountFile(content, `${title}.${format}`, format);
-      toast.success(`Downloaded as ${title}.${format}`);
-    } catch (error) {
-      console.error("Failed to download", error);
     }
   };
 
@@ -332,7 +316,10 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
             }}
             onOneTimeCopy={() => setIsOneTimeLinkModalOpen(true)}
             onShare={() => setIsShareModalOpen(true)}
-            onDownload={handleDownload}
+            onExport={(fmt) => {
+              setExportFormat(fmt as ExportFormat);
+              setIsExportModalOpen(true);
+            }}
             onFavorite={() => {}}
             onAddTag={() => {}}
             onEdit={() => {}}
@@ -359,6 +346,16 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
         isOpen={isOneTimeLinkModalOpen}
         onOpenChange={setIsOneTimeLinkModalOpen}
         title={getTitle()}
+      />
+
+      {/* Export Modal */}
+      <ExportModal
+        account={account}
+        platform={platform}
+        format={exportFormat}
+        isOpen={isExportModalOpen}
+        onOpenChange={setIsExportModalOpen}
+        resolvePassword={resolvePassword}
       />
     </div>
   );
