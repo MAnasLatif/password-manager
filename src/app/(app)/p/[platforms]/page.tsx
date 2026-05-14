@@ -1,7 +1,7 @@
-import PlatformDetailPage from "@/components/app/platform-detail-page";
-import type { Account, Platform } from "@/types";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import PlatformDetailPage from "@/components/app/platform-detail-page";
+import type { Account, Platform } from "@/types";
 
 export const metadata: Metadata = {
   title: "Platform Accounts",

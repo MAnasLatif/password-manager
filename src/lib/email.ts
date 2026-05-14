@@ -1,6 +1,6 @@
 import path from "node:path";
-import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
+import nodemailer from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
 
 import {
@@ -20,8 +20,7 @@ let _transporter: Transporter | null = null;
 function getTransporter(): Transporter {
   if (_transporter) return _transporter;
 
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE } =
-    process.env;
+  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE } = process.env;
 
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
     throw new Error(
@@ -99,10 +98,7 @@ export async function sendPasswordResetEmail(
   });
 }
 
-export async function sendWelcomeEmail(
-  to: string,
-  opts: { name: string; loginUrl: string },
-) {
+export async function sendWelcomeEmail(to: string, opts: { name: string; loginUrl: string }) {
   return sendEmail({
     to,
     subject: "Welcome to MAnasPM",

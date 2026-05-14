@@ -1,22 +1,26 @@
 "use client";
 
 import { Accordion, Button, cn } from "@heroui/react";
-import { ChevronDown, Circle, Plus, Star, User, Users } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useLocalStorage, useIsClient } from "usehooks-ts";
-
 import type { LucideIcon } from "lucide-react";
-import type { SidebarItem as SidebarItemType } from "@/types";
 import {
   ArrowUpRight,
   BriefcaseBusiness,
+  ChevronDown,
+  Circle,
   Code2,
   LockKeyhole,
   Palette,
+  Plus,
   Rocket,
+  Star,
+  User,
   UserRound,
+  Users,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useIsClient, useLocalStorage } from "usehooks-ts";
+import type { SidebarItem as SidebarItemType } from "@/types";
 
 const Icons: {
   [key: string]: LucideIcon;
@@ -215,7 +219,7 @@ export function AppSidebar({ className }: { className?: string }) {
                         variant="ghost"
                         aria-label={`Add ${section?.title?.slice(0, -1)}`}
                       >
-                        <Plus className="text-muted size-4" />
+                        <Plus className="size-4 text-muted" />
                       </Button>
                     )}
                   </Accordion.Heading>

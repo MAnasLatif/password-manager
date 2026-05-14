@@ -1,9 +1,9 @@
-import { ThemeToggle } from '@/components/ThemeSwitcher'
+import { ThemeToggle } from "@/components/ThemeSwitcher";
 
 export default function AuthLayout({
-  children
+  children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <div className="relative min-h-svh">
@@ -12,5 +12,5 @@ export default function AuthLayout({
       </div>
       <main className="flex min-h-svh items-center justify-center px-4 py-16">{children}</main>
     </div>
-  )
+  );
 }

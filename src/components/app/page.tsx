@@ -1,12 +1,12 @@
 "use client";
 
-import useAppState from "@/contexts/app-state";
-import type { Platform } from "@/types";
-import { getFaviconUrl, getInitials, stringToColor } from "@/utils";
 import { Avatar } from "@heroui/react";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
+import useAppState from "@/contexts/app-state";
+import type { Platform } from "@/types";
+import { getFaviconUrl, getInitials, stringToColor } from "@/utils";
 
 export default function HomePage({
   platforms,
@@ -25,7 +25,7 @@ export default function HomePage({
         <Link
           key={index}
           href={`/p/${platform.domain}`}
-          className="hover:bg-surface active:bg-surface-pressed flex cursor-pointer items-center gap-3 rounded-lg px-4 py-3 transition-colors"
+          className="flex cursor-pointer items-center gap-3 rounded-lg px-4 py-3 transition-colors hover:bg-surface active:bg-surface-pressed"
         >
           {/* Avatar */}
           <Avatar size="sm" className="shrink-0">
@@ -35,7 +35,7 @@ export default function HomePage({
                 backgroundColor: stringToColor(platform.name),
                 color: "white",
               }}
-              className="text-sm font-semibold"
+              className="font-semibold text-sm"
             >
               {getInitials(platform.name)}
             </Avatar.Fallback>
@@ -43,15 +43,15 @@ export default function HomePage({
 
           {/* Content */}
           <div className="flex flex-1 flex-col">
-            <span className="text-sm font-semibold">{platform.name}</span>
+            <span className="font-semibold text-sm">{platform.name}</span>
             <span className="text-muted text-xs">{platform.domain}</span>
           </div>
 
           {/* Count */}
-          <span className="text-muted text-sm font-medium">{platform.count}</span>
+          <span className="font-medium text-muted text-sm">{platform.count}</span>
 
           {/* Chevron */}
-          <ChevronRight className="text-muted size-4 shrink-0" />
+          <ChevronRight className="size-4 shrink-0 text-muted" />
         </Link>
       ))}
     </div>

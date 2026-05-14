@@ -1,12 +1,12 @@
 "use client";
 
-import useAppState from "@/contexts/app-state";
-import type { Account, Platform } from "@/types";
-import { getFaviconUrl, getInitials, stringToColor } from "@/utils";
 import { Avatar, Button, Tooltip } from "@heroui/react";
 import { ArrowLeft, ExternalLink, LockKeyhole } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
+import useAppState from "@/contexts/app-state";
+import type { Account, Platform } from "@/types";
+import { getFaviconUrl, getInitials, stringToColor } from "@/utils";
 import AccountCard from "./account-card";
 
 interface PlatformDetailPageProps {
@@ -48,20 +48,20 @@ export default function PlatformDetailPage({ platform, accounts }: PlatformDetai
                 backgroundColor: stringToColor(platform.name),
                 color: "white",
               }}
-              className="text-sm font-semibold"
+              className="font-semibold text-sm"
             >
               {getInitials(platform.name)}
             </Avatar.Fallback>
           </Avatar>
           <div className="flex flex-col">
-            <span className="text-lg font-semibold">{platform.name}</span>
+            <span className="font-semibold text-lg">{platform.name}</span>
             <span className="text-muted text-sm">{platform.domain}</span>
           </div>
         </div>
         <Tooltip delay={0}>
           <Link href={platform.domain} target="_blank" rel="noopener noreferrer">
             <Button isIconOnly variant="ghost" size="sm" aria-label="Open website">
-              <ExternalLink className="text-muted size-4" />
+              <ExternalLink className="size-4 text-muted" />
             </Button>
           </Link>
           <Tooltip.Content>
@@ -73,7 +73,7 @@ export default function PlatformDetailPage({ platform, accounts }: PlatformDetai
       {/* Accounts list */}
       <div className="flex flex-col gap-3">
         {accounts.length === 0 ? (
-          <div className="text-muted flex flex-col items-center justify-center py-12 text-center">
+          <div className="flex flex-col items-center justify-center py-12 text-center text-muted">
             <LockKeyhole className="mb-3 size-12 opacity-40" />
             <p className="text-sm">No accounts yet</p>
             <p className="text-xs opacity-70">Add your first {platform.name} account</p>

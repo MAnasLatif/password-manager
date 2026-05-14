@@ -2,8 +2,8 @@
 
 import { Alert, Button, cn, Spinner } from "@heroui/react";
 import { Eye, EyeOff } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
@@ -83,11 +83,11 @@ export default function ResetPasswordForm({ className, ...props }: React.Compone
                 className="size-30"
               />
             </div>
-            <h1 className="text-xl font-bold">Password Reset Successful</h1>
+            <h1 className="font-bold text-xl">Password Reset Successful</h1>
             <p className="text-muted text-sm">Your password has been updated.</p>
           </div>
 
-          <Alert status="accent" className="border-border w-full rounded-2xl border shadow-none">
+          <Alert status="accent" className="w-full rounded-2xl border border-border shadow-none">
             <Alert.Indicator />
             <Alert.Content className="gap-1">
               <Alert.Description>
@@ -98,7 +98,7 @@ export default function ResetPasswordForm({ className, ...props }: React.Compone
 
           <Link
             href="/login"
-            className="bg-accent text-accent-foreground hover:bg-accent-hover flex h-10 w-full items-center justify-center rounded-lg text-sm font-medium transition-colors"
+            className="flex h-10 w-full items-center justify-center rounded-lg bg-accent font-medium text-accent-foreground text-sm transition-colors hover:bg-accent-hover"
           >
             Go to Sign In
           </Link>
@@ -123,13 +123,13 @@ export default function ResetPasswordForm({ className, ...props }: React.Compone
                 className="size-30"
               />
             </div>
-            <h1 className="text-xl font-bold">Reset your password</h1>
+            <h1 className="font-bold text-xl">Reset your password</h1>
             <p className="text-muted text-sm">Enter your new password below.</p>
           </div>
 
           {/* Error Alert */}
           {error && (
-            <Alert status="danger" className="border-border w-full rounded-2xl border shadow-none">
+            <Alert status="danger" className="w-full rounded-2xl border border-border shadow-none">
               <Alert.Indicator />
               <Alert.Content className="gap-1">
                 <Alert.Title>{error}</Alert.Title>
@@ -138,7 +138,7 @@ export default function ResetPasswordForm({ className, ...props }: React.Compone
           )}
 
           {!token && (
-            <Alert status="danger" className="border-border w-full rounded-2xl border shadow-none">
+            <Alert status="danger" className="w-full rounded-2xl border border-border shadow-none">
               <Alert.Indicator />
               <Alert.Content className="gap-1">
                 <Alert.Title>
@@ -150,7 +150,7 @@ export default function ResetPasswordForm({ className, ...props }: React.Compone
 
           {/* New Password */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">
+            <label className="font-medium text-sm">
               New Password <span className="text-danger">*</span>
             </label>
             <div className="relative">
@@ -164,14 +164,13 @@ export default function ResetPasswordForm({ className, ...props }: React.Compone
                 }}
                 disabled={isPending || !token}
                 required
-                autoFocus
                 minLength={8}
                 className="input w-full pr-10"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-muted hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors focus:outline-none"
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted transition-colors hover:text-foreground focus:outline-none"
                 disabled={isPending}
                 tabIndex={-1}
               >
@@ -185,7 +184,7 @@ export default function ResetPasswordForm({ className, ...props }: React.Compone
 
           {/* Confirm Password */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">
+            <label className="font-medium text-sm">
               Confirm Password <span className="text-danger">*</span>
             </label>
             <div className="relative">
@@ -207,7 +206,7 @@ export default function ResetPasswordForm({ className, ...props }: React.Compone
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="text-muted hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors focus:outline-none"
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted transition-colors hover:text-foreground focus:outline-none"
                 disabled={isPending}
                 tabIndex={-1}
               >
@@ -234,7 +233,7 @@ export default function ResetPasswordForm({ className, ...props }: React.Compone
             )}
           </Button>
 
-          <p className="text-muted text-center text-sm">
+          <p className="text-center text-muted text-sm">
             Remember your password?{" "}
             <Link href="/login" className="text-accent hover:underline">
               Sign in
@@ -243,7 +242,7 @@ export default function ResetPasswordForm({ className, ...props }: React.Compone
         </div>
       </form>
 
-      <p className="text-muted px-6 text-center text-xs">
+      <p className="px-6 text-center text-muted text-xs">
         If you didn&apos;t request a password reset, you can safely ignore this page.
       </p>
     </div>

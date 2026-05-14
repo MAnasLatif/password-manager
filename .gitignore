@@ -4,6 +4,9 @@
 /node_modules
 /.pnp
 .pnp.*
+
+# bun
+.bun/
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
@@ -44,3 +47,5 @@ next-env.d.ts
 
 # prisma
 generated/
+.agents
+.claude

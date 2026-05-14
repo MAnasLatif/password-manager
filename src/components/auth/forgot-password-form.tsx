@@ -1,8 +1,8 @@
 "use client";
 
 import { Alert, Button, cn, Input, Label, Spinner, TextField } from "@heroui/react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 
 import { forgotPasswordAction } from "@/app/actions/auth";
@@ -53,14 +53,14 @@ export default function ForgotPasswordForm({ className, ...props }: React.Compon
                 className="size-30"
               />
             </div>
-            <h1 className="text-xl font-bold">Check Your Email</h1>
+            <h1 className="font-bold text-xl">Check Your Email</h1>
             <p className="text-muted text-sm">
-              If an account exists with <span className="text-foreground font-medium">{email}</span>
+              If an account exists with <span className="font-medium text-foreground">{email}</span>
               on MAnasPM, you will receive a password reset link shortly.
             </p>
           </div>
 
-          <Alert status="accent" className="border-border w-full rounded-2xl border shadow-none">
+          <Alert status="accent" className="w-full rounded-2xl border border-border shadow-none">
             <Alert.Indicator />
             <Alert.Content className="gap-1">
               <Alert.Description>
@@ -71,7 +71,7 @@ export default function ForgotPasswordForm({ className, ...props }: React.Compon
 
           <Link
             href="/login"
-            className="bg-accent text-accent-foreground hover:bg-accent-hover flex h-10 w-full items-center justify-center rounded-lg text-sm font-medium transition-colors"
+            className="flex h-10 w-full items-center justify-center rounded-lg bg-accent font-medium text-accent-foreground text-sm transition-colors hover:bg-accent-hover"
           >
             Back to Sign In
           </Link>
@@ -96,7 +96,7 @@ export default function ForgotPasswordForm({ className, ...props }: React.Compon
                 className="size-30"
               />
             </div>
-            <h1 className="text-xl font-bold">Forgot your password?</h1>
+            <h1 className="font-bold text-xl">Forgot your password?</h1>
             <p className="text-muted text-sm">
               Enter your email and we&apos;ll send you a reset link.
             </p>
@@ -104,7 +104,7 @@ export default function ForgotPasswordForm({ className, ...props }: React.Compon
 
           {/* Error Alert */}
           {error && (
-            <Alert status="danger" className="border-border w-full rounded-2xl border shadow-none">
+            <Alert status="danger" className="w-full rounded-2xl border border-border shadow-none">
               <Alert.Indicator />
               <Alert.Content className="gap-1">
                 <Alert.Title>{error}</Alert.Title>
@@ -144,7 +144,7 @@ export default function ForgotPasswordForm({ className, ...props }: React.Compon
           </Button>
 
           {/* Back to login */}
-          <p className="text-muted text-center text-sm">
+          <p className="text-center text-muted text-sm">
             Remember your password?{" "}
             <Link href="/login" className="text-accent hover:underline">
               Sign in

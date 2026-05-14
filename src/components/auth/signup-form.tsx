@@ -2,8 +2,8 @@
 
 import { Alert, Button, cn, Input, Label, Spinner, TextField } from "@heroui/react";
 import { Eye, EyeOff, Mail } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 
 import { resendVerificationAction, signUpAction } from "@/app/actions/auth";
@@ -73,21 +73,21 @@ export default function SignupForm({ className, ...props }: React.ComponentProps
           </div>
 
           <div className="space-y-1 text-center">
-            <h1 className="text-xl font-bold">Check Your Email</h1>
+            <h1 className="font-bold text-xl">Check Your Email</h1>
             <p className="text-muted text-sm">We&apos;ve sent a verification link to</p>
           </div>
 
-          <div className="bg-accent-soft rounded-lg p-3 text-center">
-            <p className="text-accent font-medium">{submittedEmail}</p>
+          <div className="rounded-lg bg-accent-soft p-3 text-center">
+            <p className="font-medium text-accent">{submittedEmail}</p>
           </div>
 
-          <div className="text-muted space-y-2 text-center text-sm">
+          <div className="space-y-2 text-center text-muted text-sm">
             <p>Click the link in the email to verify your address and access your vault.</p>
             <p>The link will expire in 24 hours.</p>
           </div>
 
           <div className="flex items-center justify-center gap-2 text-sm">
-            <Mail className="text-muted h-4 w-4" />
+            <Mail className="h-4 w-4 text-muted" />
             <span className="text-muted">
               Didn&apos;t receive it?{" "}
               {resendSuccess ? (
@@ -104,7 +104,7 @@ export default function SignupForm({ className, ...props }: React.ComponentProps
             </span>
           </div>
 
-          <p className="text-muted text-center text-sm">
+          <p className="text-center text-muted text-sm">
             Already verified?{" "}
             <Link href="/login" className="text-accent hover:underline">
               Sign in
@@ -131,7 +131,7 @@ export default function SignupForm({ className, ...props }: React.ComponentProps
                 className="size-30"
               />
             </div>
-            <h1 className="text-xl font-bold">Create your account</h1>
+            <h1 className="font-bold text-xl">Create your account</h1>
             <p className="text-muted text-sm">
               Already have an account?{" "}
               <Link href="/login" className="text-accent hover:underline">
@@ -142,7 +142,7 @@ export default function SignupForm({ className, ...props }: React.ComponentProps
 
           {/* Error Alert */}
           {error && (
-            <Alert status="danger" className="border-border w-full rounded-2xl border shadow-none">
+            <Alert status="danger" className="w-full rounded-2xl border border-border shadow-none">
               <Alert.Indicator />
               <Alert.Content className="gap-1">
                 <Alert.Title>{error}</Alert.Title>
@@ -183,7 +183,7 @@ export default function SignupForm({ className, ...props }: React.ComponentProps
 
           {/* Password */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">
+            <label className="font-medium text-sm">
               Password <span className="text-danger">*</span>
             </label>
             <div className="relative">
@@ -203,7 +203,7 @@ export default function SignupForm({ className, ...props }: React.ComponentProps
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-muted hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors focus:outline-none"
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted transition-colors hover:text-foreground focus:outline-none"
                 disabled={isPending}
                 tabIndex={-1}
               >
@@ -232,7 +232,7 @@ export default function SignupForm({ className, ...props }: React.ComponentProps
         </div>
       </form>
 
-      <p className="text-muted px-6 text-center text-xs">
+      <p className="px-6 text-center text-muted text-xs">
         By creating an account, you agree to our{" "}
         <a href="/terms" className="hover:underline">
           Terms of Service

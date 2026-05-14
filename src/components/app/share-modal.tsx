@@ -1,7 +1,5 @@
 "use client";
 
-import type { Account } from "@/types";
-import { getInitials, stringToColor } from "@/utils";
 import {
   Avatar,
   Button,
@@ -18,8 +16,9 @@ import {
 import { Crown, FolderInput, Link2, Mail, Trash2, Upload, UserPlus, Users } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
-
 import { useSession } from "@/lib/auth-client";
+import type { Account } from "@/types";
+import { getInitials, stringToColor } from "@/utils";
 
 interface ShareModalProps {
   account: Account;
@@ -70,7 +69,7 @@ export default function ShareModal({
 }: ShareModalProps) {
   const { data: session } = useSession();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [copiedText, copy] = useCopyToClipboard();
+  const [_copiedText, copy] = useCopyToClipboard();
   const [email, setEmail] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -97,7 +96,7 @@ export default function ShareModal({
     setActiveIndex(-1);
   };
 
-  const handleSelectSuggestion = (name: string, emailOrTeam: string) => {
+  const handleSelectSuggestion = (_name: string, emailOrTeam: string) => {
     // Append to existing comma-separated list
     const parts = email
       .split(",")
@@ -105,11 +104,11 @@ export default function ShareModal({
       .filter(Boolean);
     // Replace the last (in-progress) part with the selection
     if (email.endsWith(",") || email.endsWith(", ")) {
-      setEmail(email + emailOrTeam + ", ");
+      setEmail(`${email + emailOrTeam}, `);
     } else {
       parts.pop();
       parts.push(emailOrTeam);
-      setEmail(parts.join(", ") + ", ");
+      setEmail(`${parts.join(", ")}, `);
     }
     setShowSuggestions(true);
     setActiveIndex(-1);
@@ -200,7 +199,7 @@ export default function ShareModal({
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [showSuggestions, allSuggestions, activeIndex],
+    [showSuggestions, allSuggestions, activeIndex, handleSelectSuggestion],
   );
 
   // #5: Highlight matching text helper
@@ -211,7 +210,7 @@ export default function ShareModal({
     return (
       <>
         {text.slice(0, idx)}
-        <span className="text-primary font-semibold">{text.slice(idx, idx + query.length)}</span>
+        <span className="font-semibold text-primary">{text.slice(idx, idx + query.length)}</span>
         {text.slice(idx + query.length)}
       </>
     );
@@ -244,7 +243,7 @@ export default function ShareModal({
               </div>
               <button
                 type="button"
-                className="text-muted hover:text-foreground flex cursor-pointer items-center gap-1.5 text-sm transition-colors"
+                className="flex cursor-pointer items-center gap-1.5 text-muted text-sm transition-colors hover:text-foreground"
                 onClick={handleCopyLink}
               >
                 <Link2 className="size-4" />
@@ -259,7 +258,7 @@ export default function ShareModal({
                 <TextField aria-label="Email or team name" className="w-full" name="share-email">
                   <InputGroup fullWidth variant="secondary">
                     <InputGroup.Prefix>
-                      <Mail className="text-muted size-4" />
+                      <Mail className="size-4 text-muted" />
                     </InputGroup.Prefix>
                     <InputGroup.Input
                       ref={inputRef}
@@ -306,11 +305,11 @@ export default function ShareModal({
 
                 {/* Suggestions dropdown */}
                 {showSuggestions && allSuggestions.length > 0 && (
-                  <div className="border-default bg-surface absolute top-full right-0 left-0 z-100 mt-1 overflow-hidden rounded-xl border shadow-xl">
+                  <div className="absolute top-full right-0 left-0 z-100 mt-1 overflow-hidden rounded-xl border border-default bg-surface shadow-xl">
                     <ScrollShadow className="max-h-60">
                       {filteredContacts.length > 0 && (
                         <div className="p-1">
-                          <span className="text-muted px-2 py-1 text-xs font-medium">
+                          <span className="px-2 py-1 font-medium text-muted text-xs">
                             Recent People
                           </span>
                           {filteredContacts.map((contact) => {
@@ -334,13 +333,13 @@ export default function ShareModal({
                                       backgroundColor: stringToColor(contact.name),
                                       color: "white",
                                     }}
-                                    className="text-[10px] font-semibold"
+                                    className="font-semibold text-[10px]"
                                   >
                                     {getInitials(contact.name)}
                                   </Avatar.Fallback>
                                 </Avatar>
                                 <div className="flex flex-1 flex-col">
-                                  <span className="text-sm font-medium">
+                                  <span className="font-medium text-sm">
                                     {highlightMatch(contact.name, currentQuery)}
                                   </span>
                                   <span className="text-muted text-xs">
@@ -355,7 +354,7 @@ export default function ShareModal({
                       {filteredTeams.length > 0 && (
                         <div className="p-1">
                           {filteredContacts.length > 0 && <Separator className="my-1" />}
-                          <span className="text-muted px-2 py-1 text-xs font-medium">Teams</span>
+                          <span className="px-2 py-1 font-medium text-muted text-xs">Teams</span>
                           {filteredTeams.map((team) => {
                             const idx = allSuggestions.findIndex(
                               (s) => s.id === team.id && s.kind === "team",
@@ -371,11 +370,11 @@ export default function ShareModal({
                                 }}
                                 onMouseEnter={() => setActiveIndex(idx)}
                               >
-                                <div className="bg-primary/10 flex size-7 items-center justify-center rounded-full">
-                                  <Users className="text-primary size-3.5" />
+                                <div className="flex size-7 items-center justify-center rounded-full bg-primary/10">
+                                  <Users className="size-3.5 text-primary" />
                                 </div>
                                 <div className="flex flex-1 flex-col">
-                                  <span className="text-sm font-medium">
+                                  <span className="font-medium text-sm">
                                     {highlightMatch(team.name, currentQuery)}
                                   </span>
                                   <span className="text-muted text-xs">
@@ -394,7 +393,7 @@ export default function ShareModal({
 
               {/* Access section */}
               <div className="flex flex-col gap-2">
-                <span className="text-muted text-xs font-medium">Allow Access</span>
+                <span className="font-medium text-muted text-xs">Allow Access</span>
                 <ScrollShadow className="max-h-100">
                   <div className="flex flex-col">
                     {/* Owner */}
@@ -406,26 +405,26 @@ export default function ShareModal({
                             backgroundColor: stringToColor(owner.name),
                             color: "white",
                           }}
-                          className="text-xs font-semibold"
+                          className="font-semibold text-xs"
                         >
                           {getInitials(owner.name)}
                         </Avatar.Fallback>
                       </Avatar>
                       <div className="flex flex-1 flex-col">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-sm font-medium">{owner.name}</span>
-                          <Crown className="text-warning size-3.5" />
+                          <span className="font-medium text-sm">{owner.name}</span>
+                          <Crown className="size-3.5 text-warning" />
                         </div>
                         {owner.email && <span className="text-muted text-xs">{owner.email}</span>}
                       </div>
-                      <span className="text-muted px-2 text-sm">owner</span>
+                      <span className="px-2 text-muted text-sm">owner</span>
                     </div>
 
                     {/* #6: Empty state when no shared users or teams */}
                     {sharedUsers.length === 0 && sharedTeams.length === 0 && (
                       <div className="flex flex-col items-center gap-2 py-8">
-                        <div className="bg-default flex size-10 items-center justify-center rounded-full">
-                          <UserPlus className="text-muted size-5" />
+                        <div className="flex size-10 items-center justify-center rounded-full bg-default">
+                          <UserPlus className="size-5 text-muted" />
                         </div>
                         <p className="text-muted text-sm">Only you have access</p>
                         <p className="text-muted/60 text-xs">Add people or teams above to share</p>
@@ -442,13 +441,13 @@ export default function ShareModal({
                               backgroundColor: stringToColor(user.name),
                               color: "white",
                             }}
-                            className="text-xs font-semibold"
+                            className="font-semibold text-xs"
                           >
                             {getInitials(user.name)}
                           </Avatar.Fallback>
                         </Avatar>
                         <div className="flex flex-1 flex-col">
-                          <span className="text-sm font-medium">{user.name}</span>
+                          <span className="font-medium text-sm">{user.name}</span>
                           {user.email && <span className="text-muted text-xs">{user.email}</span>}
                         </div>
                         <Select
@@ -472,11 +471,11 @@ export default function ShareModal({
                               </ListBox.Item>
                               <Separator className="my-1" />
                               <ListBox.Item id="transfer" textValue="Transfer ownership">
-                                <FolderInput className="text-primary size-4" />
+                                <FolderInput className="size-4 text-primary" />
                                 <span>Transfer ownership</span>
                               </ListBox.Item>
                               <ListBox.Item id="remove" textValue="Remove access" variant="danger">
-                                <Trash2 className="text-danger size-4" />
+                                <Trash2 className="size-4 text-danger" />
                                 <span>Remove access</span>
                               </ListBox.Item>
                             </ListBox>
@@ -488,14 +487,14 @@ export default function ShareModal({
                     {/* Shared Teams */}
                     {sharedTeams.length > 0 && (
                       <>
-                        <span className="text-muted mb-1 text-xs font-medium">Teams</span>
+                        <span className="mb-1 font-medium text-muted text-xs">Teams</span>
                         {sharedTeams.map((team) => (
                           <div key={team.id} className="flex items-center gap-3 py-2">
-                            <div className="bg-primary/10 flex size-9 items-center justify-center rounded-full">
-                              <Users className="text-primary size-4" />
+                            <div className="flex size-9 items-center justify-center rounded-full bg-primary/10">
+                              <Users className="size-4 text-primary" />
                             </div>
                             <div className="flex flex-1 flex-col">
-                              <span className="text-sm font-medium">{team.name}</span>
+                              <span className="font-medium text-sm">{team.name}</span>
                               <span className="text-muted text-xs">{team.memberCount} members</span>
                             </div>
                             <Select
@@ -523,7 +522,7 @@ export default function ShareModal({
                                     textValue="Remove team"
                                     variant="danger"
                                   >
-                                    <Trash2 className="text-danger size-4" />
+                                    <Trash2 className="size-4 text-danger" />
                                     <span>Remove team</span>
                                   </ListBox.Item>
                                 </ListBox>
@@ -539,27 +538,25 @@ export default function ShareModal({
 
               {/* One-Time Link button */}
               {onOpenOneTimeLinks && (
-                <>
-                  <button
-                    type="button"
-                    className="hover:bg-default flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors"
-                    onClick={() => {
-                      onOpenChange(false);
-                      onOpenOneTimeLinks();
-                    }}
-                  >
-                    <div className="bg-warning/10 flex size-8 shrink-0 items-center justify-center rounded-lg">
-                      <Link2 className="text-warning size-4" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium">One-Time Links</span>
-                      <span className="text-muted text-xs">
-                        Create temporary links to share credentials securely with non account
-                        holders. You can also add expiration and usage limits.
-                      </span>
-                    </div>
-                  </button>
-                </>
+                <button
+                  type="button"
+                  className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-default"
+                  onClick={() => {
+                    onOpenChange(false);
+                    onOpenOneTimeLinks();
+                  }}
+                >
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-warning/10">
+                    <Link2 className="size-4 text-warning" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-medium text-sm">One-Time Links</span>
+                    <span className="text-muted text-xs">
+                      Create temporary links to share credentials securely with non account holders.
+                      You can also add expiration and usage limits.
+                    </span>
+                  </div>
+                </button>
               )}
             </Modal.Body>
           </Modal.Dialog>
