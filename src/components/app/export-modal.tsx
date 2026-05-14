@@ -1,8 +1,5 @@
 "use client";
 
-import type { Account, Platform } from "@/types";
-import type { ExportFormat, ExportOptions, PasswordRevealPolicy } from "@/utils/account";
-import { buildExportContent, downloadAccountFile, getAccountTitle } from "@/utils/account";
 import {
   Button,
   Checkbox,
@@ -18,6 +15,9 @@ import {
 } from "@heroui/react";
 import { Download, Eye, EyeOff, Lock, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import type { Account, Platform } from "@/types";
+import type { ExportFormat, ExportOptions, PasswordRevealPolicy } from "@/utils/account";
+import { buildExportContent, downloadAccountFile, getAccountTitle } from "@/utils/account";
 
 interface ExportModalProps {
   account: Account;
@@ -51,19 +51,19 @@ const PASSWORD_POLICIES: {
     id: "include",
     label: "Include password",
     description: "Password will be visible in plain text",
-    icon: <Eye className="text-warning size-3.5" />,
+    icon: <Eye className="size-3.5 text-warning" />,
   },
   {
     id: "mask",
     label: "Mask password",
     description: "Password shown as ••••••••",
-    icon: <EyeOff className="text-muted size-3.5" />,
+    icon: <EyeOff className="size-3.5 text-muted" />,
   },
   {
     id: "exclude",
     label: "Exclude password",
     description: "Password field will not be exported",
-    icon: <Lock className="text-success size-3.5" />,
+    icon: <Lock className="size-3.5 text-success" />,
   },
 ];
 
@@ -161,10 +161,10 @@ export default function ExportModal({
               {/* Fields selection */}
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-muted text-xs font-medium">Include Fields</span>
+                  <span className="font-medium text-muted text-xs">Include Fields</span>
                   <button
                     type="button"
-                    className="text-primary cursor-pointer text-xs font-medium"
+                    className="cursor-pointer font-medium text-primary text-xs"
                     onClick={() => {
                       if (selectedFields.length === availableFields.length) {
                         setSelectedFields([]);
@@ -189,7 +189,7 @@ export default function ExportModal({
                         key={field.id}
                         value={field.id}
                         variant="secondary"
-                        className="group bg-surface data-[selected=true]:bg-accent/10 relative rounded-2xl px-4 py-3 transition-all"
+                        className="group relative rounded-2xl bg-surface px-4 py-3 transition-all data-[selected=true]:bg-accent/10"
                       >
                         <Checkbox.Control className="absolute top-2.5 right-3 size-4 rounded-full before:rounded-full">
                           <Checkbox.Indicator />
@@ -209,8 +209,8 @@ export default function ExportModal({
                   <Separator />
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-1.5">
-                      <ShieldCheck className="text-muted size-3.5" />
-                      <span className="text-muted text-xs font-medium">Password Reveal Policy</span>
+                      <ShieldCheck className="size-3.5 text-muted" />
+                      <span className="font-medium text-muted text-xs">Password Reveal Policy</span>
                     </div>
                     <RadioGroup
                       value={passwordPolicy}
@@ -222,7 +222,7 @@ export default function ExportModal({
                           <Radio
                             key={policy.id}
                             value={policy.id}
-                            className="group bg-surface data-[selected=true]:bg-accent/10 relative rounded-2xl px-4 py-3 transition-all"
+                            className="group relative rounded-2xl bg-surface px-4 py-3 transition-all data-[selected=true]:bg-accent/10"
                           >
                             <Radio.Control className="absolute top-3 right-3 size-4 rounded-full before:rounded-full">
                               <Radio.Indicator />

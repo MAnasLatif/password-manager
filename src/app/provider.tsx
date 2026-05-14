@@ -1,8 +1,8 @@
 "use client";
 
 import { RouterProvider, Toast } from "@heroui/react";
-import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/navigation";
+import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
 
 export default function Provider({

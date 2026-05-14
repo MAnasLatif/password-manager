@@ -2,8 +2,8 @@
 
 import { Alert, Button, cn, FieldError, Input, Label, Spinner, TextField } from "@heroui/react";
 import { Eye, EyeOff } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
@@ -153,7 +153,7 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
                 className="size-30"
               />
             </div>
-            <h1 className="text-xl font-bold">Welcome back to MAnasPM</h1>
+            <h1 className="font-bold text-xl">Welcome back to MAnasPM</h1>
             <p className="text-muted text-sm">
               Don&apos;t have an account?{" "}
               <Link href="/signup" className="text-accent hover:underline">
@@ -164,7 +164,7 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
 
           {/* Error Alert */}
           {error && (
-            <Alert status="danger" className="border-border w-full rounded-2xl border shadow-none">
+            <Alert status="danger" className="w-full rounded-2xl border border-border shadow-none">
               <Alert.Indicator />
               <Alert.Content className="gap-1">
                 <Alert.Title>{error}</Alert.Title>
@@ -174,7 +174,7 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
 
           {/* Info Alert */}
           {info && (
-            <Alert status="warning" className="border-border w-full rounded-2xl border shadow-none">
+            <Alert status="warning" className="w-full rounded-2xl border border-border shadow-none">
               <Alert.Indicator />
               <Alert.Content className="gap-1">
                 <Alert.Title>{info}</Alert.Title>
@@ -184,7 +184,7 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
 
           {/* Needs Verification Banner */}
           {needsVerification && (
-            <Alert status="warning" className="border-border w-full rounded-2xl border shadow-none">
+            <Alert status="warning" className="w-full rounded-2xl border border-border shadow-none">
               <Alert.Indicator />
               <Alert.Content className="gap-1">
                 <Alert.Title>Verify your email</Alert.Title>
@@ -192,13 +192,13 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
                   Your email is not verified. Please check your inbox.
                 </Alert.Description>
                 {resendSuccess ? (
-                  <p className="mt-2 text-sm font-medium">Verification email sent!</p>
+                  <p className="mt-2 font-medium text-sm">Verification email sent!</p>
                 ) : (
                   <button
                     type="button"
                     onClick={handleResendVerification}
                     disabled={resendLoading}
-                    className="text-accent mt-2 text-sm hover:underline disabled:opacity-50"
+                    className="mt-2 text-accent text-sm hover:underline disabled:opacity-50"
                   >
                     {resendLoading ? "Sending..." : "Resend verification email"}
                   </button>
@@ -209,7 +209,7 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
 
           {/* Forgot Password Success */}
           {forgotPasswordSuccess && (
-            <Alert status="accent" className="border-border w-full rounded-2xl border shadow-none">
+            <Alert status="accent" className="w-full rounded-2xl border border-border shadow-none">
               <Alert.Indicator />
               <Alert.Content className="gap-1">
                 <Alert.Title>Password Reset Email Sent!</Alert.Title>
@@ -262,11 +262,11 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
             <>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium">Email</label>
+                  <label className="font-medium text-sm">Email</label>
                   <button
                     type="button"
                     onClick={handleBackToEmail}
-                    className="text-muted hover:text-foreground text-sm"
+                    className="text-muted text-sm hover:text-foreground"
                     disabled={isPending}
                   >
                     Change
@@ -283,12 +283,12 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
                 <>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <label className="text-sm font-medium">Password</label>
+                      <label className="font-medium text-sm">Password</label>
                       <button
                         type="button"
                         onClick={handleForgotPassword}
                         disabled={forgotPasswordLoading || isPending}
-                        className="text-muted hover:text-foreground text-sm disabled:opacity-50"
+                        className="text-muted text-sm hover:text-foreground disabled:opacity-50"
                       >
                         {forgotPasswordLoading ? "Sending..." : "Forgot password?"}
                       </button>
@@ -304,14 +304,13 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
                         }}
                         disabled={isPending}
                         required
-                        autoFocus
                         minLength={8}
                         className="input w-full pr-10"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="text-muted hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors focus:outline-none"
+                        className="absolute top-1/2 right-3 -translate-y-1/2 text-muted transition-colors hover:text-foreground focus:outline-none"
                         disabled={isPending}
                         tabIndex={-1}
                       >
@@ -347,7 +346,7 @@ export default function LoginForm({ className, ...props }: React.ComponentProps<
         </div>
       </form>
 
-      <p className="text-muted px-6 text-center text-xs">
+      <p className="px-6 text-center text-muted text-xs">
         By signing in, you agree to our{" "}
         <a href="/terms" className="hover:underline">
           Terms of Service

@@ -33,11 +33,8 @@ jobs:
             - name: Generate Prisma client
               run: bun run db:generate
 
-            - name: Lint
-              run: bun run lint
-
-            - name: Format check
-              run: bun run format:check
+            - name: Biome check (lint + format)
+              run: bun run check
 
             - name: Typecheck
               run: bun --bun tsc --noEmit

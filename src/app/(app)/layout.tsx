@@ -1,7 +1,7 @@
+import type { Metadata } from "next";
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppStateProvider } from "@/contexts/app-state";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "My Vault",

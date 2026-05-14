@@ -1,5 +1,6 @@
 "use client";
 
+import type { DragEndEvent } from "@dnd-kit/core";
 import {
   closestCenter,
   DndContext,
@@ -8,7 +9,6 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import type { DragEndEvent } from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
@@ -37,7 +37,6 @@ import {
   TextField,
   TimeField,
 } from "@heroui/react";
-import type { TimeValue } from "react-aria-components";
 import { parseDate, parseDateTime } from "@internationalized/date";
 import {
   AlignLeft,
@@ -71,6 +70,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState, useTransition } from "react";
+import type { TimeValue } from "react-aria-components";
 
 import useAppState from "@/contexts/app-state";
 import { fetchPlatformName, getFaviconUrl } from "@/utils";
@@ -207,27 +207,27 @@ function getFieldPlaceholder(type: FieldType): string {
 function getFieldIcon(type: FieldType): React.ReactNode {
   switch (type) {
     case "text":
-      return <AlignLeft className="text-muted size-4" />;
+      return <AlignLeft className="size-4 text-muted" />;
     case "email":
-      return <Mail className="text-muted size-4" />;
+      return <Mail className="size-4 text-muted" />;
     case "url":
-      return <Link2 className="text-muted size-4" />;
+      return <Link2 className="size-4 text-muted" />;
     case "phone":
-      return <Phone className="text-muted size-4" />;
+      return <Phone className="size-4 text-muted" />;
     case "number":
-      return <Hash className="text-muted size-4" />;
+      return <Hash className="size-4 text-muted" />;
     case "textarea":
-      return <AlignLeft className="text-muted size-4" />;
+      return <AlignLeft className="size-4 text-muted" />;
     case "address":
-      return <MapPin className="text-muted size-4" />;
+      return <MapPin className="size-4 text-muted" />;
     case "secret":
-      return <ShieldEllipsis className="text-muted size-4" />;
+      return <ShieldEllipsis className="size-4 text-muted" />;
     case "password":
-      return <KeyRound className="text-muted size-4" />;
+      return <KeyRound className="size-4 text-muted" />;
     case "security-question":
-      return <HelpCircle className="text-muted size-4" />;
+      return <HelpCircle className="size-4 text-muted" />;
     case "credit-card":
-      return <CreditCard className="text-muted size-4" />;
+      return <CreditCard className="size-4 text-muted" />;
     default:
       return null;
   }
@@ -359,7 +359,7 @@ export default function AddPasswordPage() {
             <ArrowLeft className="size-4" />
           </Button>
         </Link>
-        <h1 className="text-lg font-semibold">Add Password</h1>
+        <h1 className="font-semibold text-lg">Add Password</h1>
       </div>
 
       {/* Form */}
@@ -367,7 +367,7 @@ export default function AddPasswordPage() {
         <div className="flex flex-col gap-4">
           {/* Error Alert */}
           {error && (
-            <Alert status="danger" className="border-border w-full rounded-2xl border shadow-none">
+            <Alert status="danger" className="w-full rounded-2xl border border-border shadow-none">
               <Alert.Indicator />
               <Alert.Content className="gap-1">
                 <Alert.Title>{error}</Alert.Title>
@@ -388,7 +388,7 @@ export default function AddPasswordPage() {
                 <Label>Website Name</Label>
                 <InputGroup>
                   <InputGroup.Prefix>
-                    <Globe className="text-muted size-4" />
+                    <Globe className="size-4 text-muted" />
                   </InputGroup.Prefix>
                   <InputGroup.Input placeholder="Google" />
                 </InputGroup>
@@ -415,7 +415,7 @@ export default function AddPasswordPage() {
                         unoptimized
                       />
                     ) : (
-                      <Globe className="text-muted size-4" />
+                      <Globe className="size-4 text-muted" />
                     )}
                   </InputGroup.Prefix>
                   <InputGroup.Input placeholder="google.com" />
@@ -429,7 +429,7 @@ export default function AddPasswordPage() {
             <Label>Title</Label>
             <InputGroup>
               <InputGroup.Prefix>
-                <Tag className="text-muted size-4" />
+                <Tag className="size-4 text-muted" />
               </InputGroup.Prefix>
               <InputGroup.Input placeholder="Personal account" />
             </InputGroup>
@@ -442,7 +442,7 @@ export default function AddPasswordPage() {
                 <Label>Email</Label>
                 <InputGroup>
                   <InputGroup.Prefix>
-                    <Mail className="text-muted size-4" />
+                    <Mail className="size-4 text-muted" />
                   </InputGroup.Prefix>
                   <InputGroup.Input placeholder="username@domain.com" />
                 </InputGroup>
@@ -453,7 +453,7 @@ export default function AddPasswordPage() {
                 <Label>Username</Label>
                 <InputGroup>
                   <InputGroup.Prefix>
-                    <User className="text-muted size-4" />
+                    <User className="size-4 text-muted" />
                   </InputGroup.Prefix>
                   <InputGroup.Input placeholder="manas" />
                 </InputGroup>
@@ -467,7 +467,7 @@ export default function AddPasswordPage() {
             <div className="flex gap-2">
               <InputGroup className="flex-1">
                 <InputGroup.Prefix>
-                  <KeyRound className="text-muted size-4" />
+                  <KeyRound className="size-4 text-muted" />
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   type={showPassword ? "text" : "password"}
@@ -541,7 +541,7 @@ export default function AddPasswordPage() {
             <Label>Notes</Label>
             <InputGroup>
               <InputGroup.Prefix>
-                <NotebookPen className="text-muted size-4" />
+                <NotebookPen className="size-4 text-muted" />
               </InputGroup.Prefix>
               <InputGroup.TextArea placeholder="Add any notes..." rows={3} />
             </InputGroup>
@@ -602,7 +602,7 @@ export default function AddPasswordPage() {
                             minValue={4}
                             maxValue={12}
                             onChange={(val) => {
-                              const len = isNaN(val) ? 4 : val;
+                              const len = Number.isNaN(val) ? 4 : val;
                               handleUpdateField(field.id, { pinLength: len, value: "" });
                             }}
                             isDisabled={isPending}
@@ -625,7 +625,7 @@ export default function AddPasswordPage() {
                           aria-label={field.pinned ? "Unpin from card" : "Pin to card"}
                         >
                           <Pin
-                            className={`size-4 ${field.pinned ? "text-accent fill-accent" : "text-muted"}`}
+                            className={`size-4 ${field.pinned ? "fill-accent text-accent" : "text-muted"}`}
                           />
                         </Button>
                         <Button
@@ -637,7 +637,7 @@ export default function AddPasswordPage() {
                           isDisabled={isPending}
                           aria-label="Remove field"
                         >
-                          <Trash2 className="text-danger size-4" />
+                          <Trash2 className="size-4 text-danger" />
                         </Button>
                       </div>
                     </InputGroup.Suffix>
@@ -654,7 +654,7 @@ export default function AddPasswordPage() {
                     >
                       <DateField.Group fullWidth>
                         <DateField.Prefix>
-                          <CalendarDays className="text-muted size-4" />
+                          <CalendarDays className="size-4 text-muted" />
                         </DateField.Prefix>
                         <DateField.Input>
                           {(segment) => <DateField.Segment segment={segment} />}
@@ -717,7 +717,7 @@ export default function AddPasswordPage() {
                         <>
                           <DateField.Group fullWidth>
                             <DateField.Prefix>
-                              <Clock className="text-muted size-4" />
+                              <Clock className="size-4 text-muted" />
                             </DateField.Prefix>
                             <DateField.Input>
                               {(segment) => <DateField.Segment segment={segment} />}
@@ -799,7 +799,7 @@ export default function AddPasswordPage() {
                     >
                       <DateField.Group fullWidth>
                         <DateField.Prefix>
-                          <CalendarRange className="text-muted size-4" />
+                          <CalendarRange className="size-4 text-muted" />
                         </DateField.Prefix>
                         <DateField.Input slot="start">
                           {(segment) => <DateField.Segment segment={segment} />}
@@ -845,13 +845,15 @@ export default function AddPasswordPage() {
                   ) : field.type === "number" ? (
                     <InputGroup>
                       <InputGroup.Prefix>
-                        <Hash className="text-muted size-4" />
+                        <Hash className="size-4 text-muted" />
                       </InputGroup.Prefix>
                       <NumberField
                         className="w-full"
                         value={field.value !== "" ? Number(field.value) : undefined}
                         onChange={(val) =>
-                          handleUpdateField(field.id, { value: isNaN(val) ? "" : String(val) })
+                          handleUpdateField(field.id, {
+                            value: Number.isNaN(val) ? "" : String(val),
+                          })
                         }
                         isDisabled={isPending}
                       >
@@ -886,14 +888,14 @@ export default function AddPasswordPage() {
                       >
                         <InputGroup>
                           <InputGroup.Prefix>
-                            <HelpCircle className="text-muted size-4" />
+                            <HelpCircle className="size-4 text-muted" />
                           </InputGroup.Prefix>
                           <InputGroup.Input placeholder="Question" />
                         </InputGroup>
                       </TextField>
                       <InputGroup>
                         <InputGroup.Prefix>
-                          <ShieldEllipsis className="text-muted size-4" />
+                          <ShieldEllipsis className="size-4 text-muted" />
                         </InputGroup.Prefix>
                         <InputGroup.Input
                           type={field.showSecret ? "text" : "password"}
@@ -908,7 +910,7 @@ export default function AddPasswordPage() {
                             onClick={() =>
                               handleUpdateField(field.id, { showSecret: !field.showSecret })
                             }
-                            className="text-muted hover:text-foreground transition-colors focus:outline-none"
+                            className="text-muted transition-colors hover:text-foreground focus:outline-none"
                             disabled={isPending}
                             tabIndex={-1}
                           >
@@ -925,7 +927,7 @@ export default function AddPasswordPage() {
                     <div className="flex flex-col gap-2">
                       <InputGroup>
                         <InputGroup.Prefix>
-                          <CreditCard className="text-muted size-4" />
+                          <CreditCard className="size-4 text-muted" />
                         </InputGroup.Prefix>
                         <InputGroup.Input
                           placeholder="4242 4242 4242 4242"
@@ -942,7 +944,7 @@ export default function AddPasswordPage() {
                       </InputGroup>
                       <InputGroup>
                         <InputGroup.Prefix>
-                          <User className="text-muted size-4" />
+                          <User className="size-4 text-muted" />
                         </InputGroup.Prefix>
                         <InputGroup.Input
                           placeholder="Cardholder Name"
@@ -973,7 +975,7 @@ export default function AddPasswordPage() {
                               onClick={() =>
                                 handleUpdateField(field.id, { showCardPin: !field.showCardPin })
                               }
-                              className="text-muted hover:text-foreground transition-colors focus:outline-none"
+                              className="text-muted transition-colors hover:text-foreground focus:outline-none"
                               disabled={isPending}
                               tabIndex={-1}
                             >
@@ -987,7 +989,7 @@ export default function AddPasswordPage() {
                         </InputGroup>
                         <InputGroup className="flex-1">
                           <InputGroup.Prefix>
-                            <CalendarDays className="text-muted size-4" />
+                            <CalendarDays className="size-4 text-muted" />
                           </InputGroup.Prefix>
                           <InputGroup.Input
                             placeholder="MM/YY"
@@ -999,7 +1001,7 @@ export default function AddPasswordPage() {
                                 !val.includes("/") &&
                                 (field.cardExp?.length ?? 0) < 2
                               )
-                                val = val + "/";
+                                val = `${val}/`;
                               handleUpdateField(field.id, { cardExp: val });
                             }}
                             disabled={isPending}
@@ -1025,7 +1027,7 @@ export default function AddPasswordPage() {
                   ) : field.type === "password" ? (
                     <InputGroup>
                       <InputGroup.Prefix>
-                        <KeyRound className="text-muted size-4" />
+                        <KeyRound className="size-4 text-muted" />
                       </InputGroup.Prefix>
                       <InputGroup.Input
                         type={field.showSecret ? "text" : "password"}
@@ -1107,7 +1109,7 @@ export default function AddPasswordPage() {
                   ) : SECRET_TYPES.includes(field.type) ? (
                     <InputGroup>
                       <InputGroup.Prefix>
-                        <ShieldEllipsis className="text-muted size-4" />
+                        <ShieldEllipsis className="size-4 text-muted" />
                       </InputGroup.Prefix>
                       <InputGroup.Input
                         type={field.showSecret ? "text" : "password"}
@@ -1122,7 +1124,7 @@ export default function AddPasswordPage() {
                           onClick={() =>
                             handleUpdateField(field.id, { showSecret: !field.showSecret })
                           }
-                          className="text-muted hover:text-foreground transition-colors focus:outline-none"
+                          className="text-muted transition-colors hover:text-foreground focus:outline-none"
                           disabled={isPending}
                           tabIndex={-1}
                         >
@@ -1204,10 +1206,10 @@ function SortableFieldCard({ id, children }: { id: string; children: React.React
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="border-border flex gap-2 rounded-xl border p-3">
+    <div ref={setNodeRef} style={style} className="flex gap-2 rounded-xl border border-border p-3">
       <button
         type="button"
-        className="text-muted hover:text-foreground mt-2 flex shrink-0 cursor-grab touch-none items-start active:cursor-grabbing"
+        className="mt-2 flex shrink-0 cursor-grab touch-none items-start text-muted hover:text-foreground active:cursor-grabbing"
         aria-label="Drag to reorder"
         {...attributes}
         {...listeners}

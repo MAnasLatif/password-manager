@@ -125,7 +125,7 @@ export function buildAccountCsv(
     headers.push("Tags");
     values.push(`"${account.tags.map((t) => t.name).join(", ")}"`);
   }
-  return headers.join(",") + "\n" + values.join(",");
+  return `${headers.join(",")}\n${values.join(",")}`;
 }
 
 export function buildAccountMarkdown(

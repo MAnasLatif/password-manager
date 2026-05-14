@@ -1,6 +1,6 @@
-import AddPasswordPage from "@/components/app/add-password-page";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import AddPasswordPage from "@/components/app/add-password-page";
 
 export const metadata: Metadata = {
   title: "Add Password",

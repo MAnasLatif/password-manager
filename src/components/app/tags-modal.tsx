@@ -1,6 +1,5 @@
 "use client";
 
-import type { AccountTag } from "@/types";
 import type { Key } from "@heroui/react";
 import {
   Autocomplete,
@@ -17,16 +16,17 @@ import {
   Label,
   ListBox,
   Modal,
-  SearchField,
-  Tag as TagItem,
-  TagGroup,
-  TextField,
   parseColor,
+  SearchField,
+  TagGroup,
+  Tag as TagItem,
+  TextField,
   toast,
   useFilter,
 } from "@heroui/react";
 import { Circle, Plus, Tag } from "lucide-react";
 import { useState } from "react";
+import type { AccountTag } from "@/types";
 
 interface TagsModalProps {
   isOpen: boolean;
@@ -73,9 +73,7 @@ export default function TagsModal({
   const handleSelectionChange = (keys: Key | Key[] | null) => {
     const keyArray = Array.isArray(keys) ? keys : keys ? [keys] : [];
     const newTags = keyArray
-      .map(
-        (key) => allTags.find((t) => t.id === key) || accountTags.find((t) => t.id === key),
-      )
+      .map((key) => allTags.find((t) => t.id === key) || accountTags.find((t) => t.id === key))
       .filter(Boolean) as AccountTag[];
     onTagsChange(newTags);
   };
@@ -197,7 +195,7 @@ export default function TagsModal({
 
               {/* Create new tag form */}
               <div className="flex flex-col gap-3">
-                <span className="text-sm font-medium">Create New Tag</span>
+                <span className="font-medium text-sm">Create New Tag</span>
                 <TextField aria-label="Tag name" className="w-full" name="new-tag-name">
                   <InputGroup fullWidth variant="secondary">
                     <InputGroup.Suffix>

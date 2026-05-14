@@ -1,15 +1,15 @@
 "use client";
 
-import useAppState from "@/contexts/app-state";
-import { signOut, useSession } from "@/lib/auth-client";
 import { Avatar, Button, cn, Dropdown, Label, SearchField, Tooltip } from "@heroui/react";
-import { ThemeToggle } from "@/components/ThemeSwitcher";
 import { LogOut, Plus, Settings, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
+import { ThemeToggle } from "@/components/ThemeSwitcher";
+import useAppState from "@/contexts/app-state";
+import { signOut, useSession } from "@/lib/auth-client";
 
 export function AppHeader({ className }: { className?: string }) {
   const { searchPlaceholder, searchQuery, setSearchQuery, addButton } = useAppState();
@@ -26,7 +26,7 @@ export function AppHeader({ className }: { className?: string }) {
       setSearchQuery("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedValue]);
+  }, [debouncedValue, setSearchQuery]);
 
   const userInitials = session?.user?.name
     ? session.user.name
@@ -43,8 +43,8 @@ export function AppHeader({ className }: { className?: string }) {
       <Link href="/" className="flex w-full max-w-50 items-center gap-2.5">
         <Image src="/logo.svg" alt="MAAnasVault logo" width={28} height={28} className="size-7" />
         <div className="flex flex-col leading-none">
-          <span className="text-sm font-semibold">MAnasPM</span>
-          <span className="text-muted text-[10px]">Password Manager</span>
+          <span className="font-semibold text-sm">MAnasPM</span>
+          <span className="text-[10px] text-muted">Password Manager</span>
         </div>
       </Link>
 
@@ -100,7 +100,7 @@ export function AppHeader({ className }: { className?: string }) {
                   <Avatar.Fallback delayMs={0}>{userInitials}</Avatar.Fallback>
                 </Avatar>
                 <div className="flex flex-col gap-0">
-                  <p className="text-sm leading-5 font-medium">{session?.user?.name ?? "Guest"}</p>
+                  <p className="font-medium text-sm leading-5">{session?.user?.name ?? "Guest"}</p>
                   <p className="text-muted text-xs leading-none">{session?.user?.email ?? ""}</p>
                 </div>
               </div>
@@ -116,15 +116,15 @@ export function AppHeader({ className }: { className?: string }) {
               }}
             >
               <Dropdown.Item id="profile" textValue="Profile">
-                <User className="text-muted size-3.5" />
+                <User className="size-3.5 text-muted" />
                 <Label>Profile</Label>
               </Dropdown.Item>
               <Dropdown.Item id="settings" textValue="Settings">
-                <Settings className="text-muted size-3.5" />
+                <Settings className="size-3.5 text-muted" />
                 <Label>Settings</Label>
               </Dropdown.Item>
               <Dropdown.Item id="logout" textValue="Log out" variant="danger">
-                <LogOut className="text-danger size-3.5" />
+                <LogOut className="size-3.5 text-danger" />
                 <Label>Log Out</Label>
               </Dropdown.Item>
             </Dropdown.Menu>

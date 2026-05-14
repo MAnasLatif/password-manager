@@ -180,10 +180,7 @@ export interface WelcomeTemplateOptions {
   loginUrl: string;
 }
 
-export function welcomeTemplate({
-  name,
-  loginUrl,
-}: WelcomeTemplateOptions): string {
+export function welcomeTemplate({ name, loginUrl }: WelcomeTemplateOptions): string {
   const content = /* html */ `
     <h1 style="font-size:22px;font-weight:700;color:#18181b;margin-bottom:8px;">Welcome to ${APP_NAME} 🎉</h1>
     <p style="font-size:15px;color:#52525b;line-height:1.7;margin-bottom:4px;">Hi ${name},</p>

@@ -1,13 +1,13 @@
 "use client";
 
+import { Avatar, Button, Chip, Tooltip, toast } from "@heroui/react";
+import { Copy, Eye, EyeOff, Loader2, LockKeyhole, Star } from "lucide-react";
+import { useState } from "react";
+import { useCopyToClipboard } from "usehooks-ts";
 import type { Account, Platform } from "@/types";
 import { getInitials, stringToColor } from "@/utils";
 import type { ExportFormat } from "@/utils/account";
 import { buildAccountText, getAccountTitle } from "@/utils/account";
-import { Avatar, Button, Chip, toast, Tooltip } from "@heroui/react";
-import { Copy, Eye, EyeOff, Loader2, LockKeyhole, Star } from "lucide-react";
-import { useState } from "react";
-import { useCopyToClipboard } from "usehooks-ts";
 import AccountCardMenu from "./account-card-menu";
 import ExportModal from "./export-modal";
 import OneTimeLinkModal from "./one-time-link-modal";
@@ -116,7 +116,7 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
   };
 
   return (
-    <div className="hover:bg-surface-hover active:bg-surface-pressed group border-default/80 flex cursor-pointer flex-col gap-4 rounded-xl border p-4 transition-colors">
+    <div className="group flex cursor-pointer flex-col gap-4 rounded-xl border border-default/80 p-4 transition-colors hover:bg-surface-hover active:bg-surface-pressed">
       {/* Top row: Avatar + Info + Actions */}
       <div className="flex items-start gap-4">
         {/* Content */}
@@ -126,16 +126,14 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
               {account.isFavorite && (
                 <Star className="size-4 shrink-0 fill-yellow-400 text-yellow-400" />
               )}
-              <span className="text-base font-semibold">{getTitle()}</span>
+              <span className="font-semibold text-base">{getTitle()}</span>
               {account.tags?.map((tag) => (
                 <Chip
                   key={tag.id}
                   size="sm"
                   variant="soft"
                   style={
-                    tag.color
-                      ? { backgroundColor: `${tag.color}20`, color: tag.color }
-                      : undefined
+                    tag.color ? { backgroundColor: `${tag.color}20`, color: tag.color } : undefined
                   }
                 >
                   {tag.name}
@@ -144,28 +142,28 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
               {/* Avatar section - clickable to open share modal */}
               <button
                 type="button"
-                className="hover:bg-surface-hover shrink-0 cursor-pointer rounded p-0.5 pt-0.5 transition-colors"
+                className="shrink-0 cursor-pointer rounded p-0.5 pt-0.5 transition-colors hover:bg-surface-hover"
                 onClick={() => setIsShareModalOpen(true)}
                 aria-label="Share account"
               >
                 {account.sharedWith && account.sharedWith.length > 0 ? (
                   <div className="flex -space-x-1.5">
                     {account.sharedWith.slice(0, 3).map((user) => (
-                      <Avatar key={user.id} className="ring-background size-5 ring-2">
+                      <Avatar key={user.id} className="size-5 ring-2 ring-background">
                         <Avatar.Image src={user.image ?? ""} alt={user.name} />
                         <Avatar.Fallback
                           style={{
                             backgroundColor: stringToColor(user.name),
                             color: "white",
                           }}
-                          className="text-[8px] font-semibold"
+                          className="font-semibold text-[8px]"
                         >
                           {getInitials(user.name)}
                         </Avatar.Fallback>
                       </Avatar>
                     ))}
                     {account.sharedWith.length > 3 ? (
-                      <Avatar className="ring-background size-5 ring-2">
+                      <Avatar className="size-5 ring-2 ring-background">
                         <Avatar.Fallback className="text-[8px]">
                           +{account.sharedWith.length - 3}
                         </Avatar.Fallback>
@@ -173,7 +171,7 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
                     ) : null}
                   </div>
                 ) : (
-                  <LockKeyhole className="text-muted/30 size-4" />
+                  <LockKeyhole className="size-4 text-muted/30" />
                 )}
               </button>
             </div>
@@ -189,7 +187,7 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
                   aria-label="Copy email"
                   onPress={handleCopy(account.email, "Email")}
                 >
-                  <Copy className="text-muted size-4" />
+                  <Copy className="size-4 text-muted" />
                 </Button>
                 <Tooltip.Content>
                   <p>Copy email</p>
@@ -199,7 +197,7 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
           )}
           {account.hasPassword && (
             <div className="flex items-center gap-2">
-              <span className="text-muted font-mono text-sm">
+              <span className="font-mono text-muted text-sm">
                 {showPassword && password ? password : "••••••••"}
               </span>
               <Tooltip delay={0}>
@@ -212,11 +210,11 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
                   onPress={handleTogglePassword}
                 >
                   {isLoadingPassword ? (
-                    <Loader2 className="text-muted size-4 animate-spin" />
+                    <Loader2 className="size-4 animate-spin text-muted" />
                   ) : showPassword ? (
-                    <EyeOff className="text-muted size-4" />
+                    <EyeOff className="size-4 text-muted" />
                   ) : (
-                    <Eye className="text-muted size-4" />
+                    <Eye className="size-4 text-muted" />
                   )}
                 </Button>
                 <Tooltip.Content>
@@ -232,7 +230,7 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
                   isDisabled={isLoadingPassword}
                   onPress={handleCopyPassword}
                 >
-                  <Copy className="text-muted size-4" />
+                  <Copy className="size-4 text-muted" />
                 </Button>
                 <Tooltip.Content>
                   <p>Copy password</p>
@@ -246,7 +244,7 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
             ?.filter((f) => f.pinned)
             .map((f) => (
               <div key={f.id} className="flex items-center gap-2">
-                <span className="text-muted text-xs font-medium">{f.label || f.type}:</span>
+                <span className="font-medium text-muted text-xs">{f.label || f.type}:</span>
                 <span className="text-muted/70 text-xs">{f.value}</span>
                 <Tooltip delay={0}>
                   <Button
@@ -256,7 +254,7 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
                     aria-label={`Copy ${f.label || f.type}`}
                     onPress={handleCopy(f.value, f.label || f.type)}
                   >
-                    <Copy className="text-muted size-3" />
+                    <Copy className="size-3 text-muted" />
                   </Button>
                   <Tooltip.Content>
                     <p>Copy {f.label || f.type}</p>
@@ -287,13 +285,13 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
               setExportFormat(fmt as ExportFormat);
               setIsExportModalOpen(true);
             }}
-            onFavorite={() => { }}
+            onFavorite={() => {}}
             onAddTag={() => setIsTagsModalOpen(true)}
-            onEdit={() => { }}
-            onDuplicate={() => { }}
-            onMove={() => { }}
-            onViewHistory={() => { }}
-            onDelete={() => { }}
+            onEdit={() => {}}
+            onDuplicate={() => {}}
+            onMove={() => {}}
+            onViewHistory={() => {}}
+            onDelete={() => {}}
           />
         </div>
       </div>

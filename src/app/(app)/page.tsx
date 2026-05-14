@@ -1,6 +1,6 @@
+import type { Metadata } from "next";
 import HomePage from "@/components/app/page";
 import type { Platform } from "@/types";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "My Vault",

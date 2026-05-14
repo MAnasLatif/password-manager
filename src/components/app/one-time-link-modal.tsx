@@ -1,7 +1,5 @@
 "use client";
 
-import type { Account } from "@/types";
-import { getInitials, stringToColor } from "@/utils";
 import {
   Avatar,
   Button,
@@ -11,8 +9,8 @@ import {
   Popover,
   ScrollShadow,
   Select,
-  toast,
   Tooltip,
+  toast,
 } from "@heroui/react";
 import {
   ArrowDownUp,
@@ -28,6 +26,8 @@ import {
 } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
+import type { Account } from "@/types";
+import { getInitials, stringToColor } from "@/utils";
 
 interface OneTimeLinkModalProps {
   account: Account;
@@ -203,7 +203,7 @@ export default function OneTimeLinkModal({
   title,
 }: OneTimeLinkModalProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [copiedText, copy] = useCopyToClipboard();
+  const [_copiedText, copy] = useCopyToClipboard();
   const [links, setLinks] = useState<OneTimeLink[]>(DUMMY_LINKS);
   const [expiry, setExpiry] = useState("24h");
   const [usageLimit, setUsageLimit] = useState("1");
@@ -289,10 +289,10 @@ export default function OneTimeLinkModal({
 
             <Modal.Body className="mt-0 flex flex-col gap-4 p-4">
               {/* Create new link section */}
-              <div className="bg-default/40 flex flex-col gap-3 rounded-2xl p-4">
+              <div className="flex flex-col gap-3 rounded-2xl bg-default/40 p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-medium">Create a new link</span>
+                    <span className="font-medium text-sm">Create a new link</span>
                     <span className="text-muted text-xs">
                       Anyone with the link can view credentials
                     </span>
@@ -383,7 +383,7 @@ export default function OneTimeLinkModal({
               {/* Links list */}
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-muted text-xs font-medium">
+                  <span className="font-medium text-muted text-xs">
                     Previous Links ({links.length})
                   </span>
                   {links.length > 1 && (
@@ -397,7 +397,7 @@ export default function OneTimeLinkModal({
                       }}
                     >
                       <Select.Trigger className="h-6 gap-1 border-none bg-transparent px-1.5 text-[11px] shadow-none">
-                        <ArrowDownUp className="text-muted size-3" />
+                        <ArrowDownUp className="size-3 text-muted" />
                         <Select.Value />
                         <Select.Indicator />
                       </Select.Trigger>
@@ -427,8 +427,8 @@ export default function OneTimeLinkModal({
 
                 {links.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 py-8">
-                    <div className="bg-default flex size-10 items-center justify-center rounded-full">
-                      <Link2 className="text-muted size-5" />
+                    <div className="flex size-10 items-center justify-center rounded-full bg-default">
+                      <Link2 className="size-5 text-muted" />
                     </div>
                     <p className="text-muted text-sm">No one-time links created yet</p>
                     <p className="text-muted/60 text-xs">
@@ -445,7 +445,7 @@ export default function OneTimeLinkModal({
                         return (
                           <div
                             key={link.id}
-                            className="border-default flex overflow-hidden rounded-xl border transition-colors"
+                            className="flex overflow-hidden rounded-xl border border-default transition-colors"
                           >
                             <div className="flex flex-1 flex-col gap-2.5 p-3">
                               {/* Row 1: Status + permission + actions */}
@@ -473,7 +473,7 @@ export default function OneTimeLinkModal({
                                           onPress={() => handleCopyLink(link.id, link.url)}
                                         >
                                           {isCopied ? (
-                                            <Check className="text-success size-3.5" />
+                                            <Check className="size-3.5 text-success" />
                                           ) : (
                                             <Copy className="size-3.5" />
                                           )}
@@ -496,7 +496,7 @@ export default function OneTimeLinkModal({
                                               variant="ghost"
                                               aria-label="Deactivate link"
                                             >
-                                              <Ban className="text-warning size-3.5" />
+                                              <Ban className="size-3.5 text-warning" />
                                             </Button>
                                           </Popover.Trigger>
                                         </Tooltip.Trigger>
@@ -504,7 +504,7 @@ export default function OneTimeLinkModal({
                                       </Tooltip>
                                       <Popover.Content className="p-3">
                                         <div className="flex flex-col gap-2">
-                                          <span className="text-sm font-medium">
+                                          <span className="font-medium text-sm">
                                             Deactivate this link?
                                           </span>
                                           <span className="text-muted text-xs">
@@ -521,7 +521,7 @@ export default function OneTimeLinkModal({
                                             <Button
                                               size="sm"
                                               variant="primary"
-                                              className="bg-warning h-7 px-3 text-xs text-black"
+                                              className="h-7 bg-warning px-3 text-black text-xs"
                                               onPress={() => handleDeactivateLink(link.id)}
                                             >
                                               Deactivate
@@ -542,7 +542,7 @@ export default function OneTimeLinkModal({
                                               variant="ghost"
                                               aria-label="Delete link"
                                             >
-                                              <Trash2 className="text-danger size-3.5" />
+                                              <Trash2 className="size-3.5 text-danger" />
                                             </Button>
                                           </Popover.Trigger>
                                         </Tooltip.Trigger>
@@ -550,7 +550,7 @@ export default function OneTimeLinkModal({
                                       </Tooltip>
                                       <Popover.Content className="p-3">
                                         <div className="flex flex-col gap-2">
-                                          <span className="text-sm font-medium">
+                                          <span className="font-medium text-sm">
                                             Delete this link?
                                           </span>
                                           <span className="text-muted text-xs">
@@ -583,7 +583,7 @@ export default function OneTimeLinkModal({
                               {/* Row 2: Stats */}
                               <div className="flex items-center gap-4">
                                 <div className="flex items-center gap-1.5">
-                                  <Eye className="text-muted size-3" />
+                                  <Eye className="size-3 text-muted" />
                                   <span className="text-xs">
                                     <span className="font-medium">
                                       {link.usageCount}/{link.usageLimit || "∞"}
@@ -592,7 +592,7 @@ export default function OneTimeLinkModal({
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
-                                  <Copy className="text-muted size-3" />
+                                  <Copy className="size-3 text-muted" />
                                   <span className="text-xs">
                                     <span className="font-medium">{link.copiedCount}</span>{" "}
                                     <span className="text-muted">copied</span>
@@ -600,16 +600,16 @@ export default function OneTimeLinkModal({
                                 </div>
                                 {isActive && link.expiresAt && (
                                   <div className="flex items-center gap-1.5">
-                                    <Clock className="text-warning size-3" />
-                                    <span className="text-warning text-xs font-medium">
+                                    <Clock className="size-3 text-warning" />
+                                    <span className="font-medium text-warning text-xs">
                                       {formatRelativeExpiry(link.expiresAt)}
                                     </span>
                                   </div>
                                 )}
                                 {isActive && !link.expiresAt && (
                                   <div className="flex items-center gap-1.5">
-                                    <Clock className="text-success size-3" />
-                                    <span className="text-success text-xs font-medium">
+                                    <Clock className="size-3 text-success" />
+                                    <span className="font-medium text-success text-xs">
                                       Never expires
                                     </span>
                                   </div>
@@ -617,7 +617,7 @@ export default function OneTimeLinkModal({
                               </div>
 
                               {/* Row 3: Meta */}
-                              <div className="text-muted flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px]">
+                              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted">
                                 <span>{formatDateTime(link.createdAt)}</span>
                                 <span>·</span>
                                 <span className="flex items-center gap-1">
@@ -627,7 +627,7 @@ export default function OneTimeLinkModal({
                                         backgroundColor: stringToColor(link.createdBy.name),
                                         color: "white",
                                       }}
-                                      className="text-[6px] font-semibold"
+                                      className="font-semibold text-[6px]"
                                     >
                                       {getInitials(link.createdBy.name)}
                                     </Avatar.Fallback>

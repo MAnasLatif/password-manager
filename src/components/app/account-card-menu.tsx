@@ -86,12 +86,12 @@ export default function AccountCardMenu({
           <Dropdown.Section>
             <Header>Quick Actions</Header>
             <Dropdown.Item id="open-website" textValue="Open Website">
-              <ExternalLink className="text-muted size-3.5" />
+              <ExternalLink className="size-3.5 text-muted" />
               <Label>Open Website</Label>
             </Dropdown.Item>
             <Dropdown.SubmenuTrigger>
               <Dropdown.Item id="share-copy" textValue="Share & Copy">
-                <Share2 className="text-muted size-3.5" />
+                <Share2 className="size-3.5 text-muted" />
                 <Label>Share & Copy</Label>
                 <Dropdown.SubmenuIndicator />
               </Dropdown.Item>
@@ -107,24 +107,24 @@ export default function AccountCardMenu({
                   }}
                 >
                   <Dropdown.Item id="copy-details" textValue="Copy Details">
-                    <ClipboardList className="text-muted size-3.5" />
+                    <ClipboardList className="size-3.5 text-muted" />
                     <Label>Copy Details</Label>
                   </Dropdown.Item>
                   <Dropdown.Item id="copy-link" textValue="Copy Link">
-                    <Link2 className="text-muted size-3.5" />
+                    <Link2 className="size-3.5 text-muted" />
                     <Label>Copy Link</Label>
                   </Dropdown.Item>
                   <Dropdown.Item id="one-time-copy" textValue="One-Time Link">
-                    <Timer className="text-muted size-3.5" />
+                    <Timer className="size-3.5 text-muted" />
                     <Label>One-Time Link</Label>
                   </Dropdown.Item>
                   <Dropdown.Item id="share" textValue="Share">
-                    <Share2 className="text-muted size-3.5" />
+                    <Share2 className="size-3.5 text-muted" />
                     <Label>Share</Label>
                   </Dropdown.Item>
                   <Dropdown.SubmenuTrigger>
                     <Dropdown.Item id="export" textValue="Export Account">
-                      <Download className="text-muted size-3.5" />
+                      <Download className="size-3.5 text-muted" />
                       <Label>Export Account</Label>
                       <Dropdown.SubmenuIndicator />
                     </Dropdown.Item>
@@ -136,27 +136,27 @@ export default function AccountCardMenu({
                         }}
                       >
                         <Dropdown.Item id="export-json" textValue="JSON">
-                          <FileJson className="text-muted size-3.5" />
+                          <FileJson className="size-3.5 text-muted" />
                           <Label>{title || "account"}.json</Label>
                         </Dropdown.Item>
                         <Dropdown.Item id="export-csv" textValue="CSV">
-                          <FileSpreadsheet className="text-muted size-3.5" />
+                          <FileSpreadsheet className="size-3.5 text-muted" />
                           <Label>{title || "account"}.csv</Label>
                         </Dropdown.Item>
                         <Dropdown.Item id="export-txt" textValue="Plain Text">
-                          <FileText className="text-muted size-3.5" />
+                          <FileText className="size-3.5 text-muted" />
                           <Label>{title || "account"}.txt</Label>
                         </Dropdown.Item>
                         <Dropdown.Item id="export-md" textValue="Markdown">
-                          <FileType className="text-muted size-3.5" />
+                          <FileType className="size-3.5 text-muted" />
                           <Label>{title || "account"}.md</Label>
                         </Dropdown.Item>
                         <Dropdown.Item id="export-xml" textValue="XML">
-                          <FileCode2 className="text-muted size-3.5" />
+                          <FileCode2 className="size-3.5 text-muted" />
                           <Label>{title || "account"}.xml</Label>
                         </Dropdown.Item>
                         <Dropdown.Item id="export-yaml" textValue="YAML">
-                          <FileCode2 className="text-muted size-3.5" />
+                          <FileCode2 className="size-3.5 text-muted" />
                           <Label>{title || "account"}.yaml</Label>
                         </Dropdown.Item>
                       </Dropdown.Menu>
@@ -175,14 +175,14 @@ export default function AccountCardMenu({
               textValue={isFavorite ? "Remove from Favorites" : "Favorite"}
             >
               {isFavorite ? (
-                <StarOff className="text-muted size-3.5" />
+                <StarOff className="size-3.5 text-muted" />
               ) : (
-                <Star className="text-muted size-3.5" />
+                <Star className="size-3.5 text-muted" />
               )}
               <Label>{isFavorite ? "Remove from Favorites" : "Favorite"}</Label>
             </Dropdown.Item>
             <Dropdown.Item id="add-tag" textValue="Add Tag">
-              <Tag className="text-muted size-3.5" />
+              <Tag className="size-3.5 text-muted" />
               <Label>Add Tag</Label>
             </Dropdown.Item>
           </Dropdown.Section>
@@ -191,19 +191,19 @@ export default function AccountCardMenu({
           <Dropdown.Section>
             <Header>Manage</Header>
             <Dropdown.Item id="edit" textValue="Edit">
-              <Pencil className="text-muted size-3.5" />
+              <Pencil className="size-3.5 text-muted" />
               <Label>Edit</Label>
             </Dropdown.Item>
             <Dropdown.Item id="duplicate" textValue="Duplicate">
-              <CopyPlus className="text-muted size-3.5" />
+              <CopyPlus className="size-3.5 text-muted" />
               <Label>Duplicate</Label>
             </Dropdown.Item>
             <Dropdown.Item id="move" textValue="Move">
-              <FolderInput className="text-muted size-3.5" />
+              <FolderInput className="size-3.5 text-muted" />
               <Label>Move</Label>
             </Dropdown.Item>
             <Dropdown.Item id="view-history" textValue="View History">
-              <History className="text-muted size-3.5" />
+              <History className="size-3.5 text-muted" />
               <Label>View History</Label>
             </Dropdown.Item>
           </Dropdown.Section>
@@ -212,7 +212,7 @@ export default function AccountCardMenu({
           <Dropdown.Section>
             <Header>Danger Zone</Header>
             <Dropdown.Item id="delete" textValue="Delete" variant="danger">
-              <Trash2 className="text-danger size-3.5" />
+              <Trash2 className="size-3.5 text-danger" />
               <Label>Delete</Label>
             </Dropdown.Item>
           </Dropdown.Section>
