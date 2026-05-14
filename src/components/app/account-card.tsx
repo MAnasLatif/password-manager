@@ -21,7 +21,7 @@ interface AccountCardProps {
 
 export default function AccountCard({ account, platform }: AccountCardProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [copiedText, copy] = useCopyToClipboard();
+  const [_copiedText, copy] = useCopyToClipboard();
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState<string | null>(null);
   const [isLoadingPassword, setIsLoadingPassword] = useState(false);
@@ -33,9 +33,10 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
   const [accountTags, setAccountTags] = useState(account.tags ?? []);
 
   // TODO: Replace with actual API call
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fetchPassword = async (accountId: string): Promise<string> => {
     // Dummy implementation - simulates API delay
+    // eslint-disable-next-line no-console
+    console.log(`Fetching password for account ${accountId}...`);
     await new Promise((resolve) => setTimeout(resolve, 500));
     return "Dummy@Password123";
   };
@@ -114,39 +115,6 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
     }
   };
 
-  const handleOneTimeCopy = async () => {
-    try {
-      setIsLoadingPassword(true);
-      const pw = await resolvePassword();
-      setIsLoadingPassword(false);
-      if (!pw) {
-        toast.danger("No password to copy");
-        return;
-      }
-      await copy(pw);
-      toast.success("Password copied — clears after you switch away");
-      const handleVisibility = async () => {
-        if (document.visibilityState === "hidden") {
-          // User switched away (to paste) — clear on return
-          const onReturn = async () => {
-            try {
-              await navigator.clipboard.writeText("");
-            } catch {
-              // Clipboard write may fail — safe to ignore
-            }
-            toast.info("Clipboard cleared");
-            document.removeEventListener("visibilitychange", onReturn);
-          };
-          document.removeEventListener("visibilitychange", handleVisibility);
-          document.addEventListener("visibilitychange", onReturn);
-        }
-      };
-      document.addEventListener("visibilitychange", handleVisibility);
-    } catch (error) {
-      console.error("Failed to copy password", error);
-    }
-  };
-
   return (
     <div className="hover:bg-surface-hover active:bg-surface-pressed group border-default/80 flex cursor-pointer flex-col gap-4 rounded-xl border p-4 transition-colors">
       {/* Top row: Avatar + Info + Actions */}
@@ -159,24 +127,20 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
                 <Star className="size-4 shrink-0 fill-yellow-400 text-yellow-400" />
               )}
               <span className="text-base font-semibold">{getTitle()}</span>
-              {account.tags && account.tags.length > 0 && (
-                <>
-                  {account.tags.map((tag) => (
-                    <Chip
-                      key={tag.id}
-                      size="sm"
-                      variant="soft"
-                      style={
-                        tag.color
-                          ? { backgroundColor: `${tag.color}20`, color: tag.color }
-                          : undefined
-                      }
-                    >
-                      {tag.name}
-                    </Chip>
-                  ))}
-                </>
-              )}
+              {account.tags?.map((tag) => (
+                <Chip
+                  key={tag.id}
+                  size="sm"
+                  variant="soft"
+                  style={
+                    tag.color
+                      ? { backgroundColor: `${tag.color}20`, color: tag.color }
+                      : undefined
+                  }
+                >
+                  {tag.name}
+                </Chip>
+              ))}
               {/* Avatar section - clickable to open share modal */}
               <button
                 type="button"
@@ -323,13 +287,13 @@ export default function AccountCard({ account, platform }: AccountCardProps) {
               setExportFormat(fmt as ExportFormat);
               setIsExportModalOpen(true);
             }}
-            onFavorite={() => {}}
+            onFavorite={() => { }}
             onAddTag={() => setIsTagsModalOpen(true)}
-            onEdit={() => {}}
-            onDuplicate={() => {}}
-            onMove={() => {}}
-            onViewHistory={() => {}}
-            onDelete={() => {}}
+            onEdit={() => { }}
+            onDuplicate={() => { }}
+            onMove={() => { }}
+            onViewHistory={() => { }}
+            onDelete={() => { }}
           />
         </div>
       </div>
